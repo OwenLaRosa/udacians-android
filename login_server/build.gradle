@@ -28,6 +28,8 @@ dependencies {
     compile 'javax.servlet:servlet-api:2.5'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'org.json:json:20090211'
+    compile 'commons-codec:commons-codec:1.7'
+    compile 'com.firebase:firebase-token-generator:2.0.0'
 }
 
 appengine {

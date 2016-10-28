@@ -6,6 +6,7 @@
 
 package com.example.owen.myapplication.backend;
 
+import com.firebase.security.token.TokenGenerator;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
@@ -14,6 +15,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Named;
 
@@ -51,6 +54,8 @@ public class MyEndpoint {
     private static final String PARAM_USERNAME = "username";
     private static final String PARAM_PASSWORD = "password";
 
+    private static final String FIREBASE_SECRET = "";
+
     private OkHttpClient mClient = new OkHttpClient();
 
     @ApiMethod(name = "session", path = "session", httpMethod = ApiMethod.HttpMethod.POST)
@@ -75,15 +80,33 @@ public class MyEndpoint {
             JSONObject account = root.getJSONObject(KEY_ACCOUNT);
             boolean registered = account.getBoolean(KEY_REGISTERED);
             String key = account.getString(KEY_KEY);
-            // this will be the actual JWT, use user key for now
-            result.setToken(key);
+            // specify whether or not the login succeeded
             result.setSuccess(registered);
+            if (registered) {
+                // user logged in successfully, create their token
+                result.setToken(generateTokenForId(key));
+            }
         } catch (IOException e) {
-
+            result.setSuccess(false);
         } catch (JSONException e) {
-
+            result.setSuccess(false);
         }
         return result;
+    }
+
+    /**
+     * Generate an auth token for the user
+     * @param userId Unique identifier, same ID used by Udacity
+     * @return The user's auth token
+     */
+    private String generateTokenForId(String userId) {
+        // based on the example from https://www-staging.firebase.com/docs/android/guide/login/custom.html
+        Map<String, Object> payload = new HashMap<String, Object>();
+        payload.put("uid", userId);
+
+        // create this user's token
+        TokenGenerator tokenGenerator = new TokenGenerator(FIREBASE_SECRET);
+        return tokenGenerator.createToken(payload);
     }
 
 }
