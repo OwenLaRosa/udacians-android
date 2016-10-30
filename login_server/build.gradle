@@ -26,13 +26,13 @@ dependencies {
     compile 'com.google.appengine:appengine-endpoints:1.9.34'
     compile 'com.google.appengine:appengine-endpoints-deps:1.9.34'
     compile 'javax.servlet:servlet-api:2.5'
-    compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'org.json:json:20090211'
     compile 'commons-codec:commons-codec:1.7'
     compile 'com.firebase:firebase-token-generator:2.0.0'
 }
 
 appengine {
+    httpAddress = "0.0.0.0"
     downloadSdk = true
     appcfg {
         oauth2 = true
