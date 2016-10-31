@@ -11,12 +11,13 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedWriter;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,24 +62,16 @@ public class MyEndpoint {
         // this is to test the 500 error if the rest of the code isn't working
 
         try {
-            // attempt to login with user's credentials
-            HttpRequest request = new HttpRequest(UDACITY_SESSION_URL);
-            // make sure the data is read as JSON
-            request.con.addRequestProperty("Accept", "application/json");
-            request.con.addRequestProperty("Content-Type", "application/json");
-            // set the JSON body for post request
-            JSONObject credentials = new JSONObject();
-            JSONObject parent = new JSONObject();
-            credentials.put(PARAM_USERNAME, username);
-            credentials.put(PARAM_PASSWORD, password);
-            parent.put("udacity", credentials);
-            // set the JSON body
-            BufferedWriter jsonBody = new BufferedWriter(new OutputStreamWriter(request.con.getOutputStream()));
-            jsonBody.write(parent.toString());
-            jsonBody.close();
-            String root = request.prepare(HttpRequest.Method.POST).sendAndReadString();
+            // create JSON body for post request
+            String jsonBody = String.format("{\"udacity\": {\"username\": \"%s\", \"password\": \"%s\"}}",
+                    username,
+                    password);
+
+            // perform the post request
+            String response = taskForPost(UDACITY_SESSION_URL, jsonBody);
+
             // return the json to the client for debugging purposes
-            result.setToken(root);
+            result.setToken(response);
             result.setSuccess(true);
             /*JSONObject account = root.getJSONObject(KEY_ACCOUNT);
             boolean registered = account.getBoolean(KEY_REGISTERED);
@@ -90,8 +83,6 @@ public class MyEndpoint {
                 result.setToken(generateTokenForId(key));
             }*/
         } catch (IOException e) {
-
-        } catch (JSONException e) {
 
         }
         return result;
@@ -110,6 +101,41 @@ public class MyEndpoint {
         // create this user's token
         TokenGenerator tokenGenerator = new TokenGenerator(FIREBASE_SECRET);
         return tokenGenerator.createToken(payload);
+    }
+
+    // performs a post request
+    // credit: http://stackoverflow.com/questions/21212674/android-java-lang-illegalstateexception-already-connected
+    public static String taskForPost(final String url, final String body) throws IOException {
+        final String charset = "UTF-8";
+        // Create the connection
+        HttpURLConnection connection = (HttpURLConnection) new URL (url).openConnection();
+        // setDoOutput(true) implicitly set's the request type to POST
+        connection.setDoOutput(true);
+        connection.setRequestProperty("Accept-Charset", charset);
+        connection.setRequestProperty("Content-type", "application/json");
+
+        // Write to the connection
+        OutputStream output = connection.getOutputStream();
+        output.write(body.getBytes(charset));
+        output.close();
+
+        // Check the error stream first, if this is null then there have been no issues with the request
+        InputStream inputStream = connection.getErrorStream();
+        if (inputStream == null)
+            inputStream = connection.getInputStream();
+
+        // Read everything from our stream
+        BufferedReader responseReader = new BufferedReader(new InputStreamReader(inputStream, charset));
+
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = responseReader.readLine()) != null) {
+            response.append(inputLine);
+        }
+        responseReader.close();
+
+        return response.toString();
     }
 
 }
