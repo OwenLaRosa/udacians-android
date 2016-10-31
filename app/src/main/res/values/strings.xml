@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Udacians</string>
+
+    <!-- Note that this app is student-run, not by Udacity -->
+    <string name="app_disclaimer">Disclaimer</string>
+
+    <!-- Displayed on the login screen -->
+    <string name="login_title">Udacians!</string>
+    <string name="login_prompt">Login with Udacity</string>
+    <string name="login_action">Login</string>
+    <string name="login_placeholder_email">Email Address</string>
+    <string name="login_placeholder_password">Password</string>
+
+    <!-- content descriptions -->
+    <string name="a11y_udacians_logo">Udacians</string>
+
 </resources>

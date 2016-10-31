@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
+
+    <TextView
+        android:id="@+id/login_title_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/white"
+        android:text="@string/login_title"
+        android:layout_marginTop="@dimen/login_inter_item_space"/>
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <ImageView
+        android:id="@+id/login_logo_imageview"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:scaleType="fitCenter"
+        android:contentDescription="@string/a11y_udacians_logo"
+        android:layout_marginBottom="@dimen/login_inter_item_space"/>
+
+    <TextView
+        android:id="@+id/login_prompt_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/white"
+        android:text="@string/login_prompt"
+        android:layout_marginBottom="@dimen/login_inter_item_space"/>
+
+    <EditText
+        android:id="@+id/login_email_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:lines="1"
+        android:layout_marginLeft="@dimen/login_margin"
+        android:layout_marginStart="@dimen/login_margin"
+        android:layout_marginRight="@dimen/login_margin"
+        android:layout_marginEnd="@dimen/login_margin"
+        android:inputType="textEmailAddress"
+        android:hint="@string/login_placeholder_email"
+        android:textColor="@color/white"
+        android:background="@color/colorPrimaryLight"
+        android:layout_marginBottom="@dimen/login_inter_item_space"
+        android:padding="@dimen/login_view_padding"/>
+
+    <EditText
+        android:id="@+id/login_password_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:lines="1"
+        android:layout_marginLeft="@dimen/login_margin"
+        android:layout_marginStart="@dimen/login_margin"
+        android:layout_marginRight="@dimen/login_margin"
+        android:layout_marginEnd="@dimen/login_margin"
+        android:inputType="textPassword"
+        android:hint="@string/login_placeholder_password"
+        android:textColor="@color/white"
+        android:background="@color/colorPrimaryLight"
+        android:layout_marginBottom="@dimen/login_inter_item_space"
+        android:padding="@dimen/login_view_padding"/>
+
+    <Button
+        android:id="@+id/login_auth_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/login_margin"
+        android:layout_marginStart="@dimen/login_margin"
+        android:layout_marginRight="@dimen/login_margin"
+        android:layout_marginEnd="@dimen/login_margin"
+        android:text="@string/login_action"
+        android:textColor="@color/white"
+        android:background="@color/colorPrimaryDark"/>
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="4"/>
+
+    <TextView
+        android:id="@+id/login_disclaimer_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/white"
+        android:text="@string/app_disclaimer"
+        android:layout_marginBottom="@dimen/login_inter_item_space"/>
+
+</LinearLayout>
