@@ -5,15 +5,15 @@ package com.example.owen.myapplication.backend;
  */
 public class SessionResponse {
 
-    private boolean success;
+    private int code;
     private String token;
 
-    public boolean getSuccess() {
-        return success;
+    public int getCode() {
+        return code;
     }
 
-    public void setSuccess(boolean success) {
-        this.success = success;
+    public void setCode(int code) {
+        this.code = code;
     }
 
     public String getToken() {

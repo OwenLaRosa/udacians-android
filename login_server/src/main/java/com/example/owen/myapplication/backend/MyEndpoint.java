@@ -11,6 +11,9 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,15 +49,14 @@ public class MyEndpoint {
     private static final String KEY_KEY = "key";
     private static final String KEY_SESSION = "session";
     private static final String KEY_ID = "id";
+    private static final String KEY_STATUS = "status";
 
     // parameters for Udacity login
     private static final String PARAM_USERNAME = "username";
     private static final String PARAM_PASSWORD = "password";
 
     private static final String FIREBASE_SECRET = "<FIREBASE_SECRET>";
-
-    //private OkHttpClient mClient = new OkHttpClient();
-
+    
     @ApiMethod(name = "session", path = "session", httpMethod = ApiMethod.HttpMethod.POST)
     public SessionResponse session(@Named("username") String username, @Named("password") String password) {
         SessionResponse result = new SessionResponse();
@@ -69,21 +71,33 @@ public class MyEndpoint {
 
             // perform the post request
             String response = taskForPost(UDACITY_SESSION_URL, jsonBody);
+            // Udacity API responses start at 5th character
+            String trimmedResponse = response.substring(4);
 
-            // return the json to the client for debugging purposes
-            result.setToken(response);
-            result.setSuccess(true);
-            /*JSONObject account = root.getJSONObject(KEY_ACCOUNT);
-            boolean registered = account.getBoolean(KEY_REGISTERED);
-            String key = account.getString(KEY_KEY);
-            // specify whether or not the login succeeded
-            result.setSuccess(registered);
-            if (registered) {
-                // user logged in successfully, create their token
-                result.setToken(generateTokenForId(key));
-            }*/
+            JSONObject root = new JSONObject(trimmedResponse);
+            if (root.has(KEY_STATUS)) {
+                // return specific code if there was an error
+                result.setCode(root.getInt(KEY_STATUS));
+            } else {
+                // request was successful
+                result.setCode(200);
+                JSONObject account = root.getJSONObject(KEY_ACCOUNT);
+                boolean registered = account.getBoolean(KEY_REGISTERED);
+                String key = account.getString(KEY_KEY);
+                // specify whether or not the login succeeded
+                if (registered) {
+                    // user logged in successfully, create their token
+                    result.setToken(generateTokenForId(key));
+                } else {
+                    result.setToken("not registered");
+                }
+            }
         } catch (IOException e) {
-
+            // problem with udacity or firebase, bad gateway
+            result.setCode(502);
+        } catch (JSONException e) {
+            // problem with this server, internal server error
+            result.setCode(500);
         }
         return result;
     }
@@ -93,7 +107,7 @@ public class MyEndpoint {
      * @param userId Unique identifier, same ID used by Udacity
      * @return The user's auth token
      */
-    private String generateTokenForId(Integer userId) {
+    private String generateTokenForId(String userId) {
         // based on the example from https://www-staging.firebase.com/docs/android/guide/login/custom.html
         Map<String, Object> payload = new HashMap<String, Object>();
         payload.put("uid", userId);
