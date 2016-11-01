@@ -28,7 +28,7 @@ dependencies {
     compile 'javax.servlet:servlet-api:2.5'
     compile 'org.json:json:20090211'
     compile 'commons-codec:commons-codec:1.7'
-    compile 'com.firebase:firebase-token-generator:2.0.0'
+    compile 'com.google.firebase:firebase-server-sdk:3.0.1'
 }
 
 appengine {

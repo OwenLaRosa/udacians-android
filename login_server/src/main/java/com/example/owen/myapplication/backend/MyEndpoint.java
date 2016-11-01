@@ -6,10 +6,12 @@
 
 package com.example.owen.myapplication.backend;
 
-import com.firebase.security.token.TokenGenerator;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,8 +23,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.inject.Named;
 
@@ -87,9 +87,14 @@ public class MyEndpoint {
                 // specify whether or not the login succeeded
                 if (registered) {
                     // user logged in successfully, create their token
-                    result.setToken(generateTokenForId(key));
-                } else {
-                    result.setToken("not registered");
+                    InputStream cred = getClass().getResourceAsStream("/serviceAccountCredentials.json");
+                    FirebaseOptions options = new FirebaseOptions.Builder()
+                            .setServiceAccount(cred)
+                            .setDatabaseUrl("https://udacians.firebaseio.com/")
+                            .build();
+                    FirebaseApp.initializeApp(options);
+                    String customToken = FirebaseAuth.getInstance().createCustomToken(key);
+                    result.setToken(customToken);
                 }
             }
         } catch (IOException e) {
@@ -100,21 +105,6 @@ public class MyEndpoint {
             result.setCode(500);
         }
         return result;
-    }
-
-    /**
-     * Generate an auth token for the user
-     * @param userId Unique identifier, same ID used by Udacity
-     * @return The user's auth token
-     */
-    private String generateTokenForId(String userId) {
-        // based on the example from https://www-staging.firebase.com/docs/android/guide/login/custom.html
-        Map<String, Object> payload = new HashMap<String, Object>();
-        payload.put("uid", userId);
-
-        // create this user's token
-        TokenGenerator tokenGenerator = new TokenGenerator(FIREBASE_SECRET);
-        return tokenGenerator.createToken(payload);
     }
 
     // performs a post request
