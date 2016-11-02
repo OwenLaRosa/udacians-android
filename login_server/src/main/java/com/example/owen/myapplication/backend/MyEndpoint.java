@@ -56,6 +56,9 @@ public class MyEndpoint {
     private static final String PARAM_PASSWORD = "password";
 
     private static final String FIREBASE_SECRET = "<FIREBASE_SECRET>";
+
+    // whether or not the Firebase app has been initialized
+    private boolean mInitialized = false;
     
     @ApiMethod(name = "session", path = "session", httpMethod = ApiMethod.HttpMethod.POST)
     public SessionResponse session(@Named("username") String username, @Named("password") String password) {
@@ -92,14 +95,18 @@ public class MyEndpoint {
                             .setServiceAccount(cred)
                             .setDatabaseUrl("https://udacians.firebaseio.com/")
                             .build();
-                    FirebaseApp.initializeApp(options);
+                    if (!mInitialized) {
+                        // Firebase app should only be initialized the first time
+                        FirebaseApp.initializeApp(options);
+                        mInitialized = true;
+                    }
                     String customToken = FirebaseAuth.getInstance().createCustomToken(key);
                     result.setToken(customToken);
                 }
             }
         } catch (IOException e) {
             // problem with udacity or firebase, bad gateway
-            result.setCode(502);
+            result.setCode(1337);
         } catch (JSONException e) {
             // problem with this server, internal server error
             result.setCode(500);
