@@ -99,6 +99,16 @@
 
                 </LinearLayout>
 
+                <com.owenlarosa.udacians.views.WritePostView
+                    android:id="@+id/profile_write_post_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/profile_margin_small"
+                    android:layout_marginStart="@dimen/profile_margin_small"
+                    android:layout_marginRight="@dimen/profile_margin_small"
+                    android:layout_marginEnd="@dimen/profile_margin_small"
+                    android:layout_marginBottom="@dimen/profile_margin_small"/>
+
             </LinearLayout>
 
         </ScrollView>

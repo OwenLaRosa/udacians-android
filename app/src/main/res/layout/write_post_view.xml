@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageButton
+        android:id="@+id/write_post_image_button"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@color/colorPrimary"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginRight="@dimen/profile_margin_small"
+        android:layout_marginEnd="@dimen/profile_margin_small"/>
+
+    <EditText
+        android:id="@+id/write_post_edit_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:text="Sample post text."
+        android:layout_toRightOf="@id/write_post_image_button"
+        android:layout_toEndOf="@id/write_post_image_button"/>
+
+    <ImageView
+        android:id="@+id/write_post_image_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitStart"
+        android:adjustViewBounds="true"
+        android:layout_below="@id/write_post_image_button"
+        android:background="@color/white"
+        android:layout_marginTop="@dimen/profile_margin_small"/>
+
+</RelativeLayout>
