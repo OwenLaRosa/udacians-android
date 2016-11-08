@@ -12,5 +12,6 @@
     <!-- used on profile screen -->
     <dimen name="profile_margin_small">8dp</dimen>
     <dimen name="profile_fab_right_margin">24dp</dimen>
+    <dimen name="profile_left_margin">24dp</dimen>
 
 </resources>
