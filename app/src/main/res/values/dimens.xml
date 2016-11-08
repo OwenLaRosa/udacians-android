@@ -9,4 +9,8 @@
     <dimen name="login_inter_item_space">8dp</dimen>
     <dimen name="login_view_padding">8dp</dimen>
 
+    <!-- used on profile screen -->
+    <dimen name="profile_margin_small">8dp</dimen>
+    <dimen name="profile_fab_right_margin">24dp</dimen>
+
 </resources>

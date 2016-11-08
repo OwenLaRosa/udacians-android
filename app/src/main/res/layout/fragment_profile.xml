@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/AppTheme"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/profile_header_view"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="#22000000">
+
+            <ImageView
+                android:id="@+id/profile_image_view"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_margin="@dimen/profile_margin_small"
+                android:background="@color/white"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/profile_title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/profile_margin_small"
+                android:layout_toEndOf="@id/profile_image_view"
+                android:layout_toRightOf="@id/profile_image_view"
+                android:maxLines="1"
+                android:text="Code Reviewer at Udacity"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/profile_name_text_view"
+                style="@style/Base.TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/profile_title_text_view"
+                android:layout_marginBottom="@dimen/profile_margin_small"
+                android:layout_toEndOf="@id/profile_image_view"
+                android:layout_toRightOf="@id/profile_image_view"
+                android:maxLines="1"
+                android:text="Owen LaRosa"
+                android:textColor="@color/white" />
+
+        </RelativeLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/white">
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/connect_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/profile_fab_right_margin"
+        android:layout_marginEnd="@dimen/profile_fab_right_margin"
+        android:clickable="true"
+        android:background="@color/colorAccent"
+        app:layout_anchor="@id/profile_header_view"
+        app:layout_anchorGravity="bottom|right|end"/>
+
+</android.support.design.widget.CoordinatorLayout>
