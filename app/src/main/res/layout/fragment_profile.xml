@@ -79,7 +79,7 @@
                     android:layout_height="wrap_content"
                     style="@style/TextAppearance.AppCompat.Title"
                     android:textStyle="bold"
-                    android:text="About"
+                    android:text="@string/about"
                     android:layout_marginTop="@dimen/profile_margin_small"
                     android:layout_marginBottom="@dimen/profile_margin_small"/>
 
@@ -133,6 +133,7 @@
         android:layout_marginEnd="@dimen/profile_fab_right_margin"
         android:clickable="true"
         android:background="@color/colorAccent"
+        android:contentDescription="@string/a11y_add_connection"
         app:layout_anchor="@id/profile_header_view"
         app:layout_anchorGravity="bottom|right|end"/>
 

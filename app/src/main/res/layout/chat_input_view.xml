@@ -24,7 +24,7 @@
         android:layout_weight="1"
         android:inputType="textMultiLine"
         android:scrollbars="vertical"
-        android:hint="Enter message"
+        android:hint="@string/enter_message"
         android:background="@color/white"
         android:paddingLeft="@dimen/chat_edittext_horizontal_padding"
         android:paddingRight="@dimen/chat_edittext_horizontal_padding"
@@ -35,7 +35,7 @@
         android:id="@+id/chat_input_send_button"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:text="Send"
+        android:text="@string/send"
         android:textColor="@color/white"
         android:background="@color/colorAccent"
         android:layout_gravity="top"/>

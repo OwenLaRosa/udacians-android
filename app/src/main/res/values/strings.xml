@@ -11,8 +11,16 @@
     <string name="login_placeholder_email">Email Address</string>
     <string name="login_placeholder_password">Password</string>
 
+    <!-- Displayed on user profile -->
+    <string name="about">About</string>
+
+    <!-- Displayed on the chat screen -->
+    <string name="enter_message">Enter message</string>
+    <string name="send">Send</string>
+
     <!-- content descriptions -->
     <string name="a11y_udacians_logo">Udacians</string>
     <string name="a11y_add_image">Post Image</string>
+    <string name="a11y_add_connection">Add connection</string>
 
 </resources>
