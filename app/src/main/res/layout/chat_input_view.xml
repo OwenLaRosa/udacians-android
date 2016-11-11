@@ -23,6 +23,7 @@
         android:minHeight="@dimen/chat_view_default_height"
         android:layout_weight="1"
         android:inputType="textMultiLine"
+        android:maxLines="@integer/chat_input_max_lines"
         android:scrollbars="vertical"
         android:hint="@string/enter_message"
         android:background="@color/white"
