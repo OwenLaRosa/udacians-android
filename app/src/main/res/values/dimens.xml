@@ -14,4 +14,11 @@
     <dimen name="profile_fab_right_margin">24dp</dimen>
     <dimen name="profile_left_margin">24dp</dimen>
 
+    <!-- used on chat view -->
+    <dimen name="chat_view_inter_item_margin">8dp</dimen>
+    <dimen name="chat_edittext_vertical_padding">2dp</dimen>
+    <dimen name="chat_edittext_horizontal_padding">8dp</dimen>
+    <!-- combined height of buttons + top and bottom margin -->
+    <dimen name="chat_view_default_height">48dp</dimen>
+
 </resources>

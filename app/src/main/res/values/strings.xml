@@ -13,5 +13,6 @@
 
     <!-- content descriptions -->
     <string name="a11y_udacians_logo">Udacians</string>
+    <string name="a11y_add_image">Post Image</string>
 
 </resources>
