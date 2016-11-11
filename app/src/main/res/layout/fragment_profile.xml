@@ -112,6 +112,7 @@
                     android:id="@+id/profile_posts_linear_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="vertical"
                     android:layout_marginBottom="@dimen/profile_margin_small">
 
                     <!-- Displays recent posts on the user's profile -->
