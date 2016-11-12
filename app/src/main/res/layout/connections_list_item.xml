@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginLeft="@dimen/connections_horizontal_margin"
+    android:layout_marginStart="@dimen/connections_horizontal_margin"
+    android:layout_marginRight="@dimen/connections_horizontal_margin"
+    android:layout_marginEnd="@dimen/connections_horizontal_margin"
+    android:layout_marginTop="@dimen/connections_vertical_margin"
+    android:layout_marginBottom="@dimen/connections_vertical_margin">
+
+    <ImageView
+        android:id="@+id/connection_photo_image_view"
+        android:layout_width="@dimen/connections_image_size"
+        android:layout_height="@dimen/connections_image_size"
+        android:scaleType="centerCrop"
+        android:background="@color/colorAccent"
+        android:layout_marginRight="@dimen/connections_horizontal_margin_small"
+        android:layout_marginEnd="@dimen/connections_horizontal_margin_small"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginRight="@dimen/connections_horizontal_margin_small"
+        android:layout_marginEnd="@dimen/connections_horizontal_margin_small">
+
+        <TextView
+            android:id="@+id/connection_name_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:text="Owen LaRosa"/>
+
+        <TextView
+            android:id="@+id/connection_title_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:text="Code Reviewer at Udacity"/>
+
+        <TextView
+            android:id="@+id/connection_location_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="Somerville, MA"/>
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/message_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:scaleType="centerCrop"/>
+
+</LinearLayout>
