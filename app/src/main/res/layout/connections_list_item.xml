@@ -57,6 +57,7 @@
         android:id="@+id/message_button"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/a11y_message"/>
 
 </LinearLayout>
