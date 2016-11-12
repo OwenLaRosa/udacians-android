@@ -20,5 +20,7 @@
     <dimen name="chat_edittext_horizontal_padding">8dp</dimen>
     <!-- combined height of buttons + top and bottom margin -->
     <dimen name="chat_view_default_height">48dp</dimen>
+    <!-- space within message box surrounding contents -->
+    <dimen name="chat_message_inner_spacing">12dp</dimen>
 
 </resources>
