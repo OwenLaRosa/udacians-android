@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/event_header_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/profile_margin_small"
+            android:background="@color/colorPrimary"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/event_margin_xlarge"
+            android:paddingEnd="@dimen/event_fab_right_margin"
+            android:paddingLeft="@dimen/event_left_margin"
+            android:paddingRight="@dimen/event_fab_right_margin"
+            android:paddingStart="@dimen/event_left_margin"
+            android:paddingTop="@dimen/event_margin_large">
+
+            <TextView
+                android:id="@+id/event_name_text_view"
+                style="@style/Base.TextAppearance.AppCompat.Headline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/event_margin_medium"
+                android:text="iOS/Android Developers Meetup"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/event_location_text_view"
+                style="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/event_margin_small"
+                android:text="1369 Coffee House in Cambridge, MA"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+        <TextView
+            style="@style/Base.TextAppearance.AppCompat.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/event_margin_small"
+            android:layout_marginEnd="@dimen/event_fab_right_margin"
+            android:layout_marginLeft="@dimen/event_left_margin"
+            android:layout_marginRight="@dimen/event_fab_right_margin"
+            android:layout_marginStart="@dimen/event_left_margin"
+            android:text="@string/about"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/event_about_text_view"
+            style="@style/Base.TextAppearance.AppCompat.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/event_margin_small"
+            android:layout_marginEnd="@dimen/event_fab_right_margin"
+            android:layout_marginLeft="@dimen/event_left_margin"
+            android:layout_marginRight="@dimen/event_fab_right_margin"
+            android:layout_marginStart="@dimen/event_left_margin"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." />
+
+        <com.owenlarosa.udacians.views.WritePostView
+            android:id="@+id/event_write_post_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/event_margin_small"
+            android:layout_marginEnd="@dimen/event_fab_right_margin"
+            android:layout_marginLeft="@dimen/event_left_margin"
+            android:layout_marginRight="@dimen/event_fab_right_margin"
+            android:layout_marginStart="@dimen/event_left_margin" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/event_posts_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:paddingEnd="@dimen/event_fab_right_margin"
+            android:paddingLeft="@dimen/event_left_margin"
+            android:paddingRight="@dimen/event_fab_right_margin"
+            android:paddingStart="@dimen/event_left_margin" />
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/attend_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/profile_fab_right_margin"
+        android:layout_marginRight="@dimen/profile_fab_right_margin"
+        android:background="@color/colorAccent"
+        android:clickable="true"
+        android:contentDescription="@string/a11y_attend_event"
+        app:layout_anchor="@id/event_header_view"
+        app:layout_anchorGravity="bottom|right|end" />
+
+</android.support.design.widget.CoordinatorLayout>

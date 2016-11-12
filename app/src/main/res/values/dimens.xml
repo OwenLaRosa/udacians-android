@@ -23,4 +23,13 @@
     <!-- space within message box surrounding contents -->
     <dimen name="chat_message_inner_spacing">12dp</dimen>
 
+    <!-- used on event screen -->
+
+    <dimen name="event_margin_small">8dp</dimen>
+    <dimen name="event_margin_medium">16dp</dimen>
+    <dimen name="event_margin_large">32dp</dimen>
+    <dimen name="event_margin_xlarge">48dp</dimen>
+    <dimen name="event_fab_right_margin">24dp</dimen>
+    <dimen name="event_left_margin">24dp</dimen>
+
 </resources>
