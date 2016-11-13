@@ -14,15 +14,19 @@
         android:text="@string/edit_profile"
         android:padding="@dimen/drawer_vertical_margin"
         android:layout_marginTop="@dimen/drawer_vertical_margin"
-        android:layout_marginBottom="@dimen/drawer_vertical_margin"/>
+        android:layout_marginBottom="@dimen/drawer_vertical_margin"
+        android:layout_marginLeft="@dimen/left_keyline"
+        android:layout_marginStart="@dimen/left_keyline"
+        android:layout_marginRight="@dimen/right_keyline"
+        android:layout_marginEnd="@dimen/right_keyline"/>
 
     <ImageView
         android:id="@+id/drawer_profile_image_view"
         android:layout_width="@dimen/drawer_profile_icon_size"
         android:layout_height="@dimen/drawer_profile_icon_size"
         android:background="@color/colorAccent"
-        android:layout_marginLeft="@dimen/drawer_horizontal_margin"
-        android:layout_marginStart="@dimen/drawer_horizontal_margin"
+        android:layout_marginLeft="@dimen/left_keyline"
+        android:layout_marginStart="@dimen/left_keyline"
         android:layout_marginBottom="@dimen/drawer_vertical_margin"/>
 
     <TextView
@@ -33,8 +37,8 @@
         android:textColor="@color/white"
         android:text="Owen LaRosa"
         android:maxLines="1"
-        android:layout_marginLeft="@dimen/drawer_horizontal_margin"
-        android:layout_marginStart="@dimen/drawer_horizontal_margin"
+        android:layout_marginLeft="@dimen/left_keyline"
+        android:layout_marginStart="@dimen/left_keyline"
         android:layout_marginBottom="@dimen/drawer_vertical_margin"/>
 
     <TextView
@@ -45,8 +49,8 @@
         android:textColor="@color/white"
         android:text="Code Reviewer at Udacity"
         android:maxLines="1"
-        android:layout_marginLeft="@dimen/drawer_horizontal_margin"
-        android:layout_marginStart="@dimen/drawer_horizontal_margin"
+        android:layout_marginLeft="@dimen/left_keyline"
+        android:layout_marginStart="@dimen/left_keyline"
         android:layout_marginBottom="@dimen/drawer_vertical_margin"/>
 
 </LinearLayout>

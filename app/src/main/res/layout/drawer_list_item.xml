@@ -12,8 +12,8 @@
         android:background="@color/white"
         android:layout_marginTop="@dimen/drawer_vertical_margin"
         android:layout_marginBottom="@dimen/drawer_vertical_margin"
-        android:layout_marginLeft="@dimen/drawer_horizontal_margin"
-        android:layout_marginStart="@dimen/drawer_horizontal_margin"
+        android:layout_marginLeft="@dimen/left_keyline"
+        android:layout_marginStart="@dimen/left_keyline"
         android:layout_marginRight="@dimen/drawer_horizontal_margin"
         android:layout_marginEnd="@dimen/drawer_horizontal_margin"/>
 

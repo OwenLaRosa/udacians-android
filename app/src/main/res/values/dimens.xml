@@ -51,5 +51,7 @@
     <dimen name="drawer_horizontal_margin">8dp</dimen>
     <dimen name="drawer_vertical_margin">8dp</dimen>
     <dimen name="drawer_profile_icon_size">96dp</dimen>
+    <dimen name="left_keyline">24dp</dimen>
+    <dimen name="right_keyline">24dp</dimen>
     
 </resources>
