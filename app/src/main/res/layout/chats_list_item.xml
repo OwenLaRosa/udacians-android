@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/chats_horizontal_margin"
+    android:layout_marginStart="@dimen/chats_horizontal_margin"
+    android:layout_marginRight="@dimen/chats_horizontal_margin"
+    android:layout_marginEnd="@dimen/chats_horizontal_margin"
+    android:layout_marginTop="@dimen/chats_vertical_margin"
+    android:layout_marginBottom="@dimen/chats_vertical_margin">
+
+    <ImageView
+        android:id="@+id/chat_photo_image_view"
+        android:layout_width="@dimen/chats_image_size"
+        android:layout_height="@dimen/chats_image_size"
+        android:scaleType="centerCrop"
+        android:background="@color/colorAccent"
+        android:layout_marginRight="@dimen/chats_horizontal_margin_small"
+        android:layout_marginEnd="@dimen/chats_horizontal_margin_small"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/chat_name_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:text="Android Developer Nanodegree"
+            android:layout_marginBottom="@dimen/chats_vertical_margin"/>
+
+        <TextView
+            android:id="@+id/chat_description_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="General discussion for students in the Android Developer Nanodegree."/>
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/leave_chat_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/a11y_leave_chat"/>
+
+</LinearLayout>

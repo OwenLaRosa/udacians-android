@@ -24,5 +24,6 @@
     <string name="a11y_add_connection">Add connection</string>
     <string name="a11y_attend_event">Attend event</string>
     <string name="a11y_message">Open messages</string>
+    <string name="a11y_leave_chat">Leave chat</string>
 
 </resources>
