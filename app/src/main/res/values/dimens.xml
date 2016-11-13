@@ -47,5 +47,8 @@
     <!-- used on main activity -->
     <dimen name="drawer_width">240dp</dimen>
     <dimen name="fab_margin">24dp</dimen>
+    <dimen name="drawer_icon_size">32dp</dimen>
+    <dimen name="drawer_horizontal_margin">8dp</dimen>
+    <dimen name="drawer_vertical_margin">8dp</dimen>
     
 </resources>
