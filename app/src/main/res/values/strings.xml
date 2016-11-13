@@ -18,6 +18,9 @@
     <string name="enter_message">Enter message</string>
     <string name="send">Send</string>
 
+    <!-- Displayed in drawer layout -->
+    <string name="edit_profile">Edit profile</string>
+
     <!-- content descriptions -->
     <string name="a11y_udacians_logo">Udacians</string>
     <string name="a11y_add_image">Post Image</string>
