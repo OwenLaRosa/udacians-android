@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="navigation_items">
+        <item>@string/nav_map</item>
+        <item>@string/nav_feed</item>
+        <item>@string/nav_connections</item>
+        <item>@string/nav_chats</item>
+        <item>@string/nav_jobs</item>
+        <item>@string/nav_settings</item>
+        <item>@string/nav_help</item>
+    </array>
+
+</resources>
