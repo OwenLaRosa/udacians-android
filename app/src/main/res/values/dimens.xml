@@ -43,6 +43,11 @@
     <dimen name="chats_horizontal_margin">24dp</dimen>
     <dimen name="chats_horizontal_margin_small">8dp</dimen>
     <dimen name="chats_vertical_margin">8dp</dimen>
+
+    <!-- used on blogs list screen -->
+    <dimen name="blogs_horizontal_margin">24dp</dimen>
+    <dimen name="blogs_horizontal_margin_small">8dp</dimen>
+    <dimen name="blogs_vertical_margin">8dp</dimen>
     
     <!-- used on main activity -->
     <dimen name="drawer_width">240dp</dimen>
