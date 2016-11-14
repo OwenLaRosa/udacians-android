@@ -74,12 +74,14 @@ public class MainActivity extends AppCompatActivity {
                             fragment = new ChatsListFragment();
                             break;
                         case 5:
-                            fragment = new JobsListFragment();
+                            fragment = new EventsListFragment();
                             break;
                         case 6:
+                            fragment = new JobsListFragment();
+                        case 7:
                             fragment = new SettingsFragment();
                             break;
-                        case 7:
+                        case 8:
                             fragment = new HelpFragment();
                             break;
                         default:

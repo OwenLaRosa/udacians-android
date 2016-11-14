@@ -11,7 +11,7 @@
     android:layout_marginBottom="@dimen/jobs_vertical_margin">
 
     <TextView
-        android:id="@+id/event_name_text_view"
+        android:id="@+id/job_title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="1"
@@ -21,7 +21,7 @@
         android:layout_marginBottom="@dimen/jobs_vertical_margin"/>
 
     <TextView
-        android:id="@+id/event_about_text_view"
+        android:id="@+id/job_company_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="5"
@@ -29,7 +29,7 @@
         android:layout_marginBottom="@dimen/jobs_vertical_margin"/>
 
     <TextView
-        android:id="@+id/event_location_text_view"
+        android:id="@+id/job_location_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="1"
