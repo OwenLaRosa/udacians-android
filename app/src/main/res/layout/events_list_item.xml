@@ -3,12 +3,12 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="@dimen/events_horizontal_margin"
-    android:layout_marginStart="@dimen/events_horizontal_margin"
-    android:layout_marginRight="@dimen/events_horizontal_margin"
-    android:layout_marginEnd="@dimen/events_horizontal_margin"
-    android:layout_marginTop="@dimen/events_vertical_margin"
-    android:layout_marginBottom="@dimen/events_vertical_margin">
+    android:paddingLeft="@dimen/events_horizontal_margin"
+    android:paddingStart="@dimen/events_horizontal_margin"
+    android:paddingRight="@dimen/events_horizontal_margin"
+    android:paddingEnd="@dimen/events_horizontal_margin"
+    android:paddingTop="@dimen/events_vertical_margin"
+    android:paddingBottom="@dimen/events_vertical_margin">
 
     <TextView
         android:id="@+id/event_name_text_view"

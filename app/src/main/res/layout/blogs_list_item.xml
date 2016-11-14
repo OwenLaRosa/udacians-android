@@ -3,12 +3,12 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/blogs_horizontal_margin"
-    android:layout_marginStart="@dimen/blogs_horizontal_margin"
-    android:layout_marginRight="@dimen/blogs_horizontal_margin"
-    android:layout_marginEnd="@dimen/blogs_horizontal_margin"
-    android:layout_marginTop="@dimen/blogs_vertical_margin"
-    android:layout_marginBottom="@dimen/blogs_vertical_margin">
+    android:paddingLeft="@dimen/blogs_horizontal_margin"
+    android:paddingStart="@dimen/blogs_horizontal_margin"
+    android:paddingRight="@dimen/blogs_horizontal_margin"
+    android:paddingEnd="@dimen/blogs_horizontal_margin"
+    android:paddingTop="@dimen/blogs_vertical_margin"
+    android:paddingBottom="@dimen/blogs_vertical_margin">
 
     <TextView
         android:id="@+id/blog_title_text_view"

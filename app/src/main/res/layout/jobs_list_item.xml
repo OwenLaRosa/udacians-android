@@ -3,12 +3,12 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="@dimen/jobs_horizontal_margin"
-    android:layout_marginStart="@dimen/jobs_horizontal_margin"
-    android:layout_marginRight="@dimen/jobs_horizontal_margin"
-    android:layout_marginEnd="@dimen/jobs_horizontal_margin"
-    android:layout_marginTop="@dimen/jobs_vertical_margin"
-    android:layout_marginBottom="@dimen/jobs_vertical_margin">
+    android:paddingLeft="@dimen/jobs_horizontal_margin"
+    android:paddingStart="@dimen/jobs_horizontal_margin"
+    android:paddingRight="@dimen/jobs_horizontal_margin"
+    android:paddingEnd="@dimen/jobs_horizontal_margin"
+    android:paddingTop="@dimen/jobs_vertical_margin"
+    android:paddingBottom="@dimen/jobs_vertical_margin">
 
     <TextView
         android:id="@+id/job_title_text_view"

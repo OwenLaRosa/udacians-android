@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:layout_marginLeft="@dimen/connections_horizontal_margin"
-    android:layout_marginStart="@dimen/connections_horizontal_margin"
-    android:layout_marginRight="@dimen/connections_horizontal_margin"
-    android:layout_marginEnd="@dimen/connections_horizontal_margin"
-    android:layout_marginTop="@dimen/connections_vertical_margin"
-    android:layout_marginBottom="@dimen/connections_vertical_margin">
+    android:paddingLeft="@dimen/connections_horizontal_margin"
+    android:paddingStart="@dimen/connections_horizontal_margin"
+    android:paddingRight="@dimen/connections_horizontal_margin"
+    android:paddingEnd="@dimen/connections_horizontal_margin"
+    android:paddingTop="@dimen/connections_vertical_margin"
+    android:paddingBottom="@dimen/connections_vertical_margin">
 
     <ImageView
         android:id="@+id/connection_photo_image_view"
