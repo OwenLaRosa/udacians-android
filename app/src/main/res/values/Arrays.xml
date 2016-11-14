@@ -5,8 +5,9 @@
         <item>@string/nav_map</item>
         <item>@string/nav_feed</item>
         <item>@string/nav_connections</item>
-        <item>@string/nav_chats</item>
+        <item>@string/nav_discussions</item>
         <item>@string/nav_jobs</item>
+
         <item>@string/nav_settings</item>
         <item>@string/nav_help</item>
     </array>
