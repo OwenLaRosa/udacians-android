@@ -6,8 +6,8 @@
         <item>@string/nav_feed</item>
         <item>@string/nav_connections</item>
         <item>@string/nav_discussions</item>
+        <item>@string/nav_events</item>
         <item>@string/nav_jobs</item>
-
         <item>@string/nav_settings</item>
         <item>@string/nav_help</item>
     </array>
@@ -17,6 +17,7 @@
         <item>@drawable/feed</item>
         <item>@drawable/connections</item>
         <item>@drawable/discussions</item>
+        <item>@drawable/event</item>
         <item>@drawable/job</item>
         <item>@drawable/settings</item>
         <item>@drawable/info</item>

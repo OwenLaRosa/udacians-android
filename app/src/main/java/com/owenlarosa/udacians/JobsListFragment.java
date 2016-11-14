@@ -31,5 +31,5 @@ public class JobsListFragment extends Fragment {
 
         return rootView;
     }
-    
+
 }
