@@ -9,7 +9,6 @@
         android:id="@+id/drawer_icon"
         android:layout_width="@dimen/drawer_icon_size"
         android:layout_height="@dimen/drawer_icon_size"
-        android:background="@color/white"
         android:layout_marginTop="@dimen/drawer_vertical_margin"
         android:layout_marginBottom="@dimen/drawer_vertical_margin"
         android:layout_marginLeft="@dimen/left_keyline"
@@ -24,7 +23,6 @@
         style="@style/Base.TextAppearance.AppCompat.Title"
         android:textColor="@color/white"
         android:maxLines="1"
-        android:text="Map"
         android:layout_gravity="center_vertical"
         android:layout_marginTop="@dimen/drawer_vertical_margin"
         android:layout_marginBottom="@dimen/drawer_vertical_margin"/>

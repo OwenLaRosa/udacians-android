@@ -2,6 +2,7 @@ package com.owenlarosa.udacians;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +21,13 @@ public class NavigationDrawerAdapter extends BaseAdapter {
 
     // titles of each nav item that comes after profile view
     private String[] navItems;
+    private TypedArray navIcons;
     private Context mContext;
 
     public NavigationDrawerAdapter(Context context) {
         mContext = context;
-        navItems =  context.getResources().getStringArray(R.array.navigation_items);
+        navItems = mContext.getResources().getStringArray(R.array.navigation_items);
+        navIcons = mContext.getResources().obtainTypedArray(R.array.navigation_icons);
     }
 
     // number of navigation items
@@ -73,6 +76,7 @@ public class NavigationDrawerAdapter extends BaseAdapter {
             // standard views contain a title and an icon
             // because the first view is different, the first standard view is at index 0 in items array
             holder.titleTextView.setText(navItems[i - 1]);
+            holder.iconImageView.setImageDrawable(navIcons.getDrawable(i - 1));
         }
         return cell;
     }

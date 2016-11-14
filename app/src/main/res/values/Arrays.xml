@@ -11,4 +11,14 @@
         <item>@string/nav_help</item>
     </array>
 
+    <integer-array name="navigation_icons">
+        <item>@drawable/map</item>
+        <item>@drawable/feed</item>
+        <item>@drawable/connections</item>
+        <item>@drawable/discussions</item>
+        <item>@drawable/job</item>
+        <item>@drawable/settings</item>
+        <item>@drawable/info</item>
+    </integer-array>
+
 </resources>
