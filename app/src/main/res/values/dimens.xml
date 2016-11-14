@@ -48,6 +48,11 @@
     <dimen name="blogs_horizontal_margin">24dp</dimen>
     <dimen name="blogs_horizontal_margin_small">8dp</dimen>
     <dimen name="blogs_vertical_margin">8dp</dimen>
+
+    <!-- used on events list screen -->
+    <dimen name="events_horizontal_margin">24dp</dimen>
+    <dimen name="events_horizontal_margin_small">8dp</dimen>
+    <dimen name="events_vertical_margin">8dp</dimen>
     
     <!-- used on main activity -->
     <dimen name="drawer_width">240dp</dimen>
