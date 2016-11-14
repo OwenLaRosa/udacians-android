@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
                             break;
                         case 6:
                             fragment = new JobsListFragment();
+                            break;
                         case 7:
                             fragment = new SettingsFragment();
                             break;
