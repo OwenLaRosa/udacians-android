@@ -78,7 +78,7 @@ public class NavigationDrawerAdapter extends BaseAdapter {
     }
 
     // view for standard navigation tabs
-    private static class ItemViewHolder {
+    static class ItemViewHolder {
         @BindView(R.id.drawer_title)
         TextView titleTextView;
         @BindView(R.id.drawer_icon)
@@ -90,7 +90,7 @@ public class NavigationDrawerAdapter extends BaseAdapter {
     }
 
     // view for topmost item, shows profile info
-    private static class ProfileViewHolder {
+    static class ProfileViewHolder {
         @BindView(R.id.drawer_profile_image_view)
         ImageView profileImageView;
         @BindView(R.id.drawer_profile_name_text_view)
