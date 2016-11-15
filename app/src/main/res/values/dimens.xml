@@ -67,5 +67,11 @@
     <dimen name="drawer_profile_icon_size">96dp</dimen>
     <dimen name="left_keyline">24dp</dimen>
     <dimen name="right_keyline">24dp</dimen>
+
+    <!-- dimensions used on all layouts -->
+    <dimen name="edge_margin">16dp</dimen>
+    <dimen name="horizontal_inter_item_space">8dp</dimen>
+    <dimen name="vertical_inter_item_space">4dp</dimen>
+    <dimen name="vertical_edge_margin">8dp</dimen>
     
 </resources>
