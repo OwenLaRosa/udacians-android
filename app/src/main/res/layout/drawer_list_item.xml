@@ -11,10 +11,10 @@
         android:layout_height="@dimen/drawer_icon_size"
         android:layout_marginTop="@dimen/drawer_vertical_margin"
         android:layout_marginBottom="@dimen/drawer_vertical_margin"
-        android:layout_marginLeft="@dimen/left_keyline"
-        android:layout_marginStart="@dimen/left_keyline"
-        android:layout_marginRight="@dimen/drawer_horizontal_margin"
-        android:layout_marginEnd="@dimen/drawer_horizontal_margin"/>
+        android:layout_marginLeft="@dimen/edge_margin"
+        android:layout_marginStart="@dimen/edge_margin"
+        android:layout_marginRight="@dimen/horizontal_inter_item_space"
+        android:layout_marginEnd="@dimen/horizontal_inter_item_space"/>
 
     <TextView
         android:id="@+id/drawer_title"

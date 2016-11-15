@@ -15,19 +15,19 @@
         android:padding="@dimen/drawer_vertical_margin"
         android:layout_marginTop="@dimen/drawer_vertical_margin"
         android:layout_marginBottom="@dimen/drawer_vertical_margin"
-        android:layout_marginLeft="@dimen/left_keyline"
-        android:layout_marginStart="@dimen/left_keyline"
-        android:layout_marginRight="@dimen/right_keyline"
-        android:layout_marginEnd="@dimen/right_keyline"/>
+        android:layout_marginLeft="@dimen/edge_margin"
+        android:layout_marginStart="@dimen/edge_margin"
+        android:layout_marginRight="@dimen/edge_margin"
+        android:layout_marginEnd="@dimen/edge_margin"/>
 
     <ImageView
         android:id="@+id/drawer_profile_image_view"
         android:layout_width="@dimen/drawer_profile_icon_size"
         android:layout_height="@dimen/drawer_profile_icon_size"
         android:background="@color/colorAccent"
-        android:layout_marginLeft="@dimen/left_keyline"
-        android:layout_marginStart="@dimen/left_keyline"
-        android:layout_marginBottom="@dimen/drawer_vertical_margin"/>
+        android:layout_marginLeft="@dimen/edge_margin"
+        android:layout_marginStart="@dimen/edge_margin"
+        android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
 
     <TextView
         android:id="@+id/drawer_profile_name_text_view"
@@ -37,9 +37,9 @@
         android:textColor="@color/white"
         android:text="Owen LaRosa"
         android:maxLines="1"
-        android:layout_marginLeft="@dimen/left_keyline"
-        android:layout_marginStart="@dimen/left_keyline"
-        android:layout_marginBottom="@dimen/drawer_vertical_margin"/>
+        android:layout_marginLeft="@dimen/edge_margin"
+        android:layout_marginStart="@dimen/edge_margin"
+        android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
 
     <TextView
         android:id="@+id/drawer_profile_title_text_view"
@@ -49,8 +49,8 @@
         android:textColor="@color/white"
         android:text="Code Reviewer at Udacity"
         android:maxLines="1"
-        android:layout_marginLeft="@dimen/left_keyline"
-        android:layout_marginStart="@dimen/left_keyline"
-        android:layout_marginBottom="@dimen/drawer_vertical_margin"/>
+        android:layout_marginLeft="@dimen/edge_margin"
+        android:layout_marginStart="@dimen/edge_margin"
+        android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
 
 </LinearLayout>
