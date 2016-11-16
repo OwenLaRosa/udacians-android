@@ -1,16 +1,15 @@
 package com.owenlarosa.udacians;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.ListPopupWindow;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.owenlarosa.udacians.adapter.BlogFeedAdapter;
 import com.owenlarosa.udacians.adapter.DiscussionsListAdapter;
 
 import butterknife.BindView;
@@ -34,7 +33,15 @@ public class ChatsListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_chats_list, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
 
-        listView.setAdapter(new DiscussionsListAdapter(getActivity()));
+        DiscussionsListAdapter adapter = new DiscussionsListAdapter(getActivity());
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getActivity(), ChatActivity.class);
+                startActivity(intent);
+            }
+        });
 
         return rootView;
     }

@@ -18,7 +18,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".EditProfileActivity" />
-        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".ChatActivity"></activity>
     </application>
 
 </manifest>

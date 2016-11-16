@@ -2,13 +2,17 @@ package com.owenlarosa.udacians.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.owenlarosa.udacians.ChatActivity;
 import com.owenlarosa.udacians.R;
 
 import butterknife.BindView;
@@ -55,6 +59,13 @@ public class ConnectionsListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) cell.getTag();
         }
+        holder.messageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, ChatActivity.class);
+                mContext.startActivity(intent);
+            }
+        });
         return cell;
     }
 
@@ -67,6 +78,8 @@ public class ConnectionsListAdapter extends BaseAdapter {
         TextView locationTextView;
         @BindView(R.id.connection_photo_image_view)
         ImageView profileImageView;
+        @BindView(R.id.message_button)
+        ImageButton messageButton;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
