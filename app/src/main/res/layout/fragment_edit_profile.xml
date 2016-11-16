@@ -23,7 +23,7 @@
             android:layout_marginBottom="@dimen/vertical_edge_margin"/>
 
         <ImageButton
-            android:id="@+id/edit_profile_image_view"
+            android:id="@+id/edit_profile_image_button"
             android:layout_width="match_parent"
             android:layout_height="96dp"
             android:background="@color/white"
@@ -161,7 +161,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Profile Picture"
+            android:text="LinkedIn"
             android:layout_columnSpan="2"
             android:layout_marginTop="@dimen/vertical_edge_margin"
             android:layout_marginBottom="@dimen/vertical_edge_margin"/>
@@ -190,7 +190,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Profile Picture"
+            android:text="Twitter"
             android:layout_columnSpan="2"
             android:layout_marginTop="@dimen/vertical_edge_margin"
             android:layout_marginBottom="@dimen/vertical_edge_margin"/>
