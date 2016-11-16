@@ -56,9 +56,11 @@
 
     <ImageButton
         android:id="@+id/message_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="@dimen/message_icon_size"
+        android:layout_height="@dimen/message_icon_size"
         android:scaleType="centerCrop"
+        android:background="@drawable/message"
+        android:layout_gravity="center_vertical"
         android:contentDescription="@string/a11y_message"/>
 
 </LinearLayout>

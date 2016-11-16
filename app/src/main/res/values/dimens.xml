@@ -30,6 +30,7 @@
 
     <!-- used on connections screen -->
     <dimen name="connections_image_size">48dp</dimen>
+    <dimen name="message_icon_size">24dp</dimen>
 
     <!-- used on chats list screen -->
     <dimen name="chats_image_size">48dp</dimen>
