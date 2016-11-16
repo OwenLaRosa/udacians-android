@@ -1,15 +1,16 @@
 package com.owenlarosa.udacians;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.owenlarosa.udacians.adapter.BlogFeedAdapter;
 import com.owenlarosa.udacians.adapter.ConnectionsListAdapter;
 
 import butterknife.BindView;
@@ -33,7 +34,15 @@ public class ConnectionsListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_connections_list, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
 
-        listView.setAdapter(new ConnectionsListAdapter(getActivity()));
+        ConnectionsListAdapter adapter = new ConnectionsListAdapter(getActivity());
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
 
         return rootView;
     }
