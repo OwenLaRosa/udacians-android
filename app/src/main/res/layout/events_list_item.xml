@@ -3,12 +3,12 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/events_horizontal_margin"
-    android:paddingStart="@dimen/events_horizontal_margin"
-    android:paddingRight="@dimen/events_horizontal_margin"
-    android:paddingEnd="@dimen/events_horizontal_margin"
-    android:paddingTop="@dimen/events_vertical_margin"
-    android:paddingBottom="@dimen/events_vertical_margin">
+    android:paddingLeft="@dimen/edge_margin"
+    android:paddingStart="@dimen/edge_margin"
+    android:paddingRight="@dimen/edge_margin"
+    android:paddingEnd="@dimen/edge_margin"
+    android:paddingTop="@dimen/vertical_edge_margin"
+    android:paddingBottom="@dimen/vertical_edge_margin">
 
     <TextView
         android:id="@+id/event_name_text_view"
@@ -18,7 +18,7 @@
         android:textStyle="bold"
         android:textColor="@color/colorPrimaryDark"
         android:text="Mobile Developers Hackathon"
-        android:layout_marginBottom="@dimen/events_vertical_margin"/>
+        android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
 
     <TextView
         android:id="@+id/event_about_text_view"
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:maxLines="5"
         android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-        android:layout_marginBottom="@dimen/events_vertical_margin"/>
+        android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
 
     <TextView
         android:id="@+id/event_location_text_view"

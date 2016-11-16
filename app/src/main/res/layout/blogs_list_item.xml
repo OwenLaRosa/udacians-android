@@ -3,12 +3,12 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="@dimen/blogs_horizontal_margin"
-    android:paddingStart="@dimen/blogs_horizontal_margin"
-    android:paddingRight="@dimen/blogs_horizontal_margin"
-    android:paddingEnd="@dimen/blogs_horizontal_margin"
-    android:paddingTop="@dimen/blogs_vertical_margin"
-    android:paddingBottom="@dimen/blogs_vertical_margin">
+    android:paddingLeft="@dimen/edge_margin"
+    android:paddingStart="@dimen/edge_margin"
+    android:paddingRight="@dimen/edge_margin"
+    android:paddingEnd="@dimen/edge_margin"
+    android:paddingTop="@dimen/vertical_edge_margin"
+    android:paddingBottom="@dimen/vertical_edge_margin">
 
     <TextView
         android:id="@+id/blog_title_text_view"
@@ -18,7 +18,7 @@
         android:textStyle="bold"
         android:textColor="@color/colorPrimaryDark"
         android:text="Creating a Sticker Pack for iOS 10"
-        android:layout_marginBottom="@dimen/blogs_vertical_margin"/>
+        android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
 
     <TextView
         android:id="@+id/blog_author_text_view"
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:text="Owen LaRosa"
-        android:layout_marginBottom="@dimen/blogs_vertical_margin"/>
+        android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
 
     <TextView
         android:id="@+id/blog_url_text_view"

@@ -2,12 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/chats_horizontal_margin"
-    android:paddingStart="@dimen/chats_horizontal_margin"
-    android:paddingRight="@dimen/chats_horizontal_margin"
-    android:paddingEnd="@dimen/chats_horizontal_margin"
-    android:paddingTop="@dimen/chats_vertical_margin"
-    android:paddingBottom="@dimen/chats_vertical_margin">
+    android:paddingLeft="@dimen/edge_margin"
+    android:paddingStart="@dimen/edge_margin"
+    android:paddingRight="@dimen/edge_margin"
+    android:paddingEnd="@dimen/edge_margin"
+    android:paddingTop="@dimen/vertical_edge_margin"
+    android:paddingBottom="@dimen/vertical_edge_margin">
 
     <ImageView
         android:id="@+id/chat_photo_image_view"
@@ -15,8 +15,8 @@
         android:layout_height="@dimen/chats_image_size"
         android:scaleType="centerCrop"
         android:background="@color/colorAccent"
-        android:layout_marginRight="@dimen/chats_horizontal_margin_small"
-        android:layout_marginEnd="@dimen/chats_horizontal_margin_small"/>
+        android:layout_marginRight="@dimen/horizontal_inter_item_space"
+        android:layout_marginEnd="@dimen/horizontal_inter_item_space"/>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -32,7 +32,7 @@
             android:textStyle="bold"
             android:textColor="@color/colorPrimaryDark"
             android:text="Android Developer Nanodegree"
-            android:layout_marginBottom="@dimen/chats_vertical_margin"/>
+            android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
 
         <TextView
             android:id="@+id/chat_description_text_view"

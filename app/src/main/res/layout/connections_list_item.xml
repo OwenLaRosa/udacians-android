@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingLeft="@dimen/connections_horizontal_margin"
-    android:paddingStart="@dimen/connections_horizontal_margin"
-    android:paddingRight="@dimen/connections_horizontal_margin"
-    android:paddingEnd="@dimen/connections_horizontal_margin"
-    android:paddingTop="@dimen/connections_vertical_margin"
-    android:paddingBottom="@dimen/connections_vertical_margin">
+    android:paddingLeft="@dimen/edge_margin"
+    android:paddingStart="@dimen/edge_margin"
+    android:paddingRight="@dimen/edge_margin"
+    android:paddingEnd="@dimen/edge_margin"
+    android:paddingTop="@dimen/vertical_edge_margin"
+    android:paddingBottom="@dimen/vertical_edge_margin">
 
     <ImageView
         android:id="@+id/connection_photo_image_view"
@@ -16,16 +16,16 @@
         android:layout_height="@dimen/connections_image_size"
         android:scaleType="centerCrop"
         android:background="@color/colorAccent"
-        android:layout_marginRight="@dimen/connections_horizontal_margin_small"
-        android:layout_marginEnd="@dimen/connections_horizontal_margin_small"/>
+        android:layout_marginRight="@dimen/horizontal_inter_item_space"
+        android:layout_marginEnd="@dimen/horizontal_inter_item_space"/>
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:layout_marginRight="@dimen/connections_horizontal_margin_small"
-        android:layout_marginEnd="@dimen/connections_horizontal_margin_small">
+        android:layout_marginRight="@dimen/horizontal_inter_item_space"
+        android:layout_marginEnd="@dimen/horizontal_inter_item_space">
 
         <TextView
             android:id="@+id/connection_name_text_view"

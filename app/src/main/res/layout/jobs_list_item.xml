@@ -3,12 +3,12 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/jobs_horizontal_margin"
-    android:paddingStart="@dimen/jobs_horizontal_margin"
-    android:paddingRight="@dimen/jobs_horizontal_margin"
-    android:paddingEnd="@dimen/jobs_horizontal_margin"
-    android:paddingTop="@dimen/jobs_vertical_margin"
-    android:paddingBottom="@dimen/jobs_vertical_margin">
+    android:paddingLeft="@dimen/edge_margin"
+    android:paddingStart="@dimen/edge_margin"
+    android:paddingRight="@dimen/edge_margin"
+    android:paddingEnd="@dimen/edge_margin"
+    android:paddingTop="@dimen/vertical_edge_margin"
+    android:paddingBottom="@dimen/vertical_edge_margin">
 
     <TextView
         android:id="@+id/job_title_text_view"
@@ -18,7 +18,7 @@
         android:textStyle="bold"
         android:textColor="@color/colorPrimaryDark"
         android:text="Junior Android Developer"
-        android:layout_marginBottom="@dimen/jobs_vertical_margin"/>
+        android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
 
     <TextView
         android:id="@+id/job_company_text_view"
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:maxLines="5"
         android:text="Google"
-        android:layout_marginBottom="@dimen/jobs_vertical_margin"/>
+        android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
 
     <TextView
         android:id="@+id/job_location_text_view"
