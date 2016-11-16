@@ -96,6 +96,7 @@
         android:layout_marginRight="@dimen/edge_margin"
         android:background="@color/colorAccent"
         android:clickable="true"
+        android:src="@drawable/plus"
         android:contentDescription="@string/a11y_attend_event"
         app:layout_anchor="@id/event_header_view"
         app:layout_anchorGravity="bottom|right|end" />
