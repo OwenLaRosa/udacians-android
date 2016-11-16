@@ -2,11 +2,14 @@ package com.owenlarosa.udacians;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -72,6 +75,13 @@ public class NavigationDrawerAdapter extends BaseAdapter {
             } else {
                 holder = (ProfileViewHolder) cell.getTag();
             }
+            holder.editProfileButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, EditProfileActivity.class);
+                    mContext.startActivity(intent);
+                }
+            });
         } else {
             // subsequent views contain standard drawer tabs
             ItemViewHolder holder = null;
@@ -110,6 +120,8 @@ public class NavigationDrawerAdapter extends BaseAdapter {
 
     // view for topmost item, shows profile info
     static class ProfileViewHolder {
+        @BindView(R.id.drawer_edit_profile_button)
+        Button editProfileButton;
         @BindView(R.id.drawer_profile_image_view)
         ImageView profileImageView;
         @BindView(R.id.drawer_profile_name_text_view)
