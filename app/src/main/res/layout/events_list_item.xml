@@ -8,7 +8,8 @@
     android:paddingRight="@dimen/edge_margin"
     android:paddingEnd="@dimen/edge_margin"
     android:paddingTop="@dimen/vertical_edge_margin"
-    android:paddingBottom="@dimen/vertical_edge_margin">
+    android:paddingBottom="@dimen/vertical_edge_margin"
+    android:descendantFocusability="blocksDescendants">
 
     <TextView
         android:id="@+id/event_name_text_view"
