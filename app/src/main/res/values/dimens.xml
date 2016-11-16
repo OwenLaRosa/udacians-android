@@ -34,6 +34,7 @@
 
     <!-- used on chats list screen -->
     <dimen name="chats_image_size">48dp</dimen>
+    <dimen name="leave_chat_size">24dp</dimen>
 
     <!-- used on main activity -->
     <dimen name="drawer_width">240dp</dimen>

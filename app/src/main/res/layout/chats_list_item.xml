@@ -10,7 +10,7 @@
     android:paddingBottom="@dimen/vertical_edge_margin"
     android:descendantFocusability="blocksDescendants">
 
-<ImageView
+    <ImageView
         android:id="@+id/chat_photo_image_view"
         android:layout_width="@dimen/chats_image_size"
         android:layout_height="@dimen/chats_image_size"
@@ -45,9 +45,11 @@
 
     <ImageButton
         android:id="@+id/leave_chat_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="@dimen/leave_chat_size"
+        android:layout_height="@dimen/leave_chat_size"
         android:scaleType="centerCrop"
+        android:background="@drawable/leave"
+        android:layout_gravity="center_vertical"
         android:contentDescription="@string/a11y_leave_chat"/>
 
 </LinearLayout>
