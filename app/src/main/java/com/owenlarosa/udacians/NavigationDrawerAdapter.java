@@ -19,6 +19,9 @@ import butterknife.ButterKnife;
 
 public class NavigationDrawerAdapter extends BaseAdapter {
 
+    private static final int VIEW_TYPE_PROFILE = 0;
+    private static final int VIEW_TYPE_ITEM = 1;
+
     // titles of each nav item that comes after profile view
     private String[] navItems;
     private TypedArray navIcons;
@@ -49,10 +52,17 @@ public class NavigationDrawerAdapter extends BaseAdapter {
     }
 
     @Override
+    public int getViewTypeCount() {
+        // profile view and standard item view
+        return 2;
+    }
+
+    @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         View cell = view;
+        int viewType = getItemViewType(i);
         // the first view shows basic profile information
-        if (i == 0) {
+        if (viewType == 0) {
             ProfileViewHolder holder = null;
             if (cell == null) {
                 LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
@@ -79,6 +89,11 @@ public class NavigationDrawerAdapter extends BaseAdapter {
             holder.iconImageView.setImageDrawable(navIcons.getDrawable(i - 1));
         }
         return cell;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position == 0 ? VIEW_TYPE_PROFILE : VIEW_TYPE_ITEM;
     }
 
     // view for standard navigation tabs
