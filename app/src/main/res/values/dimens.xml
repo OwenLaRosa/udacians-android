@@ -34,39 +34,15 @@
 
     <!-- used on connections screen -->
     <dimen name="connections_image_size">48dp</dimen>
-    <dimen name="connections_horizontal_margin">24dp</dimen>
-    <dimen name="connections_horizontal_margin_small">8dp</dimen>
-    <dimen name="connections_vertical_margin">4dp</dimen>
 
     <!-- used on chats list screen -->
     <dimen name="chats_image_size">48dp</dimen>
-    <dimen name="chats_horizontal_margin">24dp</dimen>
-    <dimen name="chats_horizontal_margin_small">8dp</dimen>
-    <dimen name="chats_vertical_margin">4dp</dimen>
-
-    <!-- used on blogs list screen -->
-    <dimen name="blogs_horizontal_margin">24dp</dimen>
-    <dimen name="blogs_horizontal_margin_small">8dp</dimen>
-    <dimen name="blogs_vertical_margin">4dp</dimen>
-
-    <!-- used on events list screen -->
-    <dimen name="events_horizontal_margin">24dp</dimen>
-    <dimen name="events_horizontal_margin_small">8dp</dimen>
-    <dimen name="events_vertical_margin">4dp</dimen>
-
-    <dimen name="jobs_horizontal_margin">24dp</dimen>
-    <dimen name="jobs_horizontal_margin_small">8dp</dimen>
-    <dimen name="jobs_vertical_margin">4dp</dimen>
     
     <!-- used on main activity -->
     <dimen name="drawer_width">240dp</dimen>
-    <dimen name="fab_margin">24dp</dimen>
     <dimen name="drawer_icon_size">32dp</dimen>
-    <dimen name="drawer_horizontal_margin">8dp</dimen>
     <dimen name="drawer_vertical_margin">8dp</dimen>
     <dimen name="drawer_profile_icon_size">96dp</dimen>
-    <dimen name="left_keyline">24dp</dimen>
-    <dimen name="right_keyline">24dp</dimen>
 
     <!-- dimensions used on all layouts -->
     <dimen name="edge_margin">16dp</dimen>
