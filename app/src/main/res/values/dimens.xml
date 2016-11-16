@@ -10,9 +10,8 @@
     <dimen name="login_view_padding">8dp</dimen>
 
     <!-- used on profile screen -->
-    <dimen name="profile_margin_small">8dp</dimen>
-    <dimen name="profile_fab_right_margin">24dp</dimen>
-    <dimen name="profile_left_margin">24dp</dimen>
+    <dimen name="profile_image_size">72dp</dimen>
+    <dimen name="profile_links_height">48dp</dimen>
 
     <!-- used on chat view -->
     <dimen name="chat_view_inter_item_margin">8dp</dimen>
@@ -25,19 +24,16 @@
 
     <!-- used on event screen -->
 
-    <dimen name="event_margin_small">8dp</dimen>
     <dimen name="event_margin_medium">16dp</dimen>
     <dimen name="event_margin_large">32dp</dimen>
     <dimen name="event_margin_xlarge">48dp</dimen>
-    <dimen name="event_fab_right_margin">24dp</dimen>
-    <dimen name="event_left_margin">24dp</dimen>
 
     <!-- used on connections screen -->
     <dimen name="connections_image_size">48dp</dimen>
 
     <!-- used on chats list screen -->
     <dimen name="chats_image_size">48dp</dimen>
-    
+
     <!-- used on main activity -->
     <dimen name="drawer_width">240dp</dimen>
     <dimen name="drawer_icon_size">32dp</dimen>
@@ -49,5 +45,5 @@
     <dimen name="horizontal_inter_item_space">8dp</dimen>
     <dimen name="vertical_inter_item_space">4dp</dimen>
     <dimen name="vertical_edge_margin">8dp</dimen>
-    
+
 </resources>

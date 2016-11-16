@@ -8,8 +8,8 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:background="@color/colorAccent"
-        android:layout_marginRight="@dimen/profile_margin_small"
-        android:layout_marginEnd="@dimen/profile_margin_small"
+        android:layout_marginRight="@dimen/horizontal_inter_item_space"
+        android:layout_marginEnd="@dimen/horizontal_inter_item_space"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
