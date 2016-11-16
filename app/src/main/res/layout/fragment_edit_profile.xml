@@ -17,7 +17,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Profile Picture"
+            android:text="@string/profile_picture"
             android:layout_columnSpan="2"
             android:layout_marginTop="@dimen/vertical_edge_margin"
             android:layout_marginBottom="@dimen/vertical_edge_margin"/>
@@ -34,7 +34,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="First Name"
+            android:text="@string/first_name"
             android:layout_columnSpan="2"
             android:layout_marginBottom="@dimen/vertical_edge_margin"/>
 
@@ -51,7 +51,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Last Name"
+            android:text="@string/last_name"
             android:layout_columnSpan="2"
             android:layout_marginBottom="@dimen/vertical_edge_margin"/>
 
@@ -68,7 +68,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Title"
+            android:text="@string/job_title"
             android:layout_columnSpan="2"
             android:layout_marginBottom="@dimen/vertical_edge_margin"/>
 
@@ -85,7 +85,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="About"
+            android:text="@string/about"
             android:layout_columnSpan="2"
             android:layout_marginBottom="@dimen/vertical_edge_margin"/>
 
@@ -103,7 +103,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Personal Website"
+            android:text="@string/personal_website"
             android:layout_columnSpan="2"
             android:layout_marginTop="@dimen/vertical_edge_margin"
             android:layout_marginBottom="@dimen/vertical_edge_margin"/>
@@ -132,7 +132,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Blog"
+            android:text="@string/personal_blog"
             android:layout_columnSpan="2"
             android:layout_marginTop="@dimen/vertical_edge_margin"
             android:layout_marginBottom="@dimen/vertical_edge_margin"/>
@@ -161,7 +161,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="LinkedIn"
+            android:text="@string/linkedin"
             android:layout_columnSpan="2"
             android:layout_marginTop="@dimen/vertical_edge_margin"
             android:layout_marginBottom="@dimen/vertical_edge_margin"/>
@@ -190,7 +190,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Twitter"
+            android:text="@string/twitter"
             android:layout_columnSpan="2"
             android:layout_marginTop="@dimen/vertical_edge_margin"
             android:layout_marginBottom="@dimen/vertical_edge_margin"/>
@@ -220,7 +220,7 @@
             android:id="@+id/edit_reset_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Discard Changes"
+            android:text="@string/discard_changes"
             android:textColor="@color/white"
             android:background="@color/colorPrimary"
             android:padding="@dimen/vertical_edge_margin"

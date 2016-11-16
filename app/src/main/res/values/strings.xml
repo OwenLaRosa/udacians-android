@@ -30,6 +30,19 @@
     <string name="nav_jobs">Jobs</string>
     <string name="nav_settings">Settings</string>
     <string name="nav_help">Help</string>
+    
+    <!-- edit profile screen -->
+    <string name="profile_picture">Profile Picture</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="job_title">Title</string>
+    <!-- uses same "about" string as on user profile -->
+    <string name="personal_website">Personal Website</string>
+    <string name="personal_blog">Blog</string>
+    <string name="linkedin" translatable="false">LinkedIn</string>
+    <string name="twitter" translatable="false">Twitter</string>
+    <!-- Reset save changes made on edit profile screen -->
+    <string name="discard_changes">Discard Changes</string>
 
     <!-- content descriptions -->
     <string name="a11y_udacians_logo">Udacians</string>
