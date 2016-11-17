@@ -10,6 +10,8 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
+import com.google.android.gms.maps.MapFragment;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                     Fragment fragment = new Fragment();
                     switch (i) {
                         case 1:
-                            // show map fragment
+                            fragment = new MainMapFragment();
                             break;
                         case 2:
                             fragment = new BlogsFragment();
