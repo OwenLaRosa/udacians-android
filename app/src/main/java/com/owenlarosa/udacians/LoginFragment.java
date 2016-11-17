@@ -1,8 +1,10 @@
 package com.owenlarosa.udacians;
 
 import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -42,6 +44,7 @@ public class LoginFragment extends Fragment {
     EditText emailEditText;
     @BindView(R.id.login_password_edit_text)
     EditText passwordEditText;
+    String authToken = "";
 
     private Unbinder mUnbinder;
 
@@ -61,6 +64,11 @@ public class LoginFragment extends Fragment {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
+                    // store the auth token to speed up future logins
+                    SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
+                    editor.putString(getString(R.string.pref_auth_token), authToken);
+                    editor.apply();
+                    getActivity().finish();
                     // login was successful
                     Log.d(LOG_TAG, "firebase authentication succeeded" + user.getUid());
                 } else {
@@ -69,6 +77,7 @@ public class LoginFragment extends Fragment {
                 }
             }
         };
+        FirebaseAuth.getInstance().addAuthStateListener(mAuthStateListener);
 
         return rootView;
     }
@@ -110,7 +119,7 @@ public class LoginFragment extends Fragment {
                         .build();
                 // localhost IP address recognized by Genymotion emulator
                 Request request = new Request.Builder()
-                        .url("http://10.0.3.2:8080/_ah/api/myApi/v1/session")
+                        .url("http://10.0.0.5:8080/_ah/api/myApi/v1/session")
                         .post(formBody)
                         .build();
                 String loginResult = "";
@@ -140,7 +149,10 @@ public class LoginFragment extends Fragment {
             if (s != null) {
                 // received the token, proceed to authenticate with Firebase
                 Log.d(LOG_TAG, "logging in with firebase");
-                FirebaseAuth.getInstance().signInWithCustomToken(s);
+                Log.d(LOG_TAG, "this is the token");
+                authToken = s;
+                Log.d(LOG_TAG, authToken);
+                FirebaseAuth.getInstance().signInWithCustomToken(authToken);
             } else {
                 Log.d(LOG_TAG, "token is null");
             }
