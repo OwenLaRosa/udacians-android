@@ -30,7 +30,7 @@
     <string name="nav_jobs">Jobs</string>
     <string name="nav_settings">Settings</string>
     <string name="nav_help">Help</string>
-    
+
     <!-- edit profile screen -->
     <string name="profile_picture">Profile Picture</string>
     <string name="first_name">First Name</string>
@@ -51,5 +51,8 @@
     <string name="a11y_attend_event">Attend event</string>
     <string name="a11y_message">Open messages</string>
     <string name="a11y_leave_chat">Leave chat</string>
+
+    <!-- strings used by shared preferences -->
+    <string name="pref_auth_token">token</string>
 
 </resources>
