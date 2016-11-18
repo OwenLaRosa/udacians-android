@@ -3,8 +3,10 @@ package com.owenlarosa.udacians;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +51,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
     private ChildEventListener mArticlesEventListener;
 
     private HashMap<Marker, PinData> pinMappings = new HashMap<Marker, PinData>();
+    private HashMap<Marker, String> articleUrls = new HashMap<Marker, String>();
 
     @Nullable
     @Override
@@ -169,12 +172,16 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
         PinData data = new PinData(type, dataSnapshot.getKey());
         // location to be displayed on the map
         MarkerOptions pin = new MarkerOptions();
+        Marker marker;
         switch (type) {
             case Person:
                 Location location = dataSnapshot.getValue(Location.class);
                 pin.position(new LatLng(location.getLatitude(), location.getLongitude()));
                 pin.title(location.getName());
                 pin.snippet(location.getLocation());
+                // add the marker and store it for handling click events later
+                marker = mGoogleMap.addMarker(pin);
+                pinMappings.put(marker, data);
                 break;
             case Event:
                 break;
@@ -186,13 +193,14 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
                 pin.title(article.getTitle());
                 pin.snippet(article.getAuthor());
                 pin.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                marker = mGoogleMap.addMarker(pin);
+                pinMappings.put(marker, data);
+                // save url so it can be referenced later
+                articleUrls.put(marker, article.getUrl());
                 break;
             case Job:
                 break;
         }
-        // add the marker and store it for handling click events later
-        Marker marker = mGoogleMap.addMarker(pin);
-        pinMappings.put(marker, data);
     }
 
     @Override
@@ -213,6 +221,14 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
             case Topic:
                 intent = new Intent(getActivity(), ChatActivity.class);
                 startActivity(intent);
+                break;
+            case Article:
+                // open the article in the browser
+                String url = articleUrls.get(marker);
+                Uri articleUri = Uri.parse(url);
+                intent = new Intent(Intent.ACTION_VIEW, articleUri);
+                startActivity(intent);
+                break;
             default:
                 break;
         }
