@@ -2,11 +2,9 @@ package com.owenlarosa.udacians;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.owenlarosa.udacians.data.Article;
+import com.owenlarosa.udacians.data.EventLocation;
 import com.owenlarosa.udacians.data.Location;
 
 import java.util.HashMap;
@@ -82,7 +81,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
     private void syncData() {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mLocationsReference = mFirebaseDatabase.getReference().child("locations");
-        mEventsReference = mFirebaseDatabase.getReference().child("events");
+        mEventsReference = mFirebaseDatabase.getReference().child("event_locations");
         mTopicsReference = mFirebaseDatabase.getReference().child("topics");
         mArticlesReference = mFirebaseDatabase.getReference().child("articles");
 
@@ -184,6 +183,13 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
                 pinMappings.put(marker, data);
                 break;
             case Event:
+                EventLocation eventLocation = dataSnapshot.getValue(EventLocation.class);
+                pin.position(new LatLng(eventLocation.getLatitude(), eventLocation.getLongitude()));
+                pin.title(eventLocation.getTitle());
+                pin.snippet(eventLocation.getName());
+                pin.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                marker = mGoogleMap.addMarker(pin);
+                pinMappings.put(marker, data);
                 break;
             case Topic:
                 break;
