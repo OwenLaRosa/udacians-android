@@ -20,14 +20,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.owenlarosa.udacians.data.Location;
+import com.owenlarosa.udacians.locations.PersonLocation;
 
 import java.util.HashMap;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-
-import static android.R.attr.type;
 
 /**
  * Created by Owen LaRosa on 11/17/16.
@@ -81,11 +79,11 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
                 // store the type of data and the destination node
                 PinData data = new PinData(PinType.Person, dataSnapshot.getKey());
                 // create a location to be displayed on the map
-                Location location = dataSnapshot.getValue(Location.class);
+                PersonLocation location = dataSnapshot.getValue(PersonLocation.class);
                 MarkerOptions pin = new MarkerOptions();
                 pin.position(new LatLng(location.getLatitude(), location.getLongitude()));
                 pin.title(location.getName());
-                pin.snippet(location.getName());
+                pin.snippet(location.getLocation());
                 // add the marker and store it for handling click events later
                 Marker marker = mGoogleMap.addMarker(pin);
                 pinMappings.put(marker, data);
