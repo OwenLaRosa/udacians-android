@@ -20,12 +20,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.owenlarosa.udacians.locations.PersonLocation;
+import com.owenlarosa.udacians.data.Location;
 
 import java.util.HashMap;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
+import static android.R.attr.type;
 
 /**
  * Created by Owen LaRosa on 11/17/16.
@@ -38,7 +40,13 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mLocationsReference;
+    private DatabaseReference mEventsReference;
+    private DatabaseReference mTopicsReference;
+    private DatabaseReference mArticlesReference;
     private ChildEventListener mLocationsEventListener;
+    private ChildEventListener mEventsEventListener;
+    private ChildEventListener mTopicsEventListener;
+    private ChildEventListener mArticlesEventListener;
 
     private HashMap<Marker, PinData> pinMappings = new HashMap<Marker, PinData>();
 
@@ -71,22 +79,14 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
     private void syncData() {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mLocationsReference = mFirebaseDatabase.getReference().child("locations");
+        mEventsReference = mFirebaseDatabase.getReference().child("events");
+        mTopicsReference = mFirebaseDatabase.getReference().child("topics");
+        mArticlesReference = mFirebaseDatabase.getReference().child("articles");
 
         mLocationsEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.d("", dataSnapshot.getKey());
-                // store the type of data and the destination node
-                PinData data = new PinData(PinType.Person, dataSnapshot.getKey());
-                // create a location to be displayed on the map
-                PersonLocation location = dataSnapshot.getValue(PersonLocation.class);
-                MarkerOptions pin = new MarkerOptions();
-                pin.position(new LatLng(location.getLatitude(), location.getLongitude()));
-                pin.title(location.getName());
-                pin.snippet(location.getLocation());
-                // add the marker and store it for handling click events later
-                Marker marker = mGoogleMap.addMarker(pin);
-                pinMappings.put(marker, data);
+                addPin(dataSnapshot, PinType.Person);
             }
 
             @Override
@@ -102,6 +102,80 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
             public void onCancelled(DatabaseError databaseError) {}
         };
         mLocationsReference.limitToLast(100).addChildEventListener(mLocationsEventListener);
+
+        mEventsEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                addPin(dataSnapshot, PinType.Event);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        };
+        mEventsReference.limitToLast(20).addChildEventListener(mEventsEventListener);
+
+        mTopicsEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                addPin(dataSnapshot, PinType.Topic);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        };
+        mTopicsReference.limitToLast(20).addChildEventListener(mTopicsEventListener);
+
+        mArticlesEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                addPin(dataSnapshot, PinType.Article);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        };
+        mArticlesReference.limitToLast(20).addChildEventListener(mArticlesEventListener);
+    }
+
+    private void addPin(DataSnapshot dataSnapshot, PinType type) {
+        // store the type of data and the destination node
+        PinData data = new PinData(PinType.Person, dataSnapshot.getKey());
+        // create a location to be displayed on the map
+        Location location = dataSnapshot.getValue(Location.class);
+        MarkerOptions pin = new MarkerOptions();
+        pin.position(new LatLng(location.getLatitude(), location.getLongitude()));
+        pin.title(location.getName());
+        pin.snippet(location.getLocation());
+        // add the marker and store it for handling click events later
+        Marker marker = mGoogleMap.addMarker(pin);
+        pinMappings.put(marker, data);
     }
 
     @Override

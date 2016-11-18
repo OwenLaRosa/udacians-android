@@ -1,19 +1,19 @@
-package com.owenlarosa.udacians.locations;
+package com.owenlarosa.udacians.data;
 
 /**
  * Created by Owen LaRosa on 11/18/16.
  */
 
-public class PersonLocation {
+public class Location {
 
     private String name;
     private String location;
     private double longitude;
     private double latitude;
 
-    public PersonLocation() {}
+    public Location() {}
 
-    public PersonLocation(String name, String location, double longitude, double latitude) {
+    public Location(String name, String location, double longitude, double latitude) {
         this.name = name;
         this.location = location;
         this.longitude = longitude;
