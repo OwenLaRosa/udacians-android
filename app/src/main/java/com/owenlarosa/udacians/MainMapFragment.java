@@ -22,8 +22,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.owenlarosa.udacians.data.Location;
 
+import java.util.HashMap;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
+import static android.R.attr.type;
 
 /**
  * Created by Owen LaRosa on 11/17/16.
@@ -37,6 +41,8 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mLocationsReference;
     private ChildEventListener mLocationsEventListener;
+
+    private HashMap<Marker, PinData> pinMappings = new HashMap<Marker, PinData>();
 
     @Nullable
     @Override
@@ -72,12 +78,17 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Log.d("", dataSnapshot.getKey());
+                // store the type of data and the destination node
+                PinData data = new PinData(PinType.Person, dataSnapshot.getKey());
+                // create a location to be displayed on the map
                 Location location = dataSnapshot.getValue(Location.class);
                 MarkerOptions pin = new MarkerOptions();
                 pin.position(new LatLng(location.getLatitude(), location.getLongitude()));
                 pin.title(location.getName());
                 pin.snippet(location.getName());
-                mGoogleMap.addMarker(pin);
+                // add the marker and store it for handling click events later
+                Marker marker = mGoogleMap.addMarker(pin);
+                pinMappings.put(marker, data);
             }
 
             @Override
@@ -97,7 +108,50 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Intent intent = new Intent(getActivity(), ProfileActivity.class);
-        startActivity(intent);
+        // get data associated with the marker
+        PinData data = pinMappings.get(marker);
+        // perform appropriate intent based on the type of data
+        Intent intent;
+        switch (data.type) {
+            case Person:
+                intent = new Intent(getActivity(), ProfileActivity.class);
+                startActivity(intent);
+                break;
+            case Event:
+                intent = new Intent(getActivity(), EventActivity.class);
+                startActivity(intent);
+                break;
+            case Topic:
+                intent = new Intent(getActivity(), ChatActivity.class);
+                startActivity(intent);
+            default:
+                break;
+        }
     }
+
+    // Classifications of different types of data marked by pins
+    enum PinType {
+        Person,
+        Event,
+        Topic,
+        Job,
+        Article
+    }
+
+    /**
+     * Information regarding the type of pin and its data's location in the DB
+     */
+    class PinData {
+
+        // type of data represented by the pin
+        public PinType type;
+        // node in which the corresponding data is stored in Firebase
+        public String key;
+
+        public PinData(PinType type, String key) {
+            this.type = type;
+            this.key = key;
+        }
+    }
+
 }
