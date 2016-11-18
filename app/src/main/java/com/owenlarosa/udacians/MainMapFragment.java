@@ -1,6 +1,7 @@
 package com.owenlarosa.udacians;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -12,6 +13,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +29,7 @@ import butterknife.Unbinder;
  * Created by Owen LaRosa on 11/17/16.
  */
 
-public class MainMapFragment extends Fragment {
+public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowClickListener {
 
     private Unbinder mUnbinder;
     private GoogleMap mGoogleMap;
@@ -47,15 +49,22 @@ public class MainMapFragment extends Fragment {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mGoogleMap = googleMap;
-                mGoogleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                syncData();
+                setupMap();
             }
         });
         return rootView;
     }
 
-    private void syncData() {
+    /**
+     * Configure properties of the map, set click listeners, load initial data
+     */
+    private void setupMap() {
+        mGoogleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mGoogleMap.setOnInfoWindowClickListener(this);
+        syncData();
+    }
 
+    private void syncData() {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mLocationsReference = mFirebaseDatabase.getReference().child("locations");
 
@@ -86,5 +95,9 @@ public class MainMapFragment extends Fragment {
         mLocationsReference.limitToLast(100).addChildEventListener(mLocationsEventListener);
     }
 
-
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Intent intent = new Intent(getActivity(), ProfileActivity.class);
+        startActivity(intent);
+    }
 }
