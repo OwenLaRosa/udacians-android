@@ -24,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.owenlarosa.udacians.data.Article;
 import com.owenlarosa.udacians.data.EventLocation;
 import com.owenlarosa.udacians.data.Location;
+import com.owenlarosa.udacians.data.TopicLocation;
 
 import java.util.HashMap;
 
@@ -82,7 +83,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mLocationsReference = mFirebaseDatabase.getReference().child("locations");
         mEventsReference = mFirebaseDatabase.getReference().child("event_locations");
-        mTopicsReference = mFirebaseDatabase.getReference().child("topics");
+        mTopicsReference = mFirebaseDatabase.getReference().child("topic_locations");
         mArticlesReference = mFirebaseDatabase.getReference().child("articles");
 
         mLocationsEventListener = new ChildEventListener() {
@@ -192,6 +193,13 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
                 pinMappings.put(marker, data);
                 break;
             case Topic:
+                TopicLocation topicLocation = dataSnapshot.getValue(TopicLocation.class);
+                pin.position(new LatLng(topicLocation.getLatitude(), topicLocation.getLongitude()));
+                pin.title(topicLocation.getName());
+                pin.snippet(topicLocation.getAuthor());
+                pin.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                marker = mGoogleMap.addMarker(pin);
+                pinMappings.put(marker, data);
                 break;
             case Article:
                 Article article = dataSnapshot.getValue(Article.class);
