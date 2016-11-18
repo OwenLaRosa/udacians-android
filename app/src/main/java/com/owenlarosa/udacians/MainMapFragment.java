@@ -3,6 +3,7 @@ package com.owenlarosa.udacians;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +11,15 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.owenlarosa.udacians.data.Location;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -23,6 +30,11 @@ import butterknife.Unbinder;
 public class MainMapFragment extends Fragment {
 
     private Unbinder mUnbinder;
+    private GoogleMap mGoogleMap;
+
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mLocationsReference;
+    private ChildEventListener mLocationsEventListener;
 
     @Nullable
     @Override
@@ -34,11 +46,44 @@ public class MainMapFragment extends Fragment {
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-                googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                mGoogleMap = googleMap;
+                mGoogleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                syncData();
             }
         });
-
         return rootView;
+    }
+
+    private void syncData() {
+
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mLocationsReference = mFirebaseDatabase.getReference().child("locations");
+
+        mLocationsEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d("", dataSnapshot.getKey());
+                Location location = dataSnapshot.getValue(Location.class);
+                MarkerOptions pin = new MarkerOptions();
+                pin.position(new LatLng(location.getLatitude(), location.getLongitude()));
+                pin.title(location.getName());
+                pin.snippet(location.getName());
+                mGoogleMap.addMarker(pin);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        };
+        mLocationsReference.limitToLast(100).addChildEventListener(mLocationsEventListener);
     }
 
 
