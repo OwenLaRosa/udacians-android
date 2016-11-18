@@ -2,9 +2,9 @@ package com.owenlarosa.udacians;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -20,14 +21,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.owenlarosa.udacians.data.Article;
 import com.owenlarosa.udacians.data.Location;
 
 import java.util.HashMap;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-
-import static android.R.attr.type;
 
 /**
  * Created by Owen LaRosa on 11/17/16.
@@ -166,13 +166,30 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
 
     private void addPin(DataSnapshot dataSnapshot, PinType type) {
         // store the type of data and the destination node
-        PinData data = new PinData(PinType.Person, dataSnapshot.getKey());
-        // create a location to be displayed on the map
-        Location location = dataSnapshot.getValue(Location.class);
+        PinData data = new PinData(type, dataSnapshot.getKey());
+        // location to be displayed on the map
         MarkerOptions pin = new MarkerOptions();
-        pin.position(new LatLng(location.getLatitude(), location.getLongitude()));
-        pin.title(location.getName());
-        pin.snippet(location.getLocation());
+        switch (type) {
+            case Person:
+                Location location = dataSnapshot.getValue(Location.class);
+                pin.position(new LatLng(location.getLatitude(), location.getLongitude()));
+                pin.title(location.getName());
+                pin.snippet(location.getLocation());
+                break;
+            case Event:
+                break;
+            case Topic:
+                break;
+            case Article:
+                Article article = dataSnapshot.getValue(Article.class);
+                pin.position(new LatLng(article.getLatitude(), article.getLongitude()));
+                pin.title(article.getTitle());
+                pin.snippet(article.getAuthor());
+                pin.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                break;
+            case Job:
+                break;
+        }
         // add the marker and store it for handling click events later
         Marker marker = mGoogleMap.addMarker(pin);
         pinMappings.put(marker, data);
