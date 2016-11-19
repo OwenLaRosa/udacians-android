@@ -41,7 +41,6 @@
                 android:layout_toEndOf="@id/profile_image_view"
                 android:layout_toRightOf="@id/profile_image_view"
                 android:maxLines="1"
-                android:text="Code Reviewer at Udacity"
                 android:textColor="@color/white" />
 
             <TextView
@@ -54,7 +53,6 @@
                 android:layout_toEndOf="@id/profile_image_view"
                 android:layout_toRightOf="@id/profile_image_view"
                 android:maxLines="1"
-                android:text="Owen LaRosa"
                 android:textColor="@color/white" />
 
         </RelativeLayout>
@@ -88,8 +86,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/TextAppearance.AppCompat.Medium"
-                    android:layout_marginBottom="@dimen/vertical_inter_item_space"
-                    android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." />
+                    android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
 
                 <LinearLayout
                     android:id="@+id/profile_links_linear_layout"

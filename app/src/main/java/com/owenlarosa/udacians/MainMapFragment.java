@@ -226,6 +226,8 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
         switch (data.type) {
             case Person:
                 intent = new Intent(getActivity(), ProfileActivity.class);
+                // pass the user id to the profile screen
+                intent.putExtra(ProfileFragment.EXTRA_USERID, data.key);
                 startActivity(intent);
                 break;
             case Event:
