@@ -16,6 +16,7 @@ import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         unbinder = ButterKnife.bind(this);
+
+        // use offline capabilities as cache
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         attemptLogin();
 
