@@ -21,6 +21,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udacians.data.Article;
 import com.owenlarosa.udacians.data.EventLocation;
 import com.owenlarosa.udacians.data.Location;
@@ -35,7 +36,7 @@ import butterknife.Unbinder;
  * Created by Owen LaRosa on 11/17/16.
  */
 
-public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowClickListener {
+public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener {
 
     private Unbinder mUnbinder;
     private GoogleMap mGoogleMap;
@@ -76,6 +77,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
     private void setupMap() {
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mGoogleMap.setOnInfoWindowClickListener(this);
+        mGoogleMap.setOnMarkerClickListener(this);
         syncData();
     }
 
@@ -177,8 +179,6 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
             case Person:
                 Location location = dataSnapshot.getValue(Location.class);
                 pin.position(new LatLng(location.getLatitude(), location.getLongitude()));
-                pin.title(location.getName());
-                pin.snippet(location.getLocation());
                 // add the marker and store it for handling click events later
                 marker = mGoogleMap.addMarker(pin);
                 pinMappings.put(marker, data);
@@ -248,6 +248,52 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
             default:
                 break;
         }
+    }
+
+    // when pin is tapped, populate its popup window with relevant data
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        PinData data = pinMappings.get(marker);
+        switch (data.type) {
+            case Person:
+                loadPersonData(marker, data.key);
+                break;
+            default:
+                break;
+        }
+        // no custom action, popup window will be displayed
+        return false;
+    }
+
+    private void loadPersonData(final Marker marker, String userId) {
+        // reference to basic profile info
+        DatabaseReference userReference = mFirebaseDatabase.getReference().child("users").child(userId).child("basic");
+        // user's display name
+        DatabaseReference nameReference = userReference.child("name");
+        // user's title
+        DatabaseReference titleReference = userReference.child("title");
+        nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                marker.setTitle(dataSnapshot.getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        titleReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                marker.setSnippet(dataSnapshot.getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     // Classifications of different types of data marked by pins
