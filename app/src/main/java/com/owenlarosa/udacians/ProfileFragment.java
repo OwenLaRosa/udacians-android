@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,12 +20,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udacians.data.BasicProfile;
 import com.owenlarosa.udacians.views.WritePostView;
 
+import java.net.URL;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-
-import static android.R.attr.name;
 
 /**
  * Created by Owen LaRosa on 11/7/16.
@@ -84,6 +83,9 @@ public class ProfileFragment extends Fragment {
                 nameTextView.setText(profile.getName());
                 titleTextView.setText(profile.getTitle());
                 aboutTextView.setText(profile.getAbout());
+                Glide.with(getActivity())
+                        .load(profile.getPhoto())
+                        .into(profilePictureImageView);
             }
 
             @Override
