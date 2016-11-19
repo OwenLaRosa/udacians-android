@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.api.client.util.Data;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,9 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udacians.data.Article;
-import com.owenlarosa.udacians.data.EventLocation;
 import com.owenlarosa.udacians.data.Location;
-import com.owenlarosa.udacians.data.TopicLocation;
 
 import java.util.HashMap;
 
@@ -184,19 +183,15 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
                 pinMappings.put(marker, data);
                 break;
             case Event:
-                EventLocation eventLocation = dataSnapshot.getValue(EventLocation.class);
+                Location eventLocation = dataSnapshot.getValue(Location.class);
                 pin.position(new LatLng(eventLocation.getLatitude(), eventLocation.getLongitude()));
-                pin.title(eventLocation.getTitle());
-                pin.snippet(eventLocation.getName());
                 pin.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                 marker = mGoogleMap.addMarker(pin);
                 pinMappings.put(marker, data);
                 break;
             case Topic:
-                TopicLocation topicLocation = dataSnapshot.getValue(TopicLocation.class);
+                Location topicLocation = dataSnapshot.getValue(Location.class);
                 pin.position(new LatLng(topicLocation.getLatitude(), topicLocation.getLongitude()));
-                pin.title(topicLocation.getName());
-                pin.snippet(topicLocation.getAuthor());
                 pin.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
                 marker = mGoogleMap.addMarker(pin);
                 pinMappings.put(marker, data);
@@ -258,12 +253,22 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
             case Person:
                 loadPersonData(marker, data.key);
                 break;
+            case Event:
+                loadEventData(marker, data.key);
+                break;
+            case Topic:
+                loadTopicData(marker, data.key);
+                break;
+            case Article:
+                loadArticleData(marker, data.key);
             default:
                 break;
         }
         // no custom action, popup window will be displayed
         return false;
     }
+
+    // methods for loading data to be displayed on a marker's info window
 
     private void loadPersonData(final Marker marker, String userId) {
         // reference to basic profile info
@@ -272,21 +277,61 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
         DatabaseReference nameReference = userReference.child("name");
         // user's title
         DatabaseReference titleReference = userReference.child("title");
-        nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                marker.setTitle(dataSnapshot.getValue(String.class));
-            }
+        setMarkerString(marker, nameReference, true);
+        setMarkerString(marker, titleReference, false);
+    }
+
+    private void loadEventData(Marker marker, String userId) {
+        DatabaseReference eventReference = mFirebaseDatabase.getReference().child("events").child(userId);
+        // title of the event
+        DatabaseReference nameReference = eventReference.child("name");
+        // full address of the event
+        DatabaseReference placeReference = eventReference.child("place");
+        setMarkerString(marker, nameReference, true);
+        setMarkerString(marker, placeReference, false);
+    }
+
+    private void loadTopicData(Marker marker, String userId) {
+        // name of the topic
+        DatabaseReference topicNameReference = mFirebaseDatabase.getReference().child("topics").child(userId).child("name");
+        // author of the topic
+        DatabaseReference authorNameReference = mFirebaseDatabase.getReference().child("users").child(userId).child("basic").child("name");
+        setMarkerString(marker, topicNameReference, true);
+        setMarkerString(marker, authorNameReference, false);
+    }
+
+    private void loadArticleData(Marker marker, String userId) {
+        // title of the article
+        DatabaseReference articleTitleReference = mFirebaseDatabase.getReference().child("articles").child(userId).child("title");
+        // poster of the article
+        DatabaseReference authorNameReference = mFirebaseDatabase.getReference().child("users").child(userId).child("basic").child("name");
+        setMarkerString(marker, articleTitleReference, true);
+        setMarkerString(marker, authorNameReference, false);
+    }
+
+    /**
+     * Download title or snippet for the marker
+     * Show the info window once both title and snippet are present
+     * @param marker A pin of any type
+     * @param reference reference to the string to be loaded into info window
+     * @param isTitle true to set title, false to set snippet
+     */
+    private void setMarkerString(final Marker marker, DatabaseReference reference, final boolean isTitle) {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        titleReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                marker.setSnippet(dataSnapshot.getValue(String.class));
+                String string = dataSnapshot.getValue(String.class);
+                if (isTitle) {
+                    marker.setTitle(string);
+                } else {
+                    marker.setSnippet(string);
+                }
+                if (marker.getTitle() != null && marker.getSnippet() != null) {
+                    // marker's will not be displayed automatically
+                    // when both fields have been filled, the window should be shown
+                    marker.showInfoWindow();
+                }
             }
 
             @Override

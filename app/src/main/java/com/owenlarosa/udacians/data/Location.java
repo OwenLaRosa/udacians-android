@@ -1,31 +1,23 @@
 package com.owenlarosa.udacians.data;
 
+import static android.R.attr.name;
+
 /**
  * Created by Owen LaRosa on 11/18/16.
  */
 
 public class Location {
 
-    private String name;
     private String location;
     private double longitude;
     private double latitude;
 
     public Location() {}
 
-    public Location(String name, String location, double longitude, double latitude) {
-        this.name = name;
+    public Location(String location, double longitude, double latitude) {
         this.location = location;
         this.longitude = longitude;
         this.latitude = latitude;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getLocation() {
