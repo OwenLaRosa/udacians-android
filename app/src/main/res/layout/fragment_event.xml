@@ -28,7 +28,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/event_margin_medium"
-                android:text="iOS/Android Developers Meetup"
                 android:textColor="@color/white" />
 
             <TextView
@@ -37,7 +36,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/vertical_edge_margin"
-                android:text="1369 Coffee House in Cambridge, MA"
                 android:textColor="@color/white" />
 
         </LinearLayout>
@@ -64,8 +62,7 @@
             android:layout_marginEnd="@dimen/edge_margin"
             android:layout_marginLeft="@dimen/edge_margin"
             android:layout_marginRight="@dimen/edge_margin"
-            android:layout_marginStart="@dimen/edge_margin"
-            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." />
+            android:layout_marginStart="@dimen/edge_margin" />
 
         <com.owenlarosa.udacians.views.WritePostView
             android:id="@+id/event_write_post_view"

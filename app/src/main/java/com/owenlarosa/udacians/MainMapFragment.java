@@ -227,6 +227,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
                 break;
             case Event:
                 intent = new Intent(getActivity(), EventActivity.class);
+                intent.putExtra(EventFragment.EXTRA_USERID, data.key);
                 startActivity(intent);
                 break;
             case Topic:
