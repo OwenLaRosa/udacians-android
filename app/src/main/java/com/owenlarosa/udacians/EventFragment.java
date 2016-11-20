@@ -65,7 +65,7 @@ public class EventFragment extends Fragment {
         }
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mEventReference = mFirebaseDatabase.getReference().child("events").child(mUserId);
+        mEventReference = mFirebaseDatabase.getReference().child("events").child(mUserId).child("info");
         mEventReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

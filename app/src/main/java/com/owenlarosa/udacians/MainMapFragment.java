@@ -283,7 +283,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
     }
 
     private void loadEventData(Marker marker, String userId) {
-        DatabaseReference eventReference = mFirebaseDatabase.getReference().child("events").child(userId);
+        DatabaseReference eventReference = mFirebaseDatabase.getReference().child("events").child(userId).child("info");
         // title of the event
         DatabaseReference nameReference = eventReference.child("name");
         // full address of the event
@@ -294,7 +294,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
 
     private void loadTopicData(Marker marker, String userId) {
         // name of the topic
-        DatabaseReference topicNameReference = mFirebaseDatabase.getReference().child("topics").child(userId).child("name");
+        DatabaseReference topicNameReference = mFirebaseDatabase.getReference().child("topics").child(userId).child("info").child("name");
         // author of the topic
         DatabaseReference authorNameReference = mFirebaseDatabase.getReference().child("users").child(userId).child("basic").child("name");
         setMarkerString(marker, topicNameReference, true);
