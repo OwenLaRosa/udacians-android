@@ -33,8 +33,6 @@
 
     <!-- edit profile screen -->
     <string name="profile_picture">Profile Picture</string>
-    <string name="first_name">First Name</string>
-    <string name="last_name">Last Name</string>
     <string name="job_title">Title</string>
     <!-- uses same "about" string as on user profile -->
     <string name="personal_website">Personal Website</string>
