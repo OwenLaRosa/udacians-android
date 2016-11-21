@@ -22,8 +22,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.owenlarosa.udacians.cookies.AddCookiesInterceptor;
-import com.owenlarosa.udacians.cookies.ReceivedCookiesInterceptor;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -121,8 +120,9 @@ public class LoginFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
+            CookieJar cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(getActivity()));
             mClient = new OkHttpClient.Builder()
-                    .addInterceptor(new ReceivedCookiesInterceptor(getActivity()))
+                    .cookieJar(cookieJar)
                     .build();
 
             // get the username and password that were passed in
@@ -227,8 +227,9 @@ public class LoginFragment extends Fragment {
 
         @Override
         protected Boolean doInBackground(String... strings) {
+            CookieJar cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(getActivity()));
             mClient = new OkHttpClient.Builder()
-                    .addInterceptor(new AddCookiesInterceptor(getActivity()))
+                    .cookieJar(cookieJar)
                     .build();
 
             userId = strings[0];
@@ -268,9 +269,9 @@ public class LoginFragment extends Fragment {
                 basicReference.child("name").setValue(emailEditText.getText().toString());
             }
             // store the auth token to speed up future logins
-            //SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
-            //editor.putString(getString(R.string.pref_auth_token), authToken);
-            //editor.apply();
+            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
+            editor.putString(getString(R.string.pref_auth_token), authToken);
+            editor.apply();
             // once authenticated, dismiss the login screen
             getActivity().finish();
         }
