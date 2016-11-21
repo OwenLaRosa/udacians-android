@@ -22,6 +22,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.owenlarosa.udacians.cookies.AddCookiesInterceptor;
+import com.owenlarosa.udacians.cookies.ReceivedCookiesInterceptor;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,6 +66,7 @@ public class LoginFragment extends Fragment {
     // this will ensure full profile info is available to be synced
     // using PersistentCookieManager: http://stackoverflow.com/questions/34881775/automatic-cookie-handling-with-okhttp-3/35346473
     CookieJar mCookieJar;
+
 
     // used to monitor firebase authentication status
     FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -119,7 +122,7 @@ public class LoginFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             mClient = new OkHttpClient.Builder()
-                    .cookieJar(mCookieJar)
+                    .addInterceptor(new ReceivedCookiesInterceptor(getActivity()))
                     .build();
 
             // get the username and password that were passed in
@@ -225,7 +228,7 @@ public class LoginFragment extends Fragment {
         @Override
         protected Boolean doInBackground(String... strings) {
             mClient = new OkHttpClient.Builder()
-                    .cookieJar(mCookieJar)
+                    .addInterceptor(new AddCookiesInterceptor(getActivity()))
                     .build();
 
             userId = strings[0];

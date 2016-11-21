@@ -52,5 +52,7 @@
 
     <!-- strings used by shared preferences -->
     <string name="pref_auth_token">token</string>
+    <!-- used to store cookies from Udacity API -->
+    <string name="pref_cookies">cookies</string>
 
 </resources>
