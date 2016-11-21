@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -224,6 +226,9 @@ public class LoginFragment extends Fragment {
         String firstName = "";
         String lastName = "";
         String userId = "";
+        // used to store the list of enrollments in Firebase
+        // keys are course IDs, values are true
+        HashMap<String, Boolean> enrollmentsMap = new HashMap<String, Boolean>();
 
         @Override
         protected Boolean doInBackground(String... strings) {
@@ -246,6 +251,17 @@ public class LoginFragment extends Fragment {
                 JSONObject user = root.getJSONObject("user");
                 firstName = user.getString("first_name");
                 lastName = user.getString("last_name");
+                JSONArray enrollments = user.getJSONArray("_enrollments");
+                // add enrollments to the hashmap
+                for (int i = 0; i < enrollments.length(); i++) {
+                    JSONObject course = enrollments.getJSONObject(i);
+                    // only nanodegree courses should be included
+                    String courseId = course.getString("node_key");
+                    if (courseId.startsWith("nd")) {
+                        // to be written to the database, the value should be true
+                        enrollmentsMap.put(courseId, true);
+                    }
+                }
                 return true;
             } catch (IOException e) {
                 Log.d(LOG_TAG, "sync profile io exception: " + e.getLocalizedMessage());
@@ -268,6 +284,9 @@ public class LoginFragment extends Fragment {
                 // if the data can't be synced at this time, use the email address
                 basicReference.child("name").setValue(emailEditText.getText().toString());
             }
+            // sync user's enrollments with the database
+            DatabaseReference enrollmentsReference = userReference.child("enrollments");
+            enrollmentsReference.setValue(enrollmentsMap);
             // store the auth token to speed up future logins
             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
             editor.putString(getString(R.string.pref_auth_token), authToken);
