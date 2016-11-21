@@ -13,24 +13,36 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.franmontiel.persistentcookiejar.PersistentCookieJar;
+import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
+import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
+import com.google.api.client.util.Data;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import okhttp3.CookieJar;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
 
 /**
  * Created by Owen LaRosa on 10/30/16.
@@ -64,12 +76,8 @@ public class LoginFragment extends Fragment {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // store the auth token to speed up future logins
-                    SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
-                    editor.putString(getString(R.string.pref_auth_token), authToken);
-                    editor.apply();
-                    getActivity().finish();
-                    // login was successful
+                    // sync profile to complete the login
+                    new SyncProfileTask().execute(user.getUid());
                     Log.d(LOG_TAG, "firebase authentication succeeded" + user.getUid());
                 } else {
                     // login failed, show error message
@@ -98,10 +106,18 @@ public class LoginFragment extends Fragment {
      */
     private class LoginTask extends AsyncTask<String, Void, String> {
 
-        private OkHttpClient mClient = new OkHttpClient();
+        private OkHttpClient mClient;
 
         @Override
         protected String doInBackground(String... strings) {
+            // cookie manager is used to ensure the XSRF token is properly saved
+            // this will ensure full profile info is available to be synced
+            // using PersistentCookieManager: http://stackoverflow.com/questions/34881775/automatic-cookie-handling-with-okhttp-3/35346473
+            CookieJar cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(getContext()));
+            mClient = new OkHttpClient.Builder()
+                    .cookieJar(cookieJar)
+                    .build();
+
             // get the username and password that were passed in
             String username = strings[0];
             String password = strings[1];
@@ -184,6 +200,68 @@ public class LoginFragment extends Fragment {
             // return whether or not the login was successful
             Log.d(LOG_TAG, String.format("response: %d", response.code()));
             return response.code() == 200;
+        }
+    }
+
+    /**
+     * Get profile data and sync it with firebase
+     * First and only parameter should be the user ID
+     * If successful, the user's first and last name will be synced
+     * If not, the
+     * Finish the activity upon completion
+     */
+    private class SyncProfileTask extends AsyncTask<String, Void, Boolean> {
+
+        private OkHttpClient mClient = new OkHttpClient();
+
+        String firstName = "";
+        String lastName = "";
+        String userId = "";
+
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            userId = strings[0];
+
+            try {
+                Request request = new Request.Builder()
+                        .url("https://www.udacity.com/api/users/" + userId)
+                        .build();
+                Response response = mClient.newCall(request).execute();
+
+                String trimmedResponse = response.body().string().substring(5);
+                Log.d(LOG_TAG, "profile info: " + trimmedResponse);
+                JSONObject root = new JSONObject(trimmedResponse);
+                JSONObject user = root.getJSONObject("user");
+                firstName = user.getString("first_name");
+                lastName = user.getString("last_name");
+                return true;
+            } catch (IOException e) {
+                Log.d(LOG_TAG, "sync profile io exception: " + e.getLocalizedMessage());
+            } catch (JSONException e) {
+                Log.d(LOG_TAG, "sync profile json exception: " + e.getLocalizedMessage());
+            }
+
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            super.onPostExecute(success);
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference userReference = database.getReference().child("users").child(userId);
+            DatabaseReference basicReference = userReference.child("basic");
+            if (success) {
+                basicReference.child("name").setValue(firstName + " " + lastName);
+            } else {
+                // if the data can't be synced at this time, use the email address
+                basicReference.child("name").setValue(emailEditText.getText().toString());
+            }
+            // store the auth token to speed up future logins
+            //SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
+            //editor.putString(getString(R.string.pref_auth_token), authToken);
+            //editor.apply();
+            // once authenticated, dismiss the login screen
+            getActivity().finish();
         }
     }
 

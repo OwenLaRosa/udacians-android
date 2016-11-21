@@ -55,7 +55,7 @@ public class MyEndpoint {
     private static final String PARAM_USERNAME = "username";
     private static final String PARAM_PASSWORD = "password";
 
-    private static final String FIREBASE_SECRET = "<FIREBASE_SECRET>";
+    private static final String FIREBASE_SECRET = "BHLbOrX85fC03kD8U5fOPfpMLwu1GcYNyZJVIAZE";
 
     // whether or not the Firebase app has been initialized
     private boolean mInitialized = false;
