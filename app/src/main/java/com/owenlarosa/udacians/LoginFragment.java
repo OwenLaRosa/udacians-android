@@ -60,6 +60,11 @@ public class LoginFragment extends Fragment {
 
     private Unbinder mUnbinder;
 
+    // cookie manager is used to ensure the XSRF token is properly saved
+    // this will ensure full profile info is available to be synced
+    // using PersistentCookieManager: http://stackoverflow.com/questions/34881775/automatic-cookie-handling-with-okhttp-3/35346473
+    CookieJar mCookieJar;
+
     // used to monitor firebase authentication status
     FirebaseAuth.AuthStateListener mAuthStateListener;
 
@@ -70,6 +75,9 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
+
+        // initialize the cookie jar
+        mCookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(getActivity()));
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -110,12 +118,8 @@ public class LoginFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            // cookie manager is used to ensure the XSRF token is properly saved
-            // this will ensure full profile info is available to be synced
-            // using PersistentCookieManager: http://stackoverflow.com/questions/34881775/automatic-cookie-handling-with-okhttp-3/35346473
-            CookieJar cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(getContext()));
             mClient = new OkHttpClient.Builder()
-                    .cookieJar(cookieJar)
+                    .cookieJar(mCookieJar)
                     .build();
 
             // get the username and password that were passed in
@@ -212,7 +216,7 @@ public class LoginFragment extends Fragment {
      */
     private class SyncProfileTask extends AsyncTask<String, Void, Boolean> {
 
-        private OkHttpClient mClient = new OkHttpClient();
+        private OkHttpClient mClient;
 
         String firstName = "";
         String lastName = "";
@@ -220,6 +224,10 @@ public class LoginFragment extends Fragment {
 
         @Override
         protected Boolean doInBackground(String... strings) {
+            mClient = new OkHttpClient.Builder()
+                    .cookieJar(mCookieJar)
+                    .build();
+
             userId = strings[0];
 
             try {
