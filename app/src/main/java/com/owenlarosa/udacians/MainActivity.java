@@ -46,11 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
         unbinder = ButterKnife.bind(this);
 
-        // enable offline capabilities before database is first used
-        if (savedInstanceState == null) {
-            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        }
-
         attemptLogin();
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
