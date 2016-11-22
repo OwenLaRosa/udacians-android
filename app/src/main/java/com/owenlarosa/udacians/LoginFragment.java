@@ -18,8 +18,6 @@ import android.widget.ProgressBar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
-import com.google.api.client.util.Data;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -30,24 +28,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.CookieHandler;
 import java.net.CookieManager;
-import java.net.CookiePolicy;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
 
 /**
  * Created by Owen LaRosa on 10/30/16.
@@ -72,8 +66,7 @@ public class LoginFragment extends Fragment {
     // cookie manager is used to ensure the XSRF token is properly saved
     // this will ensure full profile info is available to be synced
     // using PersistentCookieManager: http://stackoverflow.com/questions/34881775/automatic-cookie-handling-with-okhttp-3/35346473
-    CookieJar mCookieJar;
-
+    PersistentCookieJar mCookieJar;
 
     // used to monitor firebase authentication status
     FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -141,9 +134,8 @@ public class LoginFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            CookieJar cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(getActivity()));
             mClient = new OkHttpClient.Builder()
-                    .cookieJar(cookieJar)
+                    .cookieJar(mCookieJar)
                     .build();
 
             // get the username and password that were passed in
@@ -213,6 +205,8 @@ public class LoginFragment extends Fragment {
          * @throws JSONException Parsing error
          */
         private boolean getXSRFToken(String username, String password) throws IOException, JSONException {
+            // remove all cookies to replace them with new ones
+            mCookieJar.clear();
             // build request body
             RequestBody formBody = new FormBody.Builder()
                     .add("udacity", String.format("{\"username\": \"%s\", \"password\": \"%s\"}",
@@ -252,9 +246,8 @@ public class LoginFragment extends Fragment {
 
         @Override
         protected Boolean doInBackground(String... strings) {
-            CookieJar cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(getActivity()));
             mClient = new OkHttpClient.Builder()
-                    .cookieJar(cookieJar)
+                    .cookieJar(mCookieJar)
                     .build();
 
             userId = strings[0];
