@@ -12,7 +12,9 @@
         android:paddingBottom="@dimen/vertical_edge_margin"
         android:paddingLeft="@dimen/edge_margin"
         android:paddingRight="@dimen/edge_margin"
-        android:paddingTop="@dimen/vertical_edge_margin">
+        android:paddingTop="@dimen/vertical_edge_margin"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true">
 
         <TextView
             android:layout_width="wrap_content"
