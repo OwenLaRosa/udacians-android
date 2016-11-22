@@ -11,6 +11,10 @@
     <string name="login_placeholder_email">Email Address</string>
     <string name="login_placeholder_password">Password</string>
 
+    <!-- errors related to logging in -->
+    <string name="incorrect_credentials">Username or password is incorrect.</string>
+    <string name="connection_failed">Failed to connect to service. Please try again.</string>
+
     <!-- Displayed on user profile -->
     <string name="about">About</string>
 

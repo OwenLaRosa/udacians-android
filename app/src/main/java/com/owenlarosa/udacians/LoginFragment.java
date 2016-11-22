@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
@@ -42,6 +44,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 /**
  * Created by Owen LaRosa on 10/30/16.
@@ -122,6 +126,20 @@ public class LoginFragment extends Fragment {
     }
 
     /**
+     * Shows a short length toast on UI thread
+     * @param message String to be displayed in the toast
+     */
+    private void displayToast(final String message) {
+        // this method may be called from a background thread
+        getView().post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
      * Get a the session and authenticate with Firebase
      * First string should be the username
      * Second string should be the password
@@ -131,6 +149,9 @@ public class LoginFragment extends Fragment {
     private class LoginTask extends AsyncTask<String, Void, String> {
 
         private OkHttpClient mClient;
+
+        // true if the login failure was due to invalid credentials
+        private boolean invalidCredentials = false;
 
         @Override
         protected String doInBackground(String... strings) {
@@ -145,6 +166,8 @@ public class LoginFragment extends Fragment {
                 if (!getXSRFToken(username, password)) {
                     // immediately return if the login fails
                     Log.d(LOG_TAG, "failed to get xsrf token");
+                    invalidCredentials = true;
+                    displayToast(getString(R.string.incorrect_credentials));
                     return null;
                 }
                 // if successful, proceed to get the Firebase auth token
@@ -191,6 +214,11 @@ public class LoginFragment extends Fragment {
                 FirebaseAuth.getInstance().signInWithCustomToken(authToken);
             } else {
                 Log.d(LOG_TAG, "token is null");
+                // if the credentials were invalid, a toast would have already been shown
+                // only display this message if login failed for another reason
+                if (!invalidCredentials) {
+                    displayToast(getString(R.string.connection_failed));
+                }
                 setUIState(true);
             }
         }
