@@ -11,7 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
@@ -59,6 +61,10 @@ public class LoginFragment extends Fragment {
     EditText emailEditText;
     @BindView(R.id.login_password_edit_text)
     EditText passwordEditText;
+    @BindView(R.id.login_auth_button)
+    Button loginButton;
+    @BindView(R.id.login_progress_bar)
+    ProgressBar progressBar;
     String authToken = "";
 
     private Unbinder mUnbinder;
@@ -104,9 +110,22 @@ public class LoginFragment extends Fragment {
 
     @OnClick(R.id.login_auth_button)
     void loginTapped() {
+        setUIState(false);
         Log.d(LOG_TAG, emailEditText.getText().toString());
         Log.d(LOG_TAG, passwordEditText.getText().toString());
         new LoginTask().execute(emailEditText.getText().toString(), passwordEditText.getText().toString());
+    }
+
+    /**
+     * Enable and disable UI elements for appropriate state
+     * @param enabled true if no login in progress, false is currently logging in
+     */
+    private void setUIState(boolean enabled) {
+        emailEditText.setEnabled(enabled);
+        passwordEditText.setEnabled(enabled);
+        loginButton.setEnabled(enabled);
+        // progress bar should only be visible when logging in
+        progressBar.setVisibility(enabled ? View.INVISIBLE : View.VISIBLE);
     }
 
     /**
@@ -180,6 +199,7 @@ public class LoginFragment extends Fragment {
                 FirebaseAuth.getInstance().signInWithCustomToken(authToken);
             } else {
                 Log.d(LOG_TAG, "token is null");
+                setUIState(true);
             }
         }
 
@@ -293,6 +313,7 @@ public class LoginFragment extends Fragment {
             editor.apply();
             // once authenticated, dismiss the login screen
             getActivity().finish();
+            setUIState(true);
         }
     }
 
