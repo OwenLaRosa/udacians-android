@@ -1,10 +1,11 @@
 package com.owenlarosa.udacians.views;
 
 import android.content.Context;
-import android.media.Image;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,15 +24,17 @@ import butterknife.Unbinder;
 public class DisplayPostView extends RelativeLayout {
 
     @BindView(R.id.display_post_profile_image_view)
-    ImageView profileImageView;
-    @BindView(R.id.profile_name_text_view)
-    TextView nameTextView;
+    public ImageView profileImageView;
+    @BindView(R.id.display_post_name_text_view)
+    public TextView nameTextView;
     @BindView(R.id.display_post_time_text_view)
-    TextView timeTextView;
+    public TextView timeTextView;
     @BindView(R.id.display_post_content_text_view)
-    TextView contentTextView;
+    public TextView contentTextView;
     @BindView(R.id.display_post_content_image_view)
-    ImageView contentImageView;
+    public ImageView contentImageView;
+    @BindView(R.id.display_post_delete_button)
+    public ImageButton deleteButton;
 
     Unbinder unbinder;
 

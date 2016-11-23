@@ -65,7 +65,6 @@ public class WritePostView extends RelativeLayout {
         Message message = new Message();
         message.setSender(FirebaseAuth.getInstance().getCurrentUser().getUid());
         message.setContent(postEditText.getText().toString());
-        message.setDate(ServerValue.TIMESTAMP);
         // clear text and image when sending a message
         postEditText.setText("");
         // can't reset an image view, just set its visibility to gone

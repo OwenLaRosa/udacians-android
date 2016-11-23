@@ -1,6 +1,10 @@
 package com.owenlarosa.udacians.data;
 
+import com.google.firebase.database.ServerValue;
+
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by Owen LaRosa on 11/23/16.
@@ -11,11 +15,11 @@ public class Message {
     private String sender;
     private String content;
     private String imageUrl;
-    private Map<String, String> date;
+    private long date;
 
     public Message() {}
 
-    public Message(String sender, String content, String imageUrl, Map<String, String> date) {
+    public Message(String sender, String content, String imageUrl, long date) {
         this.sender = sender;
         this.content = content;
         this.imageUrl = imageUrl;
@@ -46,11 +50,27 @@ public class Message {
         this.imageUrl = imageUrl;
     }
 
-    public Map<String, String> getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(Map<String, String> date) {
+    public void setDate(long date) {
         this.date = date;
     }
+
+    /**
+     * Create a map consistent of this class's properties
+     * This is used when pushing new messages
+     * The date property is set to ServerValue.TIMESTAMP for this purpose
+     * @return map of the properties
+     */
+    public Map<String, Object> toMap() {
+        Map<String, Object> mapped = new HashMap<>();
+        mapped.put("sender", sender);
+        mapped.put("content", content);
+        mapped.put("imageUrl", imageUrl);
+        mapped.put("date", ServerValue.TIMESTAMP);
+        return mapped;
+    }
+
 }

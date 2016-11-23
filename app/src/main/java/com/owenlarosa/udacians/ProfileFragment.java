@@ -17,6 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,6 +29,7 @@ import com.owenlarosa.udacians.data.BasicProfile;
 import com.owenlarosa.udacians.data.Message;
 import com.owenlarosa.udacians.data.ProfileInfo;
 import com.owenlarosa.udacians.interfaces.MessageDelegate;
+import com.owenlarosa.udacians.views.DisplayPostView;
 import com.owenlarosa.udacians.views.WritePostView;
 
 import butterknife.BindView;
@@ -131,6 +135,71 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
             }
         });
         mPostsReference = userReference.child("posts");
+        mPostsReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                // populate a view with message data
+                Message message = dataSnapshot.getValue(Message.class);
+                final DisplayPostView postView = new DisplayPostView(getActivity());
+                postView.contentTextView.setText(message.getContent());
+                // user data is not directly part of the message and must be downloaded separately
+                DatabaseReference userBasicReference = mFirebaseDatabase.getReference().child("users").child(message.getSender()).child("basic");
+                userBasicReference.child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        postView.nameTextView.setText(dataSnapshot.getValue(String.class));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                userBasicReference.child("photo").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Glide.with(getActivity())
+                                .load(dataSnapshot.getValue(String.class))
+                                .into(postView.profileImageView);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                // enable/disble delete button if user has these permissions
+                String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                // user can delete posts if...
+                // this is their profile, then they can delete everything
+                // they wrote the post, even if it's on someone else's profile
+                if (mUserId.equals(uid) || message.getSender().equals(uid)) {
+                    postView.deleteButton.setVisibility(View.VISIBLE);
+                }
+                // 0 position means top of the linear layout
+                postsLinearLayout.addView(new View(getActivity()));
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         return rootView;
     }
@@ -199,6 +268,7 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
 
     @Override
     public void sendMessage(Message message) {
-        mPostsReference.push().setValue(message);
+        // mapped form will correctly allow the server to generate the timestamp
+        mPostsReference.push().setValue(message.toMap());
     }
 }
