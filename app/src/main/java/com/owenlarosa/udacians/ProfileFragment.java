@@ -177,7 +177,7 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
                     postView.deleteButton.setVisibility(View.VISIBLE);
                 }
                 // 0 position means top of the linear layout
-                postsLinearLayout.addView(new View(getActivity()));
+                postsLinearLayout.addView(postView, 0);
             }
 
             @Override
