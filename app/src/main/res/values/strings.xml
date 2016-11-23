@@ -17,6 +17,7 @@
 
     <!-- Displayed on user profile -->
     <string name="about">About</string>
+    <string name="post">Post</string>
 
     <!-- Displayed on the chat screen -->
     <string name="enter_message">Enter message</string>
