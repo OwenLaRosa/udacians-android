@@ -12,6 +12,8 @@
     <!-- used on profile screen -->
     <dimen name="profile_image_size">72dp</dimen>
     <dimen name="profile_links_height">48dp</dimen>
+    <dimen name="profile_links_vertical_offset">16dp</dimen>
+    <dimen name="profile_links_horizontal_space">16dp</dimen>
 
     <!-- used on chat view -->
     <dimen name="chat_view_inter_item_margin">8dp</dimen>

@@ -88,14 +88,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/TextAppearance.AppCompat.Medium"
-                    android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
+                    android:layout_marginBottom="@dimen/profile_links_vertical_offset"/>
 
                 <LinearLayout
                     android:id="@+id/profile_links_linear_layout"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/profile_links_height"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="@dimen/vertical_inter_item_space">
+                    android:layout_marginBottom="@dimen/profile_links_vertical_offset">
 
                     <!-- Contains icons that link to personal sites -->
 
