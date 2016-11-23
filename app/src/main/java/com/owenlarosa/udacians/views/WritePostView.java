@@ -9,10 +9,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.owenlarosa.udacians.R;
+import com.owenlarosa.udacians.data.Message;
+import com.owenlarosa.udacians.interfaces.MessageDelegate;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -27,6 +31,7 @@ public class WritePostView extends RelativeLayout {
     EditText postEditText;
     @BindView(R.id.write_post_image_view)
     ImageView previewImageView;
+    public MessageDelegate delegate;
 
     Unbinder unbinder;
 
@@ -51,6 +56,21 @@ public class WritePostView extends RelativeLayout {
         View rootView = inflater.inflate(R.layout.write_post_view, this);
 
         unbinder = ButterKnife.bind(this, rootView);
+    }
+
+    @OnClick(R.id.create_post_button)
+    public void createPost() {
+        // create a message/post object
+        Message message = new Message();
+        message.setSender(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        message.setContent(postEditText.getText().toString());
+        // clear text and image when sending a message
+        postEditText.setText("");
+        // can't reset an image view, just set its visibility to gone
+        // when uploading an image, the visibility will be set later
+        previewImageView.setVisibility(View.GONE);
+        // alert fragment to send a message
+        delegate.sendMessage(message);
     }
 
 }

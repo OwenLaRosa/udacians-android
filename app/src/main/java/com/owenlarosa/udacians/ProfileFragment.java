@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +23,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udacians.data.BasicProfile;
+import com.owenlarosa.udacians.data.Message;
 import com.owenlarosa.udacians.data.ProfileInfo;
+import com.owenlarosa.udacians.interfaces.MessageDelegate;
 import com.owenlarosa.udacians.views.WritePostView;
 
 import butterknife.BindView;
@@ -36,7 +39,7 @@ import static android.R.attr.button;
  * Created by Owen LaRosa on 11/7/16.
  */
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements MessageDelegate {
 
     public static final String EXTRA_USERID = "userId";
 
@@ -69,6 +72,9 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
+
+        // listen for messages to be sent
+        writePostView.delegate = this;
 
         Intent intent = getActivity().getIntent();
         if (intent != null) {
@@ -188,5 +194,10 @@ public class ProfileFragment extends Fragment {
         });
         // display the button onscreen
         linksLinearLayout.addView(button);
+    }
+
+    @Override
+    public void sendMessage(Message message) {
+        Log.d("", "sending message: " + message.getContent());
     }
 }
