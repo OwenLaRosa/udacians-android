@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:minHeight="@dimen/button_size"
         style="@style/TextAppearance.AppCompat.Medium"
-        android:text="Sample post text."
+        android:hint="@string/post_placeholder"
         android:layout_toRightOf="@id/write_post_image_button"
         android:layout_toEndOf="@id/write_post_image_button"
         android:layout_toLeftOf="@id/create_post_button"
