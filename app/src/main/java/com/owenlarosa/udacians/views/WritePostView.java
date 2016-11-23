@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ServerValue;
 import com.owenlarosa.udacians.R;
 import com.owenlarosa.udacians.data.Message;
 import com.owenlarosa.udacians.interfaces.MessageDelegate;
@@ -64,6 +65,7 @@ public class WritePostView extends RelativeLayout {
         Message message = new Message();
         message.setSender(FirebaseAuth.getInstance().getCurrentUser().getUid());
         message.setContent(postEditText.getText().toString());
+        message.setDate(ServerValue.TIMESTAMP);
         // clear text and image when sending a message
         postEditText.setText("");
         // can't reset an image view, just set its visibility to gone

@@ -130,6 +130,7 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
 
             }
         });
+        mPostsReference = userReference.child("posts");
 
         return rootView;
     }
@@ -198,6 +199,6 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
 
     @Override
     public void sendMessage(Message message) {
-        Log.d("", "sending message: " + message.getContent());
+        mPostsReference.push().setValue(message);
     }
 }
