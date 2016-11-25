@@ -4,10 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_marginLeft="@dimen/edge_margin"
-    android:layout_marginStart="@dimen/edge_margin"
-    android:layout_marginRight="@dimen/edge_margin"
-    android:layout_marginEnd="@dimen/edge_margin">
+    android:paddingStart="@dimen/edge_margin"
+    android:paddingEnd="@dimen/edge_margin">
 
     <TextView
         android:id="@+id/profile_about_label"

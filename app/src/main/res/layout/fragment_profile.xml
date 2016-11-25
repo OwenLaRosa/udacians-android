@@ -63,7 +63,8 @@
             android:id="@+id/posts_list_view"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            android:background="@color/white"/>
+            android:background="@color/white"
+            android:paddingBottom="@dimen/vertical_edge_margin"/>
 
     </LinearLayout>
 
