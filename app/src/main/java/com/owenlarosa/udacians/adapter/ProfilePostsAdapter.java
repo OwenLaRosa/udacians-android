@@ -10,22 +10,22 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udacians.R;
 import com.owenlarosa.udacians.data.Message;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
 
 /**
  * Created by Owen LaRosa on 11/25/16.
@@ -126,6 +126,10 @@ public class ProfilePostsAdapter extends BaseAdapter {
         } else {
             holder = (PostViewHolder) cell.getTag();
         }
+        // show post info in the view
+        Message post = posts.get(i);
+        populatePostViewHolder(holder, post);
+
         return cell;
     }
 
@@ -148,6 +152,55 @@ public class ProfilePostsAdapter extends BaseAdapter {
 
         PostViewHolder(View view) {
             ButterKnife.bind(this, view);
+        }
+    }
+
+    /**
+     * Fill in the contents of the view holder
+     * @param viewHolder view to display the post
+     * @param post post data to display in the view
+     */
+    private void populatePostViewHolder(final PostViewHolder viewHolder, Message post) {
+        // content is directly in the message object
+        viewHolder.contentTextView.setText(post.getContent());
+        // other data is associate with the user
+        // download it separately if it hasn't been already
+        DatabaseReference basicReference = mFirebaseDatabase.getReference().child("users").child(post.getSender()).child("basic");
+        DatabaseReference nameReference = basicReference.child("name");
+        nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String name = dataSnapshot.getValue(String.class);
+                viewHolder.nameTextView.setText(name);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        DatabaseReference photoReference = basicReference.child("photo");
+        photoReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String photoUrl = dataSnapshot.getValue(String.class);
+                Glide.with(mContext)
+                        .load(photoUrl)
+                        .into(viewHolder.imageView);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        // users can delete all posts on their profile
+        // they can also delete posts they authored on a different profile
+        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if (user.equals(post.getSender()) || user.equals(mUid)) {
+            viewHolder.deleteButton.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.deleteButton.setVisibility(View.INVISIBLE);
         }
     }
 
