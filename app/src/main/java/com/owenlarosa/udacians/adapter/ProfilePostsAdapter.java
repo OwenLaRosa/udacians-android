@@ -42,6 +42,10 @@ import static com.owenlarosa.udacians.R.string.post;
 
 public class ProfilePostsAdapter extends BaseAdapter {
 
+    // identifiers for view types used by the adapter
+    private static final int VIEW_TYPE_HEADER = 0;
+    private static final int VIEW_TYPE_POST = 1;
+
     private Context mContext;
     // user id of profile to show posts for
     private String mUid;
@@ -49,7 +53,17 @@ public class ProfilePostsAdapter extends BaseAdapter {
     /**
      * "About" text of the user's profile
      */
-    public String about = "";
+    private String about = "";
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
+        // should refresh the header view with new "about" text
+        notifyDataSetChanged();
+    }
 
     // posts to be displayed in list view
     private ArrayList<Message> posts = new ArrayList<Message>();
@@ -95,27 +109,10 @@ public class ProfilePostsAdapter extends BaseAdapter {
         });
     }
 
-    /**
-     * Add a post and update the data set
-     * @param post Post to be added
-     */
-    public void addPost(Message post) {
-        posts.add(post);
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Delete a post and update the data set
-     * @param index Index of the post to be deleted
-     */
-    public void deletePost(int index) {
-        posts.remove(index);
-        notifyDataSetChanged();
-    }
-
     @Override
     public int getCount() {
-        return posts.size();
+        // all posts plus a header view
+        return posts.size() + 1;
     }
 
     @Override
@@ -128,21 +125,49 @@ public class ProfilePostsAdapter extends BaseAdapter {
         return 0;
     }
 
+    // 2 methods used so the adapter works with multiple different view types
+
+    @Override
+    public int getViewTypeCount() {
+        // header view, view for displaying posts
+        return 2;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        // first view is header, all others show posts
+        return position == 0 ? VIEW_TYPE_HEADER : VIEW_TYPE_POST;
+    }
+
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         View cell = view;
-        PostViewHolder holder = null;
-        if (cell == null) {
-            LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
-            cell = inflater.inflate(R.layout.display_post_view, viewGroup, false);
-            holder = new PostViewHolder(cell);
-            cell.setTag(holder);
+        int viewType = getItemViewType(i);
+        if (viewType == 0) {
+            HeaderViewHolder holder = null;
+            if (cell == null) {
+                LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
+                cell = inflater.inflate(R.layout.profile_posts_header, viewGroup, false);
+                holder = new HeaderViewHolder(cell);
+                cell.setTag(holder);
+            } else {
+                holder = (HeaderViewHolder) cell.getTag();
+            }
+            populateHeaderViewHolder(holder);
         } else {
-            holder = (PostViewHolder) cell.getTag();
+            PostViewHolder holder = null;
+            if (cell == null) {
+                LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
+                cell = inflater.inflate(R.layout.display_post_view, viewGroup, false);
+                holder = new PostViewHolder(cell);
+                cell.setTag(holder);
+            } else {
+                holder = (PostViewHolder) cell.getTag();
+            }
+            // i = 1 is the first post, since the view at index 0 is the header
+            Message post = posts.get(i - 1);
+            populatePostViewHolder(holder, post);
         }
-        // show post info in the view
-        Message post = posts.get(i);
-        populatePostViewHolder(holder, post);
 
         return cell;
     }
