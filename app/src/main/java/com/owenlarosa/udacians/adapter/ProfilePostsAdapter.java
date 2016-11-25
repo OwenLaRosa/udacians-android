@@ -2,12 +2,15 @@ package com.owenlarosa.udacians.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -19,13 +22,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.owenlarosa.udacians.ProfileFragment;
 import com.owenlarosa.udacians.R;
 import com.owenlarosa.udacians.data.Message;
+import com.owenlarosa.udacians.data.ProfileInfo;
+import com.owenlarosa.udacians.interfaces.MessageDelegate;
+import com.owenlarosa.udacians.views.WritePostView;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.owenlarosa.udacians.R.string.post;
 
 /**
  * Created by Owen LaRosa on 11/25/16.
@@ -33,9 +42,14 @@ import butterknife.ButterKnife;
 
 public class ProfilePostsAdapter extends BaseAdapter {
 
-    Context mContext;
+    private Context mContext;
     // user id of profile to show posts for
-    String mUid;
+    private String mUid;
+
+    /**
+     * "About" text of the user's profile
+     */
+    public String about = "";
 
     // posts to be displayed in list view
     private ArrayList<Message> posts = new ArrayList<Message>();
@@ -136,7 +150,7 @@ public class ProfilePostsAdapter extends BaseAdapter {
     /**
      * View holder to display the contents of individual posts
      */
-    static class PostViewHolder {
+    class PostViewHolder {
         @BindView(R.id.display_post_profile_image_view)
         ImageView imageView;
         @BindView(R.id.display_post_delete_button)
@@ -202,6 +216,126 @@ public class ProfilePostsAdapter extends BaseAdapter {
         } else {
             viewHolder.deleteButton.setVisibility(View.INVISIBLE);
         }
+    }
+
+    /**
+     * Shows basic profile info
+     * About section and links to personal sites
+     */
+    class HeaderViewHolder implements MessageDelegate {
+        @BindView(R.id.profile_about_text_view)
+        TextView aboutTextView;
+        @BindView(R.id.profile_links_linear_layout)
+        LinearLayout linksLinearLayout;
+        @BindView(R.id.profile_write_post_view)
+        WritePostView writePostView;
+
+        HeaderViewHolder(View view) {
+            ButterKnife.bind(this, view);
+            // view has a callback to let this class know about posting messages
+            writePostView.delegate = this;
+        }
+
+        // alerted by writePostView, upload the post
+        @Override
+        public void sendMessage(Message message) {
+            // mapped form will correctly allow the server to generate the timestamp
+            postsReference.push().setValue(message.toMap());
+        }
+    }
+
+    /**
+     * Fill contents of the header view
+     * @param viewHolder view that contains the contents
+     */
+    private void populateHeaderViewHolder(final HeaderViewHolder viewHolder) {
+        viewHolder.aboutTextView.setText(about);
+        DatabaseReference profileReference = mFirebaseDatabase.getReference().child("users").child(mUid).child("basic");
+        profileReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ProfileInfo profileInfo = dataSnapshot.getValue(ProfileInfo.class);
+                // check if links of each type exist, and if so add them to the layout
+                if (profileInfo.getSite() != null && !profileInfo.getSite().equals("")) {
+                    ImageButton button = addLinkButton(LinkType.Personal, profileInfo.getSite());
+                    viewHolder.linksLinearLayout.addView(button);
+                }
+                if (profileInfo.getBlog() != null && !profileInfo.getBlog().equals("")) {
+                    ImageButton button = addLinkButton(LinkType.Blog, profileInfo.getBlog());
+                    viewHolder.linksLinearLayout.addView(button);
+                }
+                if (profileInfo.getLinkedin() != null && !profileInfo.getLinkedin().equals("")) {
+                    ImageButton button = addLinkButton(LinkType.Linkedin, profileInfo.getLinkedin());
+                    viewHolder.linksLinearLayout.addView(button);
+                }
+                if (profileInfo.getTwitter() != null && !profileInfo.getTwitter().equals("")) {
+                    ImageButton button = addLinkButton(LinkType.Twitter, profileInfo.getTwitter());
+                    viewHolder.linksLinearLayout.addView(button);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    // types of eligible links for image buttons
+    enum LinkType {
+        Personal,
+        Blog,
+        Linkedin,
+        Twitter
+    }
+
+    /**
+     * Create and add a button that opens a link
+     * @param type Type of link, used to determine the image
+     * @param link Url to open in browser when tapped
+     * @return ImageButton with the specified properties
+     */
+    private ImageButton createLinkButton(LinkType type, final String link) {
+        // configure the button's size and margins
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        int size = (int) mContext.getResources().getDimension(R.dimen.profile_links_height);
+        int horizontalSpace = (int) mContext.getResources().getDimension(R.dimen.profile_links_horizontal_space);
+        layoutParams.setMargins(0, 0, horizontalSpace, 0);
+        layoutParams.setMarginEnd(horizontalSpace);
+        layoutParams.width = size;
+        layoutParams.height = size;
+        // create a button with these layout parameters
+        ImageButton button = new ImageButton(mContext);
+        button.setLayoutParams(layoutParams);
+        // determine the correct icon to display
+        switch (type) {
+            case Personal:
+                button.setBackgroundResource(R.drawable.personal_site);
+                break;
+            case Blog:
+                button.setBackgroundResource(R.drawable.blog);
+                break;
+            case Linkedin:
+                button.setBackgroundResource(R.drawable.linkedin);
+                break;
+            case Twitter:
+                button.setBackgroundResource(R.drawable.twitter);
+                break;
+        }
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // convert to Uri for use with intent
+                Uri linkUri = Uri.parse(link);
+                // open the link in the browser
+                Intent intent = new Intent(Intent.ACTION_VIEW, linkUri);
+                mContext.startActivity(intent);
+            }
+        });
+        return button;
     }
 
 }
