@@ -32,12 +32,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".EditProfileActivity" />
-        <!-- the embedded fragment contains an edittext within a list view item
-         soft input mode is set to ensure the edittext doesn't lose focus when
-         the keyboard appears-->
-        <!-- referenced: http://stackoverflow.com/questions/9272140/edittext-in-listview-android -->
-        <activity android:name=".ProfileActivity"
-            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".ProfileActivity"/>
         <activity android:name=".ChatActivity" />
         <activity android:name=".EventActivity" />
         <activity android:name=".LoginActivity"></activity>
