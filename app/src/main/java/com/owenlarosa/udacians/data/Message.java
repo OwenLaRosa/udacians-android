@@ -12,6 +12,7 @@ import java.util.Objects;
 
 public class Message {
 
+    private String id;
     private String sender;
     private String content;
     private String imageUrl;
@@ -24,6 +25,14 @@ public class Message {
         this.content = content;
         this.imageUrl = imageUrl;
         this.date = date;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getSender() {

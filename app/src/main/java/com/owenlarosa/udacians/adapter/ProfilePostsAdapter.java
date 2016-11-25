@@ -2,15 +2,12 @@ package com.owenlarosa.udacians.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -25,9 +22,11 @@ import com.owenlarosa.udacians.R;
 import com.owenlarosa.udacians.data.Message;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Owen LaRosa on 11/25/16.
@@ -41,6 +40,9 @@ public class ProfilePostsAdapter extends BaseAdapter {
 
     // posts to be displayed in list view
     private ArrayList<Message> posts = new ArrayList<Message>();
+    // maps post keys to message objects for later retrieval
+    // this is mainly for deleting posts from the array list
+    private HashMap<String, Message> iDtoMessage = new HashMap<String, Message>();
 
     // References to Firebase Database
     private FirebaseDatabase mFirebaseDatabase;
@@ -57,7 +59,10 @@ public class ProfilePostsAdapter extends BaseAdapter {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Message post = dataSnapshot.getValue(Message.class);
+                String id = dataSnapshot.getKey();
+                iDtoMessage.put(id, post);
                 posts.add(post);
+                post.setId(id);
                 notifyDataSetChanged();
             }
 
@@ -68,7 +73,11 @@ public class ProfilePostsAdapter extends BaseAdapter {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                String id = dataSnapshot.getKey();
+                Message post = iDtoMessage.get(id);
+                iDtoMessage.remove(id);
+                posts.remove(post);
+                notifyDataSetChanged();
             }
 
             @Override
@@ -134,9 +143,18 @@ public class ProfilePostsAdapter extends BaseAdapter {
         @BindView(R.id.display_post_time_text_view)
         TextView timeTextView;
 
+        // Firebase key for the post data
+        public String id;
+
         PostViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
+
+        @OnClick(R.id.display_post_delete_button)
+        public void deletePost() {
+            postsReference.child(id).removeValue();
+        }
+
     }
 
     /**
@@ -145,6 +163,8 @@ public class ProfilePostsAdapter extends BaseAdapter {
      * @param post post data to display in the view
      */
     private void populatePostViewHolder(final PostViewHolder viewHolder, Message post) {
+        // id used to reference post for deletion
+        viewHolder.id = post.getId();
         // content is directly in the message object
         viewHolder.contentTextView.setText(post.getContent());
         // other data is associate with the user
