@@ -282,19 +282,19 @@ public class ProfilePostsAdapter extends BaseAdapter {
                 ProfileInfo profileInfo = dataSnapshot.getValue(ProfileInfo.class);
                 // check if links of each type exist, and if so add them to the layout
                 if (profileInfo.getSite() != null && !profileInfo.getSite().equals("")) {
-                    ImageButton button = addLinkButton(LinkType.Personal, profileInfo.getSite());
+                    ImageButton button = createLinkButton(LinkType.Personal, profileInfo.getSite());
                     viewHolder.linksLinearLayout.addView(button);
                 }
                 if (profileInfo.getBlog() != null && !profileInfo.getBlog().equals("")) {
-                    ImageButton button = addLinkButton(LinkType.Blog, profileInfo.getBlog());
+                    ImageButton button = createLinkButton(LinkType.Blog, profileInfo.getBlog());
                     viewHolder.linksLinearLayout.addView(button);
                 }
                 if (profileInfo.getLinkedin() != null && !profileInfo.getLinkedin().equals("")) {
-                    ImageButton button = addLinkButton(LinkType.Linkedin, profileInfo.getLinkedin());
+                    ImageButton button = createLinkButton(LinkType.Linkedin, profileInfo.getLinkedin());
                     viewHolder.linksLinearLayout.addView(button);
                 }
                 if (profileInfo.getTwitter() != null && !profileInfo.getTwitter().equals("")) {
-                    ImageButton button = addLinkButton(LinkType.Twitter, profileInfo.getTwitter());
+                    ImageButton button = createLinkButton(LinkType.Twitter, profileInfo.getTwitter());
                     viewHolder.linksLinearLayout.addView(button);
                 }
             }
