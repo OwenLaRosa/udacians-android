@@ -59,68 +59,11 @@
 
         </RelativeLayout>
 
-        <ScrollView
+        <ListView
+            android:id="@+id/posts_list_view"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            android:background="@color/white">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginLeft="@dimen/edge_margin"
-                android:layout_marginStart="@dimen/edge_margin"
-                android:layout_marginRight="@dimen/edge_margin"
-                android:layout_marginEnd="@dimen/edge_margin">
-
-                <TextView
-                    android:id="@+id/profile_about_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/TextAppearance.AppCompat.Title"
-                    android:textStyle="bold"
-                    android:text="@string/about"
-                    android:layout_marginTop="@dimen/vertical_edge_margin"
-                    android:layout_marginBottom="@dimen/vertical_edge_margin"/>
-
-                <TextView
-                    android:id="@+id/profile_about_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/TextAppearance.AppCompat.Medium"
-                    android:layout_marginBottom="@dimen/profile_links_vertical_offset"/>
-
-                <LinearLayout
-                    android:id="@+id/profile_links_linear_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/profile_links_height"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="@dimen/profile_links_vertical_offset">
-
-                    <!-- Contains icons that link to personal sites -->
-
-                </LinearLayout>
-
-                <com.owenlarosa.udacians.views.WritePostView
-                    android:id="@+id/profile_write_post_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/vertical_edge_margin"/>
-
-                <LinearLayout
-                    android:id="@+id/profile_posts_linear_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="@dimen/vertical_edge_margin">
-
-                    <!-- Displays recent posts on the user's profile -->
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </ScrollView>
+            android:background="@color/white"/>
 
     </LinearLayout>
 

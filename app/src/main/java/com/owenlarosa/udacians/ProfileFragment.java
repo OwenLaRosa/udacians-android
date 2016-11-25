@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -25,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.owenlarosa.udacians.adapter.ProfilePostsAdapter;
 import com.owenlarosa.udacians.data.BasicProfile;
 import com.owenlarosa.udacians.data.Message;
 import com.owenlarosa.udacians.data.ProfileInfo;
@@ -43,7 +45,7 @@ import static android.R.attr.button;
  * Created by Owen LaRosa on 11/7/16.
  */
 
-public class ProfileFragment extends Fragment implements MessageDelegate {
+public class ProfileFragment extends Fragment {
 
     public static final String EXTRA_USERID = "userId";
 
@@ -53,14 +55,8 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
     TextView nameTextView;
     @BindView(R.id.profile_title_text_view)
     TextView titleTextView;
-    @BindView(R.id.profile_about_text_view)
-    TextView aboutTextView;
-    @BindView(R.id.profile_links_linear_layout)
-    LinearLayout linksLinearLayout;
-    @BindView(R.id.profile_write_post_view)
-    WritePostView writePostView;
-    @BindView(R.id.profile_posts_linear_layout)
-    LinearLayout postsLinearLayout;
+    @BindView(R.id.posts_list_view)
+    ListView postsListView;
 
     private Unbinder mUnbinder;
 
@@ -68,17 +64,12 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mBasicReference;
-    private DatabaseReference mProfileReference;
-    private DatabaseReference mPostsReference;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
-
-        // listen for messages to be sent
-        writePostView.delegate = this;
 
         Intent intent = getActivity().getIntent();
         if (intent != null) {
@@ -89,6 +80,9 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
             mUserId = getArguments().getString(EXTRA_USERID);
         }
 
+        final ProfilePostsAdapter postsAdapter = new ProfilePostsAdapter(getActivity(), mUserId);
+        postsListView.setAdapter(postsAdapter);
+
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference userReference = mFirebaseDatabase.getReference().child("users").child(mUserId);
         mBasicReference = userReference.child("basic");
@@ -98,7 +92,7 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
                 BasicProfile profile = dataSnapshot.getValue(BasicProfile.class);
                 nameTextView.setText(profile.getName());
                 titleTextView.setText(profile.getTitle());
-                aboutTextView.setText(profile.getAbout());
+                postsAdapter.setAbout(profile.getAbout());
                 Glide.with(getActivity())
                         .load(profile.getPhoto())
                         .into(profilePictureImageView);
@@ -109,166 +103,11 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
 
             }
         });
-        mProfileReference = userReference.child("profile");
-        mProfileReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ProfileInfo profileInfo = dataSnapshot.getValue(ProfileInfo.class);
-                // check if links of each type exist, and if so add them to the layout
-                if (profileInfo.getSite() != null && !profileInfo.getSite().equals("")) {
-                    addLinkButton(LinkType.Personal, profileInfo.getSite());
-                }
-                if (profileInfo.getBlog() != null && !profileInfo.getBlog().equals("")) {
-                    addLinkButton(LinkType.Blog, profileInfo.getBlog());
-                }
-                if (profileInfo.getLinkedin() != null && !profileInfo.getLinkedin().equals("")) {
-                    addLinkButton(LinkType.Linkedin, profileInfo.getLinkedin());
-                }
-                if (profileInfo.getTwitter() != null && !profileInfo.getTwitter().equals("")) {
-                    addLinkButton(LinkType.Twitter, profileInfo.getTwitter());
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        mPostsReference = userReference.child("posts");
-        mPostsReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                // populate a view with message data
-                Message message = dataSnapshot.getValue(Message.class);
-                final DisplayPostView postView = new DisplayPostView(getActivity());
-                postView.contentTextView.setText(message.getContent());
-                // user data is not directly part of the message and must be downloaded separately
-                DatabaseReference userBasicReference = mFirebaseDatabase.getReference().child("users").child(message.getSender()).child("basic");
-                userBasicReference.child("name").addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        postView.nameTextView.setText(dataSnapshot.getValue(String.class));
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-                userBasicReference.child("photo").addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Glide.with(getActivity())
-                                .load(dataSnapshot.getValue(String.class))
-                                .into(postView.profileImageView);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-                // enable/disble delete button if user has these permissions
-                String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                // user can delete posts if...
-                // this is their profile, then they can delete everything
-                // they wrote the post, even if it's on someone else's profile
-                if (mUserId.equals(uid) || message.getSender().equals(uid)) {
-                    postView.deleteButton.setVisibility(View.VISIBLE);
-                }
-                // 0 position means top of the linear layout
-                postsLinearLayout.addView(postView, 0);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
         return rootView;
     }
 
     @OnClick(R.id.connect_button)
     public void connectTapped(View view) {
 
-    }
-
-    // types of eligible links for image buttons
-    enum LinkType {
-        Personal,
-        Blog,
-        Linkedin,
-        Twitter
-    }
-
-    /**
-     * Create and add a button that opens a link
-     * @param type Type of link, used to determine the image
-     * @param link Url to open in browser when tapped
-     */
-    private void addLinkButton(LinkType type, final String link) {
-        // configure the button's size and margins
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        int size = (int) getResources().getDimension(R.dimen.profile_links_height);
-        int horizontalSpace = (int) getResources().getDimension(R.dimen.profile_links_horizontal_space);
-        layoutParams.setMargins(0, 0, horizontalSpace, 0);
-        layoutParams.setMarginEnd(horizontalSpace);
-        layoutParams.width = size;
-        layoutParams.height = size;
-        // create a button with these layout parameters
-        ImageButton button = new ImageButton(getActivity());
-        button.setLayoutParams(layoutParams);
-        // determine the correct icon to display
-        switch (type) {
-            case Personal:
-                button.setBackgroundResource(R.drawable.personal_site);
-                break;
-            case Blog:
-                button.setBackgroundResource(R.drawable.blog);
-                break;
-            case Linkedin:
-                button.setBackgroundResource(R.drawable.linkedin);
-                break;
-            case Twitter:
-                button.setBackgroundResource(R.drawable.twitter);
-                break;
-        }
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // convert to Uri for use with intent
-                Uri linkUri = Uri.parse(link);
-                // open the link in the browser
-                Intent intent = new Intent(Intent.ACTION_VIEW, linkUri);
-                startActivity(intent);
-            }
-        });
-        // display the button onscreen
-        linksLinearLayout.addView(button);
-    }
-
-    @Override
-    public void sendMessage(Message message) {
-        // mapped form will correctly allow the server to generate the timestamp
-        mPostsReference.push().setValue(message.toMap());
     }
 }
