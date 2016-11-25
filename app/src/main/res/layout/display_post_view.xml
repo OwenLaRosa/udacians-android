@@ -25,7 +25,8 @@
         android:layout_height="24dp"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/delete"/>
 
     <TextView
         android:id="@+id/display_post_name_text_view"

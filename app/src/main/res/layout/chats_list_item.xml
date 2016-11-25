@@ -48,7 +48,7 @@
         android:layout_width="@dimen/leave_chat_size"
         android:layout_height="@dimen/leave_chat_size"
         android:scaleType="centerCrop"
-        android:background="@drawable/leave"
+        android:background="@drawable/delete"
         android:layout_gravity="center_vertical"
         android:contentDescription="@string/a11y_leave_chat"/>
 
