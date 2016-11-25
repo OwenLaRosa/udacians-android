@@ -120,7 +120,8 @@ public class ProfilePostsAdapter extends BaseAdapter {
         } else {
             holder = (PostViewHolder) cell.getTag();
         }
-        Message post = posts.get(i);
+        // posts should be reversed with newest on top
+        Message post = posts.get(posts.size() - 1 - i);
         populatePostViewHolder(holder, post);
 
         return cell;
