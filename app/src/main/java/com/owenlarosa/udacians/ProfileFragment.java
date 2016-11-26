@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,6 +48,8 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
     TextView nameTextView;
     @BindView(R.id.profile_title_text_view)
     TextView titleTextView;
+    @BindView(R.id.connect_button)
+    FloatingActionButton connectButton;
     @BindView(R.id.posts_list_view)
     ListView postsListView;
     ProfileView headerView;
@@ -58,6 +62,10 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
     private DatabaseReference mBasicReference;
     private DatabaseReference mProfileReference;
     private DatabaseReference mPostsReference;
+    private DatabaseReference mIsConnectionReference;
+
+    // whether or not this user is a connection
+    private boolean mIsConnection = false;
 
     @Nullable
     @Override
@@ -127,12 +135,42 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
         });
         // used to write new posts, reading posts is handled by the adapter
         mPostsReference = userReference.child("posts");
+        // connections stored under user currently signed into the app
+        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mIsConnectionReference = mFirebaseDatabase.getReference().child("users").child(user).child("connections").child(mUserId);
+        mIsConnectionReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    // connection is added, show option to remove
+                    mIsConnection = true;
+                    connectButton.setImageResource(R.drawable.remove_connection);
+                    connectButton.setBackgroundColor(getResources().getColor(R.color.colorRemove));
+                } else {
+                    // not a connection yet, show option to add
+                    mIsConnection = false;
+                    connectButton.setImageResource(R.drawable.add_connection);
+                    connectButton.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         return rootView;
     }
 
     @OnClick(R.id.connect_button)
     public void connectTapped(View view) {
-
+        if (mIsConnection) {
+            // remove the connection
+            mIsConnectionReference.removeValue();
+        } else {
+            // add the connection
+            mIsConnectionReference.setValue(true);
+        }
     }
 
     // types of eligible links for image buttons

@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#01579B</color>
     <color name="colorPrimaryLight">#81D4FA</color>
     <color name="colorAccent">#FF9100</color>
+    <!-- color pertaining to deleting content or undoing action of FAB -->
+    <color name="colorRemove">#B0BEC5</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
 </resources>
