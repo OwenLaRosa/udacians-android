@@ -2,6 +2,7 @@ package com.owenlarosa.udacians;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -145,12 +146,12 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
                     // connection is added, show option to remove
                     mIsConnection = true;
                     connectButton.setImageResource(R.drawable.remove_connection);
-                    connectButton.setBackgroundColor(getResources().getColor(R.color.colorRemove));
+                    connectButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorRemove)));
                 } else {
                     // not a connection yet, show option to add
                     mIsConnection = false;
                     connectButton.setImageResource(R.drawable.add_connection);
-                    connectButton.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                    connectButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
                 }
             }
 
