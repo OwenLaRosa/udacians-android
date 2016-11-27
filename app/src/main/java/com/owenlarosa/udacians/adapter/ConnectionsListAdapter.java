@@ -12,11 +12,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.google.api.client.util.Data;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udacians.ChatActivity;
 import com.owenlarosa.udacians.R;
 
@@ -105,6 +108,8 @@ public class ConnectionsListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) cell.getTag();
         }
+        String userId = connections.get(i);
+        populateViewHolder(holder, userId);
         holder.messageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,6 +135,69 @@ public class ConnectionsListAdapter extends BaseAdapter {
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
+    }
+
+    /**
+     * Fills in the view holder with data related to the user
+     * @param viewHolder View to populate
+     * @param userId User to fetch data for
+     */
+    public void populateViewHolder(final ViewHolder viewHolder, String userId) {
+        DatabaseReference userBasicReference = mFirebaseDatabase.getReference().child("users").child(userId);
+        DatabaseReference nameReference = userBasicReference.child("name");
+        nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String name = dataSnapshot.getValue(String.class);
+                viewHolder.nameTextView.setText(name);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        DatabaseReference titleReference = userBasicReference.child("title");
+        titleReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String title = dataSnapshot.getValue(String.class);
+                viewHolder.titleTextView.setText(title);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        DatabaseReference photoReference = userBasicReference.child("photo");
+        photoReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String photoUrl = dataSnapshot.getValue(String.class);
+                Glide.with(mContext)
+                        .load(photoUrl)
+                        .into(viewHolder.profileImageView);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        DatabaseReference locationReference = mFirebaseDatabase.getReference().child("locations").child(userId).child("location");
+        locationReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String location = dataSnapshot.getValue(String.class);
+                viewHolder.locationTextView.setText(location);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }
