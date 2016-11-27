@@ -143,7 +143,7 @@ public class ConnectionsListAdapter extends BaseAdapter {
      * @param userId User to fetch data for
      */
     public void populateViewHolder(final ViewHolder viewHolder, String userId) {
-        DatabaseReference userBasicReference = mFirebaseDatabase.getReference().child("users").child(userId);
+        DatabaseReference userBasicReference = mFirebaseDatabase.getReference().child("users").child(userId).child("basic");
         DatabaseReference nameReference = userBasicReference.child("name");
         nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
