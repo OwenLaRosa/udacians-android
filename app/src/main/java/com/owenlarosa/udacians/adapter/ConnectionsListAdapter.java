@@ -12,8 +12,16 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.owenlarosa.udacians.ChatActivity;
 import com.owenlarosa.udacians.R;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,15 +33,53 @@ import butterknife.ButterKnife;
 public class ConnectionsListAdapter extends BaseAdapter {
 
     private Context mContext;
+    private String mUser;
 
-    public ConnectionsListAdapter(Context context) {
+    private ArrayList<String> connections = new ArrayList<String>();
+
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mConnectionsReference;
+
+    public ConnectionsListAdapter(Context context, String user) {
+        mUser = user;
         mContext = context;
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mConnectionsReference = mFirebaseDatabase.getReference().child("users").child(mUser).child("connections");
+        mConnectionsReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                // keys are the user IDs
+                connections.add(dataSnapshot.getKey());
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                connections.remove(dataSnapshot.getKey());
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
     public int getCount() {
         // 10 views as placeholders
-        return 10;
+        return connections.size();
     }
 
     // these 2 methods are required by base adapter, not used here

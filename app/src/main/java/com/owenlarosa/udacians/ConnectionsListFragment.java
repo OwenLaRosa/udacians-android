@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.owenlarosa.udacians.adapter.ConnectionsListAdapter;
 
 import butterknife.BindView;
@@ -34,7 +35,8 @@ public class ConnectionsListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_connections_list, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
 
-        ConnectionsListAdapter adapter = new ConnectionsListAdapter(getActivity());
+        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        ConnectionsListAdapter adapter = new ConnectionsListAdapter(getActivity(), user);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
