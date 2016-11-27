@@ -189,8 +189,13 @@ public class ConnectionsListAdapter extends BaseAdapter {
         locationReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String location = dataSnapshot.getValue(String.class);
-                viewHolder.locationTextView.setText(location);
+                if (dataSnapshot.getValue() != null) {
+                    String location = dataSnapshot.getValue(String.class);
+                    viewHolder.locationTextView.setText(location);
+                } else {
+                    // location not available in string form
+                    viewHolder.locationTextView.setText(mContext.getString(R.string.unknown_location));
+                }
             }
 
             @Override

@@ -48,6 +48,10 @@
     <!-- Reset save changes made on edit profile screen -->
     <string name="discard_changes">Discard Changes</string>
 
+    <!-- Connections list screen -->
+    <!-- Default text for when user's location (string form) is not specified -->
+    <string name="unknown_location">Unknown location</string>
+
     <!-- content descriptions -->
     <string name="a11y_udacians_logo">Udacians</string>
     <string name="a11y_add_image">Post Image</string>
