@@ -3,6 +3,7 @@ package com.owenlarosa.udacians;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -68,6 +69,9 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
     // whether or not this user is a connection
     private boolean mIsConnection = false;
 
+    // ensures resources can be accessed even if not attached to activity
+    private Resources mResources;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,6 +86,7 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
             // attached to main activity
             mUserId = getArguments().getString(EXTRA_USERID);
         }
+        mResources = getResources();
 
         final ProfilePostsAdapter postsAdapter = new ProfilePostsAdapter(getActivity(), mUserId);
         postsListView.setAdapter(postsAdapter);
@@ -146,12 +151,12 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
                     // connection is added, show option to remove
                     mIsConnection = true;
                     connectButton.setImageResource(R.drawable.remove_connection);
-                    connectButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorRemove)));
+                    connectButton.setBackgroundTintList(ColorStateList.valueOf(mResources.getColor(R.color.colorRemove)));
                 } else {
                     // not a connection yet, show option to add
                     mIsConnection = false;
                     connectButton.setImageResource(R.drawable.add_connection);
-                    connectButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
+                    connectButton.setBackgroundTintList(ColorStateList.valueOf(mResources.getColor(R.color.colorAccent)));
                 }
             }
 
@@ -193,8 +198,8 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        int size = (int) getResources().getDimension(R.dimen.profile_links_height);
-        int horizontalSpace = (int) getResources().getDimension(R.dimen.profile_links_horizontal_space);
+        int size = (int) mResources.getDimension(R.dimen.profile_links_height);
+        int horizontalSpace = (int) mResources.getDimension(R.dimen.profile_links_horizontal_space);
         layoutParams.setMargins(0, 0, horizontalSpace, 0);
         layoutParams.setMarginEnd(horizontalSpace);
         layoutParams.width = size;
