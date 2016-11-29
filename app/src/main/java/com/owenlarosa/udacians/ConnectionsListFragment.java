@@ -36,12 +36,14 @@ public class ConnectionsListFragment extends Fragment {
         mUnbinder = ButterKnife.bind(this, rootView);
 
         String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        ConnectionsListAdapter adapter = new ConnectionsListAdapter(getActivity(), user);
+        final ConnectionsListAdapter adapter = new ConnectionsListAdapter(getActivity(), user);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                String userId = (String) adapter.getItem(i);
+                intent.putExtra(ProfileFragment.EXTRA_USERID, userId);
                 startActivity(intent);
             }
         });

@@ -93,7 +93,7 @@ public class ConnectionsListAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int i) {
-        return null;
+        return connections.get(i);
     }
 
     @Override
