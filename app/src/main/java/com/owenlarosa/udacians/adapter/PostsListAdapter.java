@@ -32,7 +32,7 @@ import butterknife.OnClick;
  * Created by Owen LaRosa on 11/25/16.
  */
 
-public class ProfilePostsAdapter extends BaseAdapter {
+public class PostsListAdapter extends BaseAdapter {
 
     private Context mContext;
     // user id of profile to show posts for
@@ -48,7 +48,7 @@ public class ProfilePostsAdapter extends BaseAdapter {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference postsReference;
 
-    public ProfilePostsAdapter(Context context, String userId) {
+    public PostsListAdapter(Context context, String userId) {
         mContext = context;
         mUid = userId;
 

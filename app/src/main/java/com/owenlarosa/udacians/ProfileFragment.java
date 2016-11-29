@@ -24,7 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.owenlarosa.udacians.adapter.ProfilePostsAdapter;
+import com.owenlarosa.udacians.adapter.PostsListAdapter;
 import com.owenlarosa.udacians.data.BasicProfile;
 import com.owenlarosa.udacians.data.Message;
 import com.owenlarosa.udacians.data.ProfileInfo;
@@ -88,7 +88,7 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
         }
         mResources = getResources();
 
-        final ProfilePostsAdapter postsAdapter = new ProfilePostsAdapter(getActivity(), mUserId);
+        final PostsListAdapter postsAdapter = new PostsListAdapter(getActivity(), mUserId);
         postsListView.setAdapter(postsAdapter);
         headerView = new ProfileView(getActivity());
         postsListView.addHeaderView(headerView);

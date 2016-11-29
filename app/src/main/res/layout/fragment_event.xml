@@ -42,48 +42,10 @@
 
         </LinearLayout>
 
-        <TextView
-            style="@style/Base.TextAppearance.AppCompat.Title"
+        <ListView
+            android:id="@+id/event_posts_list_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/vertical_edge_margin"
-            android:layout_marginBottom="@dimen/vertical_edge_margin"
-            android:layout_marginEnd="@dimen/edge_margin"
-            android:layout_marginLeft="@dimen/edge_margin"
-            android:layout_marginRight="@dimen/edge_margin"
-            android:layout_marginStart="@dimen/edge_margin"
-            android:text="@string/about"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/event_about_text_view"
-            style="@style/Base.TextAppearance.AppCompat.Medium"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/vertical_inter_item_space"
-            android:layout_marginEnd="@dimen/edge_margin"
-            android:layout_marginLeft="@dimen/edge_margin"
-            android:layout_marginRight="@dimen/edge_margin"
-            android:layout_marginStart="@dimen/edge_margin" />
-
-        <com.owenlarosa.udacians.views.WritePostView
-            android:id="@+id/event_write_post_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/vertical_inter_item_space"
-            android:layout_marginEnd="@dimen/edge_margin"
-            android:layout_marginLeft="@dimen/edge_margin"
-            android:layout_marginRight="@dimen/edge_margin"
-            android:layout_marginStart="@dimen/edge_margin" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/event_posts_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:paddingEnd="@dimen/edge_margin"
-            android:paddingLeft="@dimen/edge_margin"
-            android:paddingRight="@dimen/edge_margin"
-            android:paddingStart="@dimen/edge_margin" />
+            android:layout_height="fill_parent" />
 
     </LinearLayout>
 

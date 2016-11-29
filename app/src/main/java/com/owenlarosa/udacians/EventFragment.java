@@ -4,10 +4,10 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -15,8 +15,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.owenlarosa.udacians.adapter.PostsListAdapter;
 import com.owenlarosa.udacians.data.Event;
-import com.owenlarosa.udacians.views.WritePostView;
+import com.owenlarosa.udacians.views.EventView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,12 +36,9 @@ public class EventFragment extends Fragment {
     TextView nameTextView;
     @BindView(R.id.event_location_text_view)
     TextView locationTextView;
-    @BindView(R.id.event_about_text_view)
-    TextView aboutTextView;
-    @BindView(R.id.event_write_post_view)
-    WritePostView writePostView;
-    @BindView(R.id.event_posts_recycler_view)
-    RecyclerView recyclerView;
+    @BindView(R.id.event_posts_list_view)
+    ListView postsListView;
+    EventView headerView;
 
     Unbinder mUnbinder;
 
@@ -64,6 +62,11 @@ public class EventFragment extends Fragment {
             mUserId = getArguments().getString(EXTRA_USERID);
         }
 
+        PostsListAdapter postsAdapter = new PostsListAdapter(getActivity(), mUserId);
+        postsListView.setAdapter(postsAdapter);
+        headerView = new EventView(getActivity());
+        postsListView.addHeaderView(headerView);
+
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mEventReference = mFirebaseDatabase.getReference().child("events").child(mUserId).child("info");
         mEventReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -72,7 +75,7 @@ public class EventFragment extends Fragment {
                 Event event = dataSnapshot.getValue(Event.class);
                 nameTextView.setText(event.getName());
                 locationTextView.setText(event.getPlace());
-                aboutTextView.setText(event.getAbout());
+                headerView.aboutTextView.setText(event.getAbout());
             }
 
             @Override
