@@ -17,6 +17,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udacians.adapter.PostsListAdapter;
 import com.owenlarosa.udacians.data.Event;
+import com.owenlarosa.udacians.data.Message;
+import com.owenlarosa.udacians.interfaces.MessageDelegate;
 import com.owenlarosa.udacians.views.EventView;
 
 import butterknife.BindView;
@@ -28,7 +30,7 @@ import butterknife.Unbinder;
  * Created by Owen LaRosa on 11/12/16.
  */
 
-public class EventFragment extends Fragment {
+public class EventFragment extends Fragment implements MessageDelegate {
 
     public static final String EXTRA_USERID = "userId";
 
@@ -46,6 +48,7 @@ public class EventFragment extends Fragment {
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mEventReference;
+    private DatabaseReference mPostsReference;
 
     @Nullable
     @Override
@@ -67,6 +70,9 @@ public class EventFragment extends Fragment {
         headerView = new EventView(getActivity());
         postsListView.addHeaderView(headerView);
 
+        // sending the actual messages is handled by this fragment
+        headerView.writePostView.delegate = this;
+
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mEventReference = mFirebaseDatabase.getReference().child("events").child(mUserId).child("info");
         mEventReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -83,6 +89,7 @@ public class EventFragment extends Fragment {
 
             }
         });
+        mPostsReference = mFirebaseDatabase.getReference().child("events").child(mUserId).child("posts");
 
         return rootView;
     }
@@ -92,4 +99,9 @@ public class EventFragment extends Fragment {
 
     }
 
+    @Override
+    public void sendMessage(Message message) {
+        // use map so server generates timestamp
+        mPostsReference.push().setValue(message.toMap());
+    }
 }
