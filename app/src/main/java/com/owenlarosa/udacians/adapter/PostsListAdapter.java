@@ -65,8 +65,10 @@ public class PostsListAdapter extends BaseAdapter {
         switch (type) {
             case Person:
                 root = "users";
+                break;
             case Event:
                 root = "events";
+                break;
         }
 
         // set up the firebase references
