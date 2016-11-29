@@ -28,11 +28,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.R.attr.type;
+
 /**
  * Created by Owen LaRosa on 11/25/16.
  */
 
 public class PostsListAdapter extends BaseAdapter {
+
+    public enum PostsType {
+        Person,
+        Event,
+    }
 
     private Context mContext;
     // user id of profile to show posts for
@@ -48,13 +55,23 @@ public class PostsListAdapter extends BaseAdapter {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference postsReference;
 
-    public PostsListAdapter(Context context, String userId) {
+    public PostsListAdapter(Context context, String userId, PostsType type) {
         mContext = context;
         mUid = userId;
 
+        // adapter can be used for posts on user profiles or events
+        // because these are at different paths in the DB, the root node is different
+        String root = "";
+        switch (type) {
+            case Person:
+                root = "users";
+            case Event:
+                root = "events";
+        }
+
         // set up the firebase references
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        postsReference = mFirebaseDatabase.getReference().child("users").child(mUid).child("posts");
+        postsReference = mFirebaseDatabase.getReference().child(root).child(mUid).child("posts");
         postsReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {

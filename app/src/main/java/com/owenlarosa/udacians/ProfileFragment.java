@@ -88,7 +88,7 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
         }
         mResources = getResources();
 
-        final PostsListAdapter postsAdapter = new PostsListAdapter(getActivity(), mUserId);
+        final PostsListAdapter postsAdapter = new PostsListAdapter(getActivity(), mUserId, PostsListAdapter.PostsType.Person);
         postsListView.setAdapter(postsAdapter);
         headerView = new ProfileView(getActivity());
         postsListView.addHeaderView(headerView);

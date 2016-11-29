@@ -62,7 +62,7 @@ public class EventFragment extends Fragment {
             mUserId = getArguments().getString(EXTRA_USERID);
         }
 
-        PostsListAdapter postsAdapter = new PostsListAdapter(getActivity(), mUserId);
+        PostsListAdapter postsAdapter = new PostsListAdapter(getActivity(), mUserId, PostsListAdapter.PostsType.Event);
         postsListView.setAdapter(postsAdapter);
         headerView = new EventView(getActivity());
         postsListView.addHeaderView(headerView);
