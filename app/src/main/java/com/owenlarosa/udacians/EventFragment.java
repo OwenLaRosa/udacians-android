@@ -57,7 +57,10 @@ public class EventFragment extends Fragment implements MessageDelegate {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mEventReference;
     private DatabaseReference mPostsReference;
+    // event is added to the user's data
     private DatabaseReference isAttendingReference;
+    // user is added to the event's data
+    private DatabaseReference isMemberReference;
 
     private boolean mIsAttending = false;
 
@@ -126,6 +129,7 @@ public class EventFragment extends Fragment implements MessageDelegate {
 
             }
         });
+        isMemberReference = mFirebaseDatabase.getReference().child("events").child(mUserId).child("members").child(user);
 
         return rootView;
     }
@@ -133,11 +137,15 @@ public class EventFragment extends Fragment implements MessageDelegate {
     @OnClick(R.id.attend_button)
     public void attendButtonTapped(View view) {
         if (mIsAttending) {
-            // remove the connection
+            // remove event from user data
             isAttendingReference.removeValue();
+            // unlist them as attendee
+            isMemberReference.removeValue();
         } else {
-            // add the connection
+            // add event to user data
             isAttendingReference.setValue(true);
+            // include user in attendee list
+            isMemberReference.setValue(true);
         }
     }
 
