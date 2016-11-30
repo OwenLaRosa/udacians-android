@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.owenlarosa.udacians.adapter.EventsListAdapter;
 
 import butterknife.BindView;
@@ -33,12 +34,14 @@ public class EventsListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_events_list, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
 
-        EventsListAdapter adapter = new EventsListAdapter(getActivity());
+        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final EventsListAdapter adapter = new EventsListAdapter(getActivity(), user);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getActivity(), EventActivity.class);
+                intent.putExtra(EventFragment.EXTRA_USERID, (String) adapter.getItem(i));
                 startActivity(intent);
             }
         });
