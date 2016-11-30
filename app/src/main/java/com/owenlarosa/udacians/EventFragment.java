@@ -2,14 +2,18 @@ package com.owenlarosa.udacians;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,6 +42,8 @@ public class EventFragment extends Fragment implements MessageDelegate {
     TextView nameTextView;
     @BindView(R.id.event_location_text_view)
     TextView locationTextView;
+    @BindView(R.id.attend_button)
+    FloatingActionButton attendButton;
     @BindView(R.id.event_posts_list_view)
     ListView postsListView;
     EventView headerView;
@@ -46,9 +52,14 @@ public class EventFragment extends Fragment implements MessageDelegate {
 
     private String mUserId;
 
+    private Resources mResources;
+
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mEventReference;
     private DatabaseReference mPostsReference;
+    private DatabaseReference isAttendingReference;
+
+    private boolean mIsAttending = false;
 
     @Nullable
     @Override
@@ -64,6 +75,8 @@ public class EventFragment extends Fragment implements MessageDelegate {
             // attached to main activity
             mUserId = getArguments().getString(EXTRA_USERID);
         }
+
+        mResources = getActivity().getResources();
 
         PostsListAdapter postsAdapter = new PostsListAdapter(getActivity(), mUserId, PostsListAdapter.PostsType.Event);
         postsListView.setAdapter(postsAdapter);
@@ -90,13 +103,42 @@ public class EventFragment extends Fragment implements MessageDelegate {
             }
         });
         mPostsReference = mFirebaseDatabase.getReference().child("events").child(mUserId).child("posts");
+        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        isAttendingReference = mFirebaseDatabase.getReference().child("users").child(user).child("events").child(mUserId);
+        isAttendingReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    // user is attending event, show option to remove
+                    mIsAttending = true;
+                    attendButton.setImageResource(R.drawable.remove_event);
+                    attendButton.setBackgroundTintList(ColorStateList.valueOf(mResources.getColor(R.color.colorRemove)));
+                } else {
+                    // not attending, show option to attend event
+                    mIsAttending = false;
+                    attendButton.setImageResource(R.drawable.add_event);
+                    attendButton.setBackgroundTintList(ColorStateList.valueOf(mResources.getColor(R.color.colorAccent)));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         return rootView;
     }
 
     @OnClick(R.id.attend_button)
     public void attendButtonTapped(View view) {
-
+        if (mIsAttending) {
+            // remove the connection
+            isAttendingReference.removeValue();
+        } else {
+            // add the connection
+            isAttendingReference.setValue(true);
+        }
     }
 
     @Override
