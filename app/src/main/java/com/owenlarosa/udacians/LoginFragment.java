@@ -72,6 +72,8 @@ public class LoginFragment extends Fragment {
     // using PersistentCookieManager: http://stackoverflow.com/questions/34881775/automatic-cookie-handling-with-okhttp-3/35346473
     PersistentCookieJar mCookieJar;
 
+    FirebaseDatabase mFirebaseDatabase;
+
     // used to monitor firebase authentication status
     FirebaseAuth.AuthStateListener mAuthStateListener;
 
@@ -83,6 +85,8 @@ public class LoginFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
 
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+
         // initialize the cookie jar
         mCookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(getActivity()));
 
@@ -91,7 +95,10 @@ public class LoginFragment extends Fragment {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // sync profile to complete the login
+                    // sync user's email address to profile
+                    DatabaseReference emailReference = mFirebaseDatabase.getReference().child("users").child(user.getUid()).child("email");
+                    emailReference.setValue(emailEditText.getText().toString());
+                    // sync profile info (name, enrollments) to complete the login
                     new SyncProfileTask().execute(user.getUid());
                     Log.d(LOG_TAG, "firebase authentication succeeded" + user.getUid());
                 } else {
@@ -176,9 +183,9 @@ public class LoginFragment extends Fragment {
                         .add("username", username)
                         .add("password", password)
                         .build();
-                // localhost IP address recognized by Genymotion emulator
+                // endpoint for posting a session
                 Request request = new Request.Builder()
-                        .url("http://10.0.0.5:8080/_ah/api/myApi/v1/session")
+                        .url("https://udacians-df696.appspot.com/_ah/api/myApi/v1/session")
                         .post(formBody)
                         .build();
                 String loginResult = "";
