@@ -4,41 +4,44 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <ImageButton
-        android:id="@+id/write_post_image_button"
-        android:layout_width="@dimen/button_size"
-        android:layout_height="@dimen/button_size"
-        app:backgroundTint="@color/colorAccent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginRight="@dimen/horizontal_inter_item_space"
-        android:layout_marginEnd="@dimen/horizontal_inter_item_space"/>
-
-    <Button
-        android:id="@+id/create_post_button"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/button_size"
-        android:text="@string/post"
-        android:textColor="@color/white"
-        app:backgroundTint="@color/colorAccent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginLeft="@dimen/horizontal_inter_item_space"
-        android:layout_marginStart="@dimen/horizontal_inter_item_space" />
-
-    <EditText
-        android:id="@+id/write_post_edit_text"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:id="@+id/write_post_linear_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/button_size"
-        style="@style/TextAppearance.AppCompat.Medium"
-        android:hint="@string/post_placeholder"
-        android:layout_toRightOf="@id/write_post_image_button"
-        android:layout_toEndOf="@id/write_post_image_button"
-        android:layout_toLeftOf="@id/create_post_button"
-        android:layout_toStartOf="@id/create_post_button"/>
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+        <ImageButton
+            android:id="@+id/write_post_image_button"
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
+            app:backgroundTint="@color/colorAccent"
+            android:layout_gravity="bottom"
+            android:layout_marginRight="@dimen/horizontal_inter_item_space"
+            android:layout_marginEnd="@dimen/horizontal_inter_item_space"/>
+
+        <EditText
+            android:id="@+id/write_post_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="@dimen/button_size"
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:hint="@string/post_placeholder"
+            android:layout_gravity="bottom"/>
+
+        <Button
+            android:id="@+id/create_post_button"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/button_size"
+            android:text="@string/post"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/colorAccent"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="@dimen/horizontal_inter_item_space"
+            android:layout_marginStart="@dimen/horizontal_inter_item_space"/>
+
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/write_post_image_view"
@@ -46,7 +49,7 @@
         android:layout_height="wrap_content"
         android:scaleType="fitStart"
         android:adjustViewBounds="true"
-        android:layout_below="@id/write_post_image_button"
+        android:layout_below="@id/write_post_linear_layout"
         android:background="@color/white"
         android:layout_marginTop="@dimen/vertical_inter_item_space"/>
 
