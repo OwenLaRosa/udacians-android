@@ -1,4 +1,6 @@
-<resources>
+<resources
+    xmlns:xliff="http://schemas.android.com/apk/res-auto">\
+
     <string name="app_name">Udacians</string>
 
     <!-- Note that this app is student-run, not by Udacity -->
@@ -47,6 +49,11 @@
     <string name="twitter" translatable="false">Twitter</string>
     <!-- Reset save changes made on edit profile screen -->
     <string name="discard_changes">Discard Changes</string>
+
+    <!-- Event screen -->
+    <!-- Used to show event details in blue header areas -->
+    <string name="evemt_location">Place: <xliff:g id="location">%1$s</xliff:g></string>
+    <string name="event_organizer">Organizer: <xliff:g id="organizer">%1$s</xliff:g></string>
 
     <!-- Connections list screen -->
     <!-- Default text for when user's location (string form) is not specified -->

@@ -110,7 +110,7 @@ public class EventFragment extends Fragment implements MessageDelegate {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Event event = dataSnapshot.getValue(Event.class);
                 nameTextView.setText(event.getName());
-                locationTextView.setText(event.getPlace());
+                locationTextView.setText(getString(R.string.evemt_location, event.getPlace()));
                 headerView.aboutTextView.setText(event.getAbout());
             }
 
@@ -125,7 +125,7 @@ public class EventFragment extends Fragment implements MessageDelegate {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String name = dataSnapshot.getValue(String.class);
-                organizerTextView.setText(name);
+                organizerTextView.setText(getString(R.string.event_organizer, name));
             }
 
             @Override
