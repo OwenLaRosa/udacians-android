@@ -7,6 +7,9 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.owenlarosa.udacians.adapter.AttendeesAdapter;
 import com.owenlarosa.udacians.adapter.PostsListAdapter;
 import com.owenlarosa.udacians.data.Event;
 import com.owenlarosa.udacians.data.Message;
@@ -88,6 +92,14 @@ public class EventFragment extends Fragment implements MessageDelegate {
 
         // sending the actual messages is handled by this fragment
         headerView.writePostView.delegate = this;
+
+        // show horizontal list of attendees for this event
+        // referenced: http://www.androidhive.info/2016/01/android-working-with-recycler-view/
+        AttendeesAdapter attendeesAdapter = new AttendeesAdapter(getActivity(), mUserId);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        headerView.recyclerView.setLayoutManager(layoutManager);
+        headerView.recyclerView.setItemAnimator(new DefaultItemAnimator());
+        headerView.recyclerView.setAdapter(attendeesAdapter);
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mEventReference = mFirebaseDatabase.getReference().child("events").child(mUserId).child("info");

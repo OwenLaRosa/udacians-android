@@ -1,6 +1,7 @@
 package com.owenlarosa.udacians.views;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,8 @@ public class EventView extends LinearLayout {
 
     @BindView(R.id.event_about_text_view)
     public TextView aboutTextView;
+    @BindView(R.id.attendees_recycler_view)
+    public RecyclerView recyclerView;
     @BindView(R.id.event_write_post_view)
     public WritePostView writePostView;
 
