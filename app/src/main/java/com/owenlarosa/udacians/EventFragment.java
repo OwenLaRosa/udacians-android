@@ -46,6 +46,8 @@ public class EventFragment extends Fragment implements MessageDelegate {
     TextView nameTextView;
     @BindView(R.id.event_location_text_view)
     TextView locationTextView;
+    @BindView(R.id.event_organizer_text_view)
+    TextView organizerTextView;
     @BindView(R.id.attend_button)
     FloatingActionButton attendButton;
     @BindView(R.id.event_posts_list_view)
@@ -110,6 +112,20 @@ public class EventFragment extends Fragment implements MessageDelegate {
                 nameTextView.setText(event.getName());
                 locationTextView.setText(event.getPlace());
                 headerView.aboutTextView.setText(event.getAbout());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        // show name of organizer
+        final DatabaseReference organizerReference = mFirebaseDatabase.getReference().child("users").child(mUserId).child("basic").child("name");
+        organizerReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String name = dataSnapshot.getValue(String.class);
+                organizerTextView.setText(name);
             }
 
             @Override

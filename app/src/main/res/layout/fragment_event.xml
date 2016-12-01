@@ -37,7 +37,15 @@
                 style="@style/Base.TextAppearance.AppCompat.Subhead"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/vertical_edge_margin"
+                android:layout_marginBottom="@dimen/vertical_inter_item_space"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/event_organizer_text_view"
+                style="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/vertical_inter_item_space"
                 android:textColor="@color/white" />
 
         </LinearLayout>
