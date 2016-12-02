@@ -1,13 +1,21 @@
 package com.owenlarosa.udacians;
 
+import android.*;
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +44,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static android.app.Activity.RESULT_OK;
+import static android.view.View.VISIBLE;
+
 /**
  * Created by Owen LaRosa on 11/7/16.
  */
@@ -43,6 +54,11 @@ import butterknife.Unbinder;
 public class ProfileFragment extends Fragment implements MessageDelegate {
 
     public static final String EXTRA_USERID = "userId";
+
+    // user selected an image from the gallery
+    private static final int RESULT_PICK_IMAGE = 1;
+    // user took an image with the camera
+    private static final int RESULT_TAKE_IMAGE = 2;
 
     @BindView(R.id.profile_image_view)
     ImageView profilePictureImageView;
@@ -69,6 +85,7 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
     // whether or not this user is a connection
     private boolean mIsConnection = false;
 
+    private Context mContext;
     // ensures resources can be accessed even if not attached to activity
     private Resources mResources;
 
@@ -86,6 +103,7 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
             // attached to main activity
             mUserId = getArguments().getString(EXTRA_USERID);
         }
+        mContext = getActivity();
         mResources = getResources();
 
         final PostsListAdapter postsAdapter = new PostsListAdapter(getActivity(), mUserId, PostsListAdapter.PostsType.Person);
@@ -93,6 +111,16 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
         headerView = new ProfileView(getActivity());
         postsListView.addHeaderView(headerView);
         headerView.writePostView.delegate = this;
+        // set up the button to add an image to post
+        headerView.writePostView.addImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // make sure read permissions are enabled before loading image
+                verifyStoragePermissions((Activity) mContext);
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, RESULT_PICK_IMAGE);
+            }
+        });
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference userReference = mFirebaseDatabase.getReference().child("users").child(mUserId);
@@ -168,6 +196,27 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
         return rootView;
     }
 
+    // get image returned from gallery or camera
+    // referenced: http://viralpatel.net/blogs/pick-image-from-galary-android-app/
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == RESULT_PICK_IMAGE && resultCode == RESULT_OK && null != intent) {
+            Uri imagePath = intent.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+            Cursor cursor = getActivity().getContentResolver().query(imagePath,
+                    filePathColumn, null, null, null);
+            if (null != cursor && cursor.moveToFirst()) {
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                String picturePath = cursor.getString(columnIndex);
+                cursor.close();
+                // show selected bitmap in the preview pane
+                headerView.writePostView.previewImageView.setVisibility(VISIBLE);
+                headerView.writePostView.previewImageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+            }
+        }
+    }
+
     @OnClick(R.id.connect_button)
     public void connectTapped(View view) {
         if (mIsConnection) {
@@ -240,5 +289,35 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
     public void sendMessage(Message message) {
         // mapped form will correctly allow the server to generate the timestamp
         mPostsReference.push().setValue(message.toMap());
+    }
+
+    // on Android Marshmallow and later, permissions for reading the image must be requested at runtime
+    // see: http://stackoverflow.com/questions/8854359/exception-open-failed-eacces-permission-denied-on-android
+
+    // Storage Permissions
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            android.Manifest.permission.READ_EXTERNAL_STORAGE
+    };
+
+    /**
+     * Checks if the app has permission to write to device storage
+     *
+     * If the app does not has permission then the user will be prompted to grant permissions
+     *
+     * @param activity
+     */
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
     }
 }
