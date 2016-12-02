@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ServerValue;
 import com.owenlarosa.udacians.R;
 import com.owenlarosa.udacians.data.Message;
 import com.owenlarosa.udacians.interfaces.MessageDelegate;
@@ -27,11 +26,11 @@ import butterknife.Unbinder;
 public class WritePostView extends RelativeLayout {
 
     @BindView(R.id.write_post_image_button)
-    ImageButton addImageButton;
+    public ImageButton addImageButton;
     @BindView(R.id.write_post_edit_text)
-    EditText postEditText;
+    public EditText postEditText;
     @BindView(R.id.write_post_image_view)
-    ImageView previewImageView;
+    public ImageView previewImageView;
     public MessageDelegate delegate;
 
     Unbinder unbinder;
@@ -73,5 +72,4 @@ public class WritePostView extends RelativeLayout {
         // alert fragment to send a message
         delegate.sendMessage(message);
     }
-
 }

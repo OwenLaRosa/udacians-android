@@ -46,11 +46,11 @@
     <ImageView
         android:id="@+id/write_post_image_view"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:scaleType="fitStart"
-        android:adjustViewBounds="true"
         android:layout_below="@id/write_post_linear_layout"
         android:background="@color/white"
+        android:visibility="gone"
         android:layout_marginTop="@dimen/vertical_inter_item_space"/>
 
 </RelativeLayout>
