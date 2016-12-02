@@ -15,7 +15,8 @@
             android:id="@+id/write_post_image_button"
             android:layout_width="@dimen/button_size"
             android:layout_height="@dimen/button_size"
-            app:backgroundTint="@color/colorAccent"
+            android:background="@color/white"
+            android:src="@drawable/camera"
             android:layout_gravity="bottom"
             android:layout_marginRight="@dimen/horizontal_inter_item_space"
             android:layout_marginEnd="@dimen/horizontal_inter_item_space"/>
