@@ -48,8 +48,6 @@ public class AttendeesAdapter extends RecyclerView.Adapter {
     public AttendeesAdapter(Context context, String userId) {
         mContext = context;
         mUserId = userId;
-        // event organizer is an attendee
-        members.add(mUserId);
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         attendeesReference = mFirebaseDatabase.getReference().child("events").child(mUserId).child("members");
         attendeesReference.addChildEventListener(new ChildEventListener() {
