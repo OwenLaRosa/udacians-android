@@ -189,7 +189,8 @@ public class EventFragment extends Fragment implements MessageDelegate {
         mIsMyEvent = mUserId.equals(user);
         if (mIsMyEvent) {
             // organizer is already attending event by default, this button is used for emailing members
-            attendButton.setImageResource(R.drawable.message);
+            // same as "message user" icon but this one is white to contrast with the orange background
+            attendButton.setImageResource(R.drawable.email);
             attendButton.setBackgroundTintList(ColorStateList.valueOf(mResources.getColor(R.color.colorAccent)));
         } else {
             // show add/remove from event icon for other users
