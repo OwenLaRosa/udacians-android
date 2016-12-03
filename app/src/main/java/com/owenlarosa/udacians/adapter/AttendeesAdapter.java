@@ -33,6 +33,14 @@ public class AttendeesAdapter extends RecyclerView.Adapter {
 
     // user IDs of event attendees
     private ArrayList<String> members = new ArrayList<String>();
+    private ArrayList<String> mailingList = new ArrayList<String>();
+    /**
+     * Get email addresses of all event members
+     * @return Addresses as an array
+     */
+    public String[] getMailingList() {
+        return (String[]) mailingList.toArray();
+    }
 
     FirebaseDatabase mFirebaseDatabase;
     DatabaseReference attendeesReference;
@@ -47,8 +55,10 @@ public class AttendeesAdapter extends RecyclerView.Adapter {
         attendeesReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                members.add(dataSnapshot.getKey());
+                String user = dataSnapshot.getKey();
+                members.add(user);
                 notifyDataSetChanged();
+                updateMailingList(user, true);
             }
 
             @Override
@@ -58,8 +68,10 @@ public class AttendeesAdapter extends RecyclerView.Adapter {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                members.remove(dataSnapshot.getKey());
+                String user = dataSnapshot.getKey();
+                members.remove(user);
                 notifyDataSetChanged();
+                updateMailingList(user, false);
             }
 
             @Override
@@ -121,5 +133,29 @@ public class AttendeesAdapter extends RecyclerView.Adapter {
         }
     }
 
+    /**
+     * Add or remove the user to the mailing list
+     * @param user ID or the user to be added/removed
+     * @param addUser true if adding a user, false if removing one
+     */
+    private void updateMailingList(String user, final boolean addUser) {
+        DatabaseReference emailReference = mFirebaseDatabase.getReference().child("users").child(user).child("email");
+        emailReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String email = dataSnapshot.getValue(String.class);
+                if (addUser) {
+                    mailingList.add(email);
+                } else {
+                    mailingList.remove(email);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
 }
