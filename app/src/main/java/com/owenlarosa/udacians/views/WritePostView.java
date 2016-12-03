@@ -64,12 +64,13 @@ public class WritePostView extends RelativeLayout {
         Message message = new Message();
         message.setSender(FirebaseAuth.getInstance().getCurrentUser().getUid());
         message.setContent(postEditText.getText().toString());
+
+        // alert fragment to send a message
+        delegate.sendMessage(message);
+
         // clear text and image when sending a message
         postEditText.setText("");
         // can't reset an image view, just set its visibility to gone
-        // when uploading an image, the visibility will be set later
         previewImageView.setVisibility(View.GONE);
-        // alert fragment to send a message
-        delegate.sendMessage(message);
     }
 }

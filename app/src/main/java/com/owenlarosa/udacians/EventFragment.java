@@ -1,7 +1,7 @@
 package com.owenlarosa.udacians;
 
-import android.app.Activity;
 import android.Manifest;
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,18 +26,25 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.owenlarosa.udacians.adapter.AttendeesAdapter;
 import com.owenlarosa.udacians.adapter.PostsListAdapter;
 import com.owenlarosa.udacians.data.Event;
 import com.owenlarosa.udacians.data.Message;
 import com.owenlarosa.udacians.interfaces.MessageDelegate;
 import com.owenlarosa.udacians.views.EventView;
+
+import java.io.ByteArrayOutputStream;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -86,7 +94,13 @@ public class EventFragment extends Fragment implements MessageDelegate {
     // user is added to the event's data
     private DatabaseReference isMemberReference;
 
+    private FirebaseStorage mFirebaseStorage;
+    private StorageReference mPublicImageStorage;
+
     private boolean mIsAttending = false;
+
+    // image currently displayed in post authoring view
+    private Bitmap mImage;
 
     @Nullable
     @Override
@@ -188,6 +202,11 @@ public class EventFragment extends Fragment implements MessageDelegate {
         });
         isMemberReference = mFirebaseDatabase.getReference().child("events").child(mUserId).child("members").child(user);
 
+        // storage is used for uploading images
+        mFirebaseStorage = FirebaseStorage.getInstance();
+        StorageReference storageReference = mFirebaseStorage.getReferenceFromUrl("gs://udacians-df696.appspot.com");
+        mPublicImageStorage = storageReference.child(user).child("public").child("images");
+
         return rootView;
     }
 
@@ -206,8 +225,9 @@ public class EventFragment extends Fragment implements MessageDelegate {
                 String picturePath = cursor.getString(columnIndex);
                 cursor.close();
                 // show selected bitmap in the preview pane
+                mImage = BitmapFactory.decodeFile(picturePath);
                 headerView.writePostView.previewImageView.setVisibility(VISIBLE);
-                headerView.writePostView.previewImageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+                headerView.writePostView.previewImageView.setImageBitmap(mImage);
             }
         }
     }
@@ -228,9 +248,27 @@ public class EventFragment extends Fragment implements MessageDelegate {
     }
 
     @Override
-    public void sendMessage(Message message) {
-        // use map so server generates timestamp
-        mPostsReference.push().setValue(message.toMap());
+    public void sendMessage(final Message message) {
+        if (mImage != null) {
+            // message contains an image to be uploaded
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            mImage.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            byte[] binaryData = outputStream.toByteArray();
+            // use the current date to generate a unique file name for the image
+            String imageName = new Date().toString() + ".jpg";
+            UploadTask uploadTask = mPublicImageStorage.child(imageName).putBytes(binaryData);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // use map so server generates timestamp
+                    message.setImageUrl(taskSnapshot.getDownloadUrl().toString());
+                    mPostsReference.push().setValue(message.toMap());
+                }
+            });
+        } else {
+            // no image? just send the message without
+            mPostsReference.push().setValue(message.toMap());
+        }
     }
 
     // on Android Marshmallow and later, permissions for reading the image must be requested at runtime
