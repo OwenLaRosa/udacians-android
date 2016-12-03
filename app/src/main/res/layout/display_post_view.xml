@@ -59,16 +59,20 @@
         android:layout_toEndOf="@id/display_post_profile_image_view"
         android:layout_toLeftOf="@id/display_post_delete_button"
         android:layout_toStartOf="@id/display_post_delete_button"
-        android:layout_below="@id/display_post_name_text_view"/>
+        android:layout_below="@id/display_post_name_text_view"
+        android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
 
     <ImageView
         android:id="@+id/display_post_content_image_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/image_preview_height"
+        android:visibility="gone"
+        android:scaleType="fitStart"
         android:layout_below="@id/display_post_content_text_view"
         android:layout_toRightOf="@id/display_post_profile_image_view"
         android:layout_toEndOf="@id/display_post_profile_image_view"
         android:layout_toLeftOf="@id/display_post_delete_button"
-        android:layout_toStartOf="@id/display_post_delete_button"/>
+        android:layout_toStartOf="@id/display_post_delete_button"
+        android:layout_marginTop="@dimen/vertical_inter_item_space"/>
 
 </RelativeLayout>

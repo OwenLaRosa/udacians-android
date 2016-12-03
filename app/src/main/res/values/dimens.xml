@@ -50,5 +50,7 @@
     <dimen name="vertical_inter_item_space">4dp</dimen>
     <dimen name="vertical_edge_margin">8dp</dimen>
     <dimen name="button_size">48dp</dimen>
+    <!-- image previews when writing and displaying posts/chat messages -->
+    <dimen name="image_preview_height">150dp</dimen>
 
 </resources>

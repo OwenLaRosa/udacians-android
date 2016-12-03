@@ -29,6 +29,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static android.R.attr.type;
+import static com.owenlarosa.udacians.R.string.post;
 
 /**
  * Created by Owen LaRosa on 11/25/16.
@@ -218,6 +219,24 @@ public class PostsListAdapter extends BaseAdapter {
 
             }
         });
+        // show image if one is contained in the post
+        if (post.getImageUrl() != null) {
+            if (post.getContent() == null || post.getContent().equals("")) {
+                // post does not have any text to show
+                viewHolder.contentTextView.setVisibility(View.GONE);
+            } else {
+                viewHolder.contentTextView.setVisibility(View.VISIBLE);
+            }
+            viewHolder.contentImageView.setVisibility(View.VISIBLE);
+            Glide.with(mContext)
+                    .load(post.getImageUrl())
+                    .into(viewHolder.contentImageView);
+        } else {
+            // make sure the right content is visible
+            // without this, sometimes an image view is shown and a text view is not
+            viewHolder.contentImageView.setVisibility(View.GONE);
+            viewHolder.contentTextView.setVisibility(View.VISIBLE);
+        }
         // users can delete all posts on their profile
         // they can also delete posts they authored on a different profile
         String user = FirebaseAuth.getInstance().getCurrentUser().getUid();

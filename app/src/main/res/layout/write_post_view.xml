@@ -47,7 +47,7 @@
     <ImageView
         android:id="@+id/write_post_image_view"
         android:layout_width="fill_parent"
-        android:layout_height="150dp"
+        android:layout_height="@dimen/image_preview_height"
         android:scaleType="fitStart"
         android:layout_below="@id/write_post_linear_layout"
         android:background="@color/white"
