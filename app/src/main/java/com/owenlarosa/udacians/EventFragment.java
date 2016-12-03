@@ -263,6 +263,8 @@ public class EventFragment extends Fragment implements MessageDelegate {
                     // use map so server generates timestamp
                     message.setImageUrl(taskSnapshot.getDownloadUrl().toString());
                     mPostsReference.push().setValue(message.toMap());
+                    // reset for a new message to be sent
+                    mImage = null;
                 }
             });
         } else {
