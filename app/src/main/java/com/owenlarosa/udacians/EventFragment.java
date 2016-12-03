@@ -44,6 +44,7 @@ import com.owenlarosa.udacians.interfaces.MessageDelegate;
 import com.owenlarosa.udacians.views.EventView;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 
 import butterknife.BindView;
@@ -52,6 +53,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Intent.EXTRA_SUBJECT;
 import static android.view.View.VISIBLE;
 
 /**
@@ -79,6 +81,9 @@ public class EventFragment extends Fragment implements MessageDelegate {
     ListView postsListView;
     EventView headerView;
 
+    // adapter used to show horizontal list of attendees
+    AttendeesAdapter attendeesAdapter;
+
     Unbinder mUnbinder;
 
     private String mUserId;
@@ -98,6 +103,7 @@ public class EventFragment extends Fragment implements MessageDelegate {
     private StorageReference mPublicImageStorage;
 
     private boolean mIsAttending = false;
+    private boolean mIsMyEvent = false;
 
     // image currently displayed in post authoring view
     private Bitmap mImage;
@@ -140,7 +146,7 @@ public class EventFragment extends Fragment implements MessageDelegate {
 
         // show horizontal list of attendees for this event
         // referenced: http://www.androidhive.info/2016/01/android-working-with-recycler-view/
-        AttendeesAdapter attendeesAdapter = new AttendeesAdapter(getActivity(), mUserId);
+        attendeesAdapter = new AttendeesAdapter(getActivity(), mUserId);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         headerView.recyclerView.setLayoutManager(layoutManager);
         headerView.recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -178,28 +184,38 @@ public class EventFragment extends Fragment implements MessageDelegate {
         });
         mPostsReference = mFirebaseDatabase.getReference().child("events").child(mUserId).child("posts");
         String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        isAttendingReference = mFirebaseDatabase.getReference().child("users").child(user).child("events").child(mUserId);
-        isAttendingReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null) {
-                    // user is attending event, show option to remove
-                    mIsAttending = true;
-                    attendButton.setImageResource(R.drawable.remove_event);
-                    attendButton.setBackgroundTintList(ColorStateList.valueOf(mResources.getColor(R.color.colorRemove)));
-                } else {
-                    // not attending, show option to attend event
-                    mIsAttending = false;
-                    attendButton.setImageResource(R.drawable.add_event);
-                    attendButton.setBackgroundTintList(ColorStateList.valueOf(mResources.getColor(R.color.colorAccent)));
+
+        // event organizers have the option to email members of the event
+        mIsMyEvent = mUserId.equals(user);
+        if (mIsMyEvent) {
+            // organizer is already attending event by default, this button is used for emailing members
+            attendButton.setImageResource(R.drawable.message);
+            attendButton.setBackgroundTintList(ColorStateList.valueOf(mResources.getColor(R.color.colorAccent)));
+        } else {
+            // show add/remove from event icon for other users
+            isAttendingReference = mFirebaseDatabase.getReference().child("users").child(user).child("events").child(mUserId);
+            isAttendingReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.getValue() != null) {
+                        // user is attending event, show option to remove
+                        mIsAttending = true;
+                        attendButton.setImageResource(R.drawable.remove_event);
+                        attendButton.setBackgroundTintList(ColorStateList.valueOf(mResources.getColor(R.color.colorRemove)));
+                    } else {
+                        // not attending, show option to attend event
+                        mIsAttending = false;
+                        attendButton.setImageResource(R.drawable.add_event);
+                        attendButton.setBackgroundTintList(ColorStateList.valueOf(mResources.getColor(R.color.colorAccent)));
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }
         isMemberReference = mFirebaseDatabase.getReference().child("events").child(mUserId).child("members").child(user);
 
         // storage is used for uploading images
@@ -234,6 +250,22 @@ public class EventFragment extends Fragment implements MessageDelegate {
 
     @OnClick(R.id.attend_button)
     public void attendButtonTapped(View view) {
+        if (mIsMyEvent) {
+            // if this is the organizer, allow them to contact the email list
+            ArrayList<String> emailList = attendeesAdapter.getMailingList();
+            // send an email message with user's preferred application
+            // http://stackoverflow.com/questions/5420138/is-it-possible-to-use-an-action-sento-intent-to-send-to-multiple-recipients
+            Intent intent = new Intent(Intent.ACTION_SENDTO);
+            intent.setType("message/rfc822");
+            if (emailList.size() != 0) {
+                intent.setData(buildMailRecipients(emailList));
+            }
+            // set title of the event as subject
+            intent.putExtra(Intent.EXTRA_SUBJECT, nameTextView.getText().toString());
+            startActivity(Intent.createChooser(intent, getString(R.string.event_send_email)));
+            return;
+        }
+        // all other members get to flag attending/not attending status
         if (mIsAttending) {
             // remove event from user data
             isAttendingReference.removeValue();
@@ -245,6 +277,26 @@ public class EventFragment extends Fragment implements MessageDelegate {
             // include user in attendee list
             isMemberReference.setValue(true);
         }
+    }
+
+    /**
+     * Create a Uri to send email to multiple recipients
+     * @param emailList Email address of the recipients
+     * @return Uri generated from the mailing list
+     */
+    private Uri buildMailRecipients(ArrayList<String> emailList) {
+        StringBuilder builder = new StringBuilder();
+        // default start of the url
+        builder.append("mailto:");
+        for (int i = 0; i < emailList.size(); i++) {
+            String emailAddress = emailList.get(i);
+            builder.append(emailAddress);
+            // email addresses are comma separated, last one not followed by comma
+            if (i < emailList.size() - 1) {
+                builder.append(",");
+            }
+        }
+        return Uri.parse(builder.toString());
     }
 
     @Override

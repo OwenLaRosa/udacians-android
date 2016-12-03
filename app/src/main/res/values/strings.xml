@@ -54,6 +54,8 @@
     <!-- Used to show event details in blue header areas -->
     <string name="evemt_location">Place: <xliff:g id="location">%1$s</xliff:g></string>
     <string name="event_organizer">Organizer: <xliff:g id="organizer">%1$s</xliff:g></string>
+    <!-- Prompt to send email about this event -->
+    <string name="event_send_email">Send email to attendees</string>
 
     <!-- Connections list screen -->
     <!-- Default text for when user's location (string form) is not specified -->

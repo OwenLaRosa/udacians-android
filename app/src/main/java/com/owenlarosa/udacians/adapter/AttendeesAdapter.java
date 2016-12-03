@@ -36,10 +36,10 @@ public class AttendeesAdapter extends RecyclerView.Adapter {
     private ArrayList<String> mailingList = new ArrayList<String>();
     /**
      * Get email addresses of all event members
-     * @return Addresses as an array
+     * @return Addresses as an arraylist
      */
-    public String[] getMailingList() {
-        return (String[]) mailingList.toArray();
+    public ArrayList<String> getMailingList() {
+        return mailingList;
     }
 
     FirebaseDatabase mFirebaseDatabase;
