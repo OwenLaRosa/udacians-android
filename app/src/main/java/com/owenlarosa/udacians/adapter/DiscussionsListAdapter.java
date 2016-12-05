@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +23,9 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+import static android.R.attr.id;
 
 
 /**
@@ -141,17 +145,28 @@ public class DiscussionsListAdapter extends BaseAdapter {
         return cell;
     }
 
-    static class ViewHolder {
+    class ViewHolder {
         @BindView(R.id.chat_name_text_view)
         TextView nameTextView;
         @BindView(R.id.chat_description_text_view)
         TextView descriptionTextView;
         @BindView(R.id.chat_photo_image_view)
         ImageView imageView;
+        @BindView(R.id.leave_chat_button)
+        ImageButton leaveChatButton;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
+
+        public String id;
+
+        @OnClick(R.id.leave_chat_button)
+        public void leaveChat() {
+            // remove this topic from the user's list
+            topicsReference.child(id).removeValue();
+        }
+
     }
 
     /**
@@ -160,8 +175,12 @@ public class DiscussionsListAdapter extends BaseAdapter {
      * @param topic Name of topic corresponding with this view
      */
     private void populateViewHolder(final ViewHolder viewHolder, String topic) {
+        // reference to topic ID to handle leaving chats
+        viewHolder.id = topic;
         if (topic.startsWith("nd")) {
             // for chats corresponding with a specific Nanodegree
+            // users are disallowed from leaving course specific chats
+            viewHolder.leaveChatButton.setVisibility(View.GONE);
             final boolean beta;
             if (topic.endsWith("beta")) {
                 // some students are enrolled in beta programs with different course IDs
@@ -209,6 +228,8 @@ public class DiscussionsListAdapter extends BaseAdapter {
             });
         } else {
             // custom topics created by users
+            // users can leave these chats
+            viewHolder.leaveChatButton.setVisibility(View.VISIBLE);
             DatabaseReference nameReference = mFirebaseDatabase.getReference().child("topics").child(topic).child("info").child("name");
             nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
