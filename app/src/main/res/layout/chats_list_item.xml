@@ -31,15 +31,12 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:textStyle="bold"
-            android:textColor="@color/colorPrimaryDark"
-            android:text="Android Developer Nanodegree"
-            android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
+            android:textColor="@color/colorPrimaryDark"/>
 
         <TextView
             android:id="@+id/chat_description_text_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="General discussion for students in the Android Developer Nanodegree."/>
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 
