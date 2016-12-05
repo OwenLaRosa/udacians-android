@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.api.client.util.Data;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,9 +23,6 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static android.R.attr.data;
-import static android.R.attr.name;
-import static android.R.attr.top;
 
 /**
  * Created by Owen LaRosa on 11/14/16.
@@ -197,6 +193,47 @@ public class DiscussionsListAdapter extends BaseAdapter {
                 }
             });
             DatabaseReference imageReference = nanodegreeReference.child("image");
+            imageReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String image = dataSnapshot.getValue(String.class);
+                    Glide.with(mContext)
+                            .load(image)
+                            .into(viewHolder.imageView);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        } else {
+            // custom topics created by users
+            DatabaseReference nameReference = mFirebaseDatabase.getReference().child("topics").child(topic).child("info").child("name");
+            nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    viewHolder.nameTextView.setText(dataSnapshot.getValue(String.class));
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+            DatabaseReference creatorReference = mFirebaseDatabase.getReference().child("users").child(topic).child("basic").child("name");
+            creatorReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    viewHolder.descriptionTextView.setText(mContext.getString(R.string.discussion_posted_by, dataSnapshot.getValue()));
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+            DatabaseReference imageReference = mFirebaseDatabase.getReference().child("users").child(topic).child("basic").child("photo");
             imageReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
