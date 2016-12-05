@@ -9,7 +9,15 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.api.client.util.Data;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.owenlarosa.udacians.R;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,15 +29,86 @@ import butterknife.ButterKnife;
 public class DiscussionsListAdapter extends BaseAdapter {
 
     private Context mContext;
+    private String mUserId;
 
-    public DiscussionsListAdapter(Context context) {
+    private ArrayList<String> discussions = new ArrayList<String>();
+
+    FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
+    DatabaseReference enrollmentsReference;
+    DatabaseReference topicsReference;
+
+    public DiscussionsListAdapter(Context context, String userId) {
+        mUserId = userId;
         mContext = context;
+        DatabaseReference userReference = mFirebaseDatabase.getReference().child("users").child(mUserId);
+        enrollmentsReference = userReference.child("enrollments");
+        enrollmentsReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                String course = dataSnapshot.getKey();
+                discussions.add(course);
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                String course = dataSnapshot.getKey();
+                discussions.remove(course);
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        topicsReference = userReference.child("topics");
+        topicsReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                String topic = dataSnapshot.getKey();
+                discussions.add(topic);
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                String topic = dataSnapshot.getKey();
+                discussions.remove(topic);
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
     public int getCount() {
-        // 10 views as placeholders
-        return 10;
+        // number of courses + discussions user participates in
+        return discussions.size();
     }
 
     @Override

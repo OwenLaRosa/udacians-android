@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.owenlarosa.udacians.adapter.DiscussionsListAdapter;
 
 import butterknife.BindView;
@@ -33,7 +34,8 @@ public class ChatsListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_chats_list, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
 
-        DiscussionsListAdapter adapter = new DiscussionsListAdapter(getActivity());
+        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DiscussionsListAdapter adapter = new DiscussionsListAdapter(getActivity(), user);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
