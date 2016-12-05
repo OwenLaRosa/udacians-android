@@ -61,6 +61,10 @@
     <!-- Default text for when user's location (string form) is not specified -->
     <string name="unknown_location">Unknown location</string>
 
+    <!-- Discussions list screen -->
+    <!--  -->
+    <string name="nd_chat_default">General discussion for students in the <xliff:g id="name">%1$s</xliff:g></string>
+
     <!-- content descriptions -->
     <string name="a11y_udacians_logo">Udacians</string>
     <string name="a11y_add_image">Post Image</string>

@@ -16,7 +16,7 @@
         android:layout_width="@dimen/connections_image_size"
         android:layout_height="@dimen/connections_image_size"
         android:scaleType="centerCrop"
-        android:background="@color/colorAccent"
+        android:background="@color/imagePlaceholder"
         android:layout_marginRight="@dimen/horizontal_inter_item_space"
         android:layout_marginEnd="@dimen/horizontal_inter_item_space"/>
 
@@ -34,23 +34,20 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:textStyle="bold"
-            android:textColor="@color/colorPrimaryDark"
-            android:text="Owen LaRosa"/>
+            android:textColor="@color/colorPrimaryDark"/>
 
         <TextView
             android:id="@+id/connection_title_text_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:maxLines="1"
-            android:text="Code Reviewer at Udacity"/>
+            android:maxLines="1"/>
 
         <TextView
             android:id="@+id/connection_location_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:text="Somerville, MA"/>
+            android:maxLines="1"/>
 
     </LinearLayout>
 

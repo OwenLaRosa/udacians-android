@@ -9,18 +9,23 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.api.client.util.Data;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udacians.R;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.R.attr.data;
+import static android.R.attr.name;
 
 /**
  * Created by Owen LaRosa on 11/14/16.
@@ -133,6 +138,9 @@ public class DiscussionsListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) cell.getTag();
         }
+        String topic = discussions.get(i);
+        populateViewHolder(holder, topic);
+
         return cell;
     }
 
@@ -146,6 +154,47 @@ public class DiscussionsListAdapter extends BaseAdapter {
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
+        }
+    }
+
+    /**
+     * Populate the view with data about the discussion
+     * @param viewHolder View to be populated
+     * @param topic Name of topic corresponding with this view
+     */
+    private void populateViewHolder(final ViewHolder viewHolder, String topic) {
+        if (topic.startsWith("nd")) {
+            // for chats corresponding with a specific Nanodegree
+            DatabaseReference nanodegreeReference = mFirebaseDatabase.getReference().child("nano_degrees").child(topic);
+            DatabaseReference nameReference = nanodegreeReference.child("name");
+            nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String name = dataSnapshot.getValue(String.class);
+                    viewHolder.nameTextView.setText(name);
+                    viewHolder.descriptionTextView.setText(mContext.getString(R.string.nd_chat_default, name));
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+            DatabaseReference imageReference = nanodegreeReference.child("image");
+            imageReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String image = dataSnapshot.getValue(String.class);
+                    Glide.with(mContext)
+                            .load(image)
+                            .into(viewHolder.imageView);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 
