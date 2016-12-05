@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimaryLight"
-    android:padding="@dimen/chat_view_inter_item_margin">
+    android:background="@color/white"
+    android:padding="@dimen/chat_view_inter_item_margin"
+    android:baselineAligned="false">
     
     <ImageButton
         android:id="@+id/chat_input_add_image_button"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_gravity="top"
-        android:background="@color/colorAccent"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        android:src="@drawable/camera"
         android:contentDescription="@string/a11y_add_image"
         android:layout_marginRight="@dimen/chat_view_inter_item_margin"
         android:layout_marginEnd="@dimen/chat_view_inter_item_margin"/>
@@ -26,7 +29,7 @@
         android:maxLines="@integer/chat_input_max_lines"
         android:scrollbars="vertical"
         android:hint="@string/enter_message"
-        android:background="@color/white"
+        android:layout_gravity="bottom"
         android:paddingLeft="@dimen/chat_edittext_horizontal_padding"
         android:paddingRight="@dimen/chat_edittext_horizontal_padding"
         android:layout_marginRight="@dimen/chat_view_inter_item_margin"
@@ -35,10 +38,10 @@
     <Button
         android:id="@+id/chat_input_send_button"
         android:layout_width="wrap_content"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:text="@string/send"
         android:textColor="@color/white"
-        android:background="@color/colorAccent"
-        android:layout_gravity="top"/>
+        app:backgroundTint="@color/colorAccent"
+        android:layout_gravity="bottom"/>
 
 </LinearLayout>
