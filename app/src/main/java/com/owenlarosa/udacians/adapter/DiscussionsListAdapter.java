@@ -26,6 +26,7 @@ import butterknife.ButterKnife;
 
 import static android.R.attr.data;
 import static android.R.attr.name;
+import static android.R.attr.top;
 
 /**
  * Created by Owen LaRosa on 11/14/16.
@@ -165,12 +166,27 @@ public class DiscussionsListAdapter extends BaseAdapter {
     private void populateViewHolder(final ViewHolder viewHolder, String topic) {
         if (topic.startsWith("nd")) {
             // for chats corresponding with a specific Nanodegree
+            final boolean beta;
+            if (topic.endsWith("beta")) {
+                // some students are enrolled in beta programs with different course IDs
+                topic = topic.replace("beta", "");
+                beta = true;
+            } else {
+                // non beta, will use regular course name
+                beta = false;
+            }
             DatabaseReference nanodegreeReference = mFirebaseDatabase.getReference().child("nano_degrees").child(topic);
             DatabaseReference nameReference = nanodegreeReference.child("name");
             nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    String name = dataSnapshot.getValue(String.class);
+                    String name;
+                    // indicate whether or not this is a beta version of the program
+                    if (beta) {
+                        name = dataSnapshot.getValue(String.class) + " " + mContext.getString(R.string.nd_beta_suffix);
+                    } else {
+                        name = dataSnapshot.getValue(String.class);
+                    }
                     viewHolder.nameTextView.setText(name);
                     viewHolder.descriptionTextView.setText(mContext.getString(R.string.nd_chat_default, name));
                 }

@@ -62,8 +62,10 @@
     <string name="unknown_location">Unknown location</string>
 
     <!-- Discussions list screen -->
-    <!--  -->
+    <!-- descriptor for Nanodegree's general chat -->
     <string name="nd_chat_default">General discussion for students in the <xliff:g id="name">%1$s</xliff:g></string>
+    <!-- Appended to Nanodegree names where student is in beta program -->
+    <string name="nd_beta_suffix">Beta</string>
 
     <!-- content descriptions -->
     <string name="a11y_udacians_logo">Udacians</string>
