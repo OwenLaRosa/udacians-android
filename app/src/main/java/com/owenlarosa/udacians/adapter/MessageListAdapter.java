@@ -19,7 +19,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udacians.R;
 import com.owenlarosa.udacians.data.Message;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -156,6 +158,11 @@ public class MessageListAdapter extends BaseAdapter {
         });
         // message contents stored directly in object
         viewHolder.contentTextView.setText(message.getContent());
+
+        // time should be formatted as hours:minutes
+        Date date = new Date(message.getDate());
+        String formattedTime = new SimpleDateFormat("H:mm").format(date);
+        viewHolder.timeTextView.setText(formattedTime);
     }
 
     @Override

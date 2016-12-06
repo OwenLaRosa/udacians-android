@@ -21,7 +21,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udacians.R;
 import com.owenlarosa.udacians.data.Message;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -245,5 +247,8 @@ public class PostsListAdapter extends BaseAdapter {
         } else {
             viewHolder.deleteButton.setVisibility(View.INVISIBLE);
         }
+        Date date = new Date(post.getDate());
+        String formattedTime = new SimpleDateFormat("H:mm").format(date);
+        viewHolder.timeTextView.setText(formattedTime);
     }
 }
