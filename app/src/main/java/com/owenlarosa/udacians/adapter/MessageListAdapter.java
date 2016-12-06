@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -128,6 +129,12 @@ public class MessageListAdapter extends BaseAdapter {
      * @param message Message to be displayed
      */
     private void populateViewHolder(final ViewHolder viewHolder, Message message) {
+        // user should see their own name in different color to easily recognize their messages
+        if (message.getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+            viewHolder.nameTextView.setTextColor(mContext.getResources().getColor(R.color.colorAccent));
+        } else {
+            viewHolder.nameTextView.setTextColor(mContext.getResources().getColor(R.color.colorPrimaryDark));
+        }
         DatabaseReference userBasicReference = mFirebaseDatabase.getReference().child("users").child(message.getSender()).child("basic");
         // user data stored in separate profile reference
         final DatabaseReference nameReference = userBasicReference.child("name");
