@@ -10,12 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udacians.adapter.MessageListAdapter;
+import com.owenlarosa.udacians.data.Message;
 import com.owenlarosa.udacians.views.ChatInputView;
 
 import butterknife.BindView;
@@ -61,7 +63,7 @@ public class ChatFragment extends Fragment {
         }
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference chatReference;
+        final DatabaseReference chatReference;
         if (direct) {
             // direct messages
             chatReference = mFirebaseDatabase.getReference().child("users").child(chatId).child("messages");
@@ -116,6 +118,22 @@ public class ChatFragment extends Fragment {
 
         MessageListAdapter adapter = new MessageListAdapter(getActivity(), chatReference);
         messagesListView.setAdapter(adapter);
+
+        chatEntry.sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // create a message to be sent
+                Message message = new Message();
+                message.setSender(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                message.setContent(chatEntry.messageTextField.getText().toString());
+
+                // send the message
+                chatReference.push().setValue(message.toMap());
+
+                // clear the chat input
+                chatEntry.messageTextField.setText("");
+            }
+        });
 
         return rootView;
     }
