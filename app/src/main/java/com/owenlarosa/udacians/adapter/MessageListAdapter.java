@@ -9,10 +9,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udacians.R;
 import com.owenlarosa.udacians.data.Message;
 
@@ -31,10 +34,12 @@ public class MessageListAdapter extends BaseAdapter {
 
     private ArrayList<Message> messages = new ArrayList<Message>();
 
+    FirebaseDatabase mFirebaseDatabase;
     DatabaseReference messagesListReference;
 
     public MessageListAdapter(Context context, DatabaseReference messagesListReference) {
         mContext = context;
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
         this.messagesListReference = messagesListReference;
         messagesListReference.addChildEventListener(new ChildEventListener() {
             @Override
@@ -93,6 +98,8 @@ public class MessageListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) cell.getTag();
         }
+        Message message = messages.get(i);
+        populateViewHolder(holder, message);
         return cell;
     }
 
@@ -112,4 +119,43 @@ public class MessageListAdapter extends BaseAdapter {
             ButterKnife.bind(this, view);
         }
     }
+
+    /**
+     * Display a message in the view
+     * @param viewHolder View to be populated with message data
+     * @param message Message to be displayed
+     */
+    private void populateViewHolder(final ViewHolder viewHolder, Message message) {
+        DatabaseReference userBasicReference = mFirebaseDatabase.getReference().child("users").child(message.getSender()).child("basic");
+        // user data stored in separate profile reference
+        final DatabaseReference nameReference = userBasicReference.child("name");
+        nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                viewHolder.nameTextView.setText(dataSnapshot.getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        DatabaseReference photoReference = userBasicReference.child("photo");
+        photoReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Glide.with(mContext)
+                        .load(dataSnapshot.getValue(String.class))
+                        .into(viewHolder.profileImageView);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        // message contents stored directly in object
+        viewHolder.contentTextView.setText(message.getContent());
+    }
+
 }
