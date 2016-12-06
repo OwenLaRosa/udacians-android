@@ -158,4 +158,9 @@ public class MessageListAdapter extends BaseAdapter {
         viewHolder.contentTextView.setText(message.getContent());
     }
 
+    @Override
+    public boolean isEnabled(int position) {
+        // Nothing should happen when tapping message items
+        return false;
+    }
 }
