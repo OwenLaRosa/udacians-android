@@ -25,9 +25,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static android.R.attr.id;
-
-
 /**
  * Created by Owen LaRosa on 11/14/16.
  */
@@ -123,8 +120,8 @@ public class DiscussionsListAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int i) {
-        return null;
+    public String getItem(int i) {
+        return discussions.get(i);
     }
 
     @Override

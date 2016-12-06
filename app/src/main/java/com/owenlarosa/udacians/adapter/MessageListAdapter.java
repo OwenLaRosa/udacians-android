@@ -9,8 +9,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.owenlarosa.udacians.R;
+import com.owenlarosa.udacians.data.Message;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,16 +29,46 @@ public class MessageListAdapter extends BaseAdapter {
 
     private Context mContext;
 
+    private ArrayList<Message> messages = new ArrayList<Message>();
+
     DatabaseReference messagesListReference;
 
     public MessageListAdapter(Context context, DatabaseReference messagesListReference) {
         mContext = context;
         this.messagesListReference = messagesListReference;
+        messagesListReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Message message = dataSnapshot.getValue(Message.class);
+                messages.add(message);
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
     public int getCount() {
-        return 10;
+        return messages.size();
     }
 
     @Override

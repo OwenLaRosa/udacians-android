@@ -35,12 +35,16 @@ public class ChatsListFragment extends Fragment {
         mUnbinder = ButterKnife.bind(this, rootView);
 
         String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DiscussionsListAdapter adapter = new DiscussionsListAdapter(getActivity(), user);
+        final DiscussionsListAdapter adapter = new DiscussionsListAdapter(getActivity(), user);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getActivity(), ChatActivity.class);
+                String chatId = adapter.getItem(i);
+                intent.putExtra(ChatFragment.EXTRA_CHAT, chatId);
+                // chats on this screen are public topics, not DMs
+                intent.putExtra(ChatFragment.EXTRA_DIRECT, false);
                 startActivity(intent);
             }
         });

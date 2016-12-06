@@ -16,7 +16,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.api.client.util.Data;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -52,6 +51,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
 
     private HashMap<Marker, PinData> pinMappings = new HashMap<Marker, PinData>();
     private HashMap<Marker, String> articleUrls = new HashMap<Marker, String>();
+    private HashMap<Marker, PinData> topicIds = new HashMap<Marker, PinData>();
 
     @Nullable
     @Override
@@ -195,6 +195,8 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
                 pin.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
                 marker = mGoogleMap.addMarker(pin);
                 pinMappings.put(marker, data);
+                // key is the topic ID
+                topicIds.put(marker, data);
                 break;
             case Article:
                 Article article = dataSnapshot.getValue(Article.class);
@@ -232,6 +234,9 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
                 break;
             case Topic:
                 intent = new Intent(getActivity(), ChatActivity.class);
+                intent.putExtra(ChatFragment.EXTRA_CHAT, data.key);
+                // all discussions here are group topics, not direct messages
+                intent.putExtra(ChatFragment.EXTRA_DIRECT, false);
                 startActivity(intent);
                 break;
             case Article:
