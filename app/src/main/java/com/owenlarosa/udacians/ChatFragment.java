@@ -4,13 +4,17 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udacians.adapter.MessageListAdapter;
 import com.owenlarosa.udacians.views.ChatInputView;
 
@@ -61,8 +65,53 @@ public class ChatFragment extends Fragment {
         if (direct) {
             // direct messages
             chatReference = mFirebaseDatabase.getReference().child("users").child(chatId).child("messages");
+            DatabaseReference nameReference = mFirebaseDatabase.getReference().child("users").child(chatId).child("basic").child("name");
+            // title should be name of user sending DMs to
+            nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String name = dataSnapshot.getValue(String.class);
+                    ((AppCompatActivity) getActivity()).setTitle(name);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         } else {
             chatReference = mFirebaseDatabase.getReference().child("topics").child(chatId).child("messages");
+            if (chatId.startsWith("nd")) {
+                DatabaseReference nameReference = mFirebaseDatabase.getReference().child("nano_degrees").child(chatId).child("name");
+                // title should be name of the Nanodegree
+                nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String name = dataSnapshot.getValue(String.class);
+                        ((AppCompatActivity) getActivity()).setTitle(name);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            } else {
+                DatabaseReference nameReference = mFirebaseDatabase.getReference().child("topics").child(chatId).child("info").child("name");
+                // title should be name/prompt of the topic
+                nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String name = dataSnapshot.getValue(String.class);
+                        ((AppCompatActivity) getActivity()).setTitle(name);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
         }
 
         MessageListAdapter adapter = new MessageListAdapter(getActivity(), chatReference);
