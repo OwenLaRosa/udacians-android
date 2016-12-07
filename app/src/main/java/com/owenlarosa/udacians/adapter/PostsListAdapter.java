@@ -77,7 +77,7 @@ public class PostsListAdapter extends BaseAdapter {
         // set up the firebase references
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         postsReference = mFirebaseDatabase.getReference().child(root).child(mUid).child("posts");
-        postsReference.addChildEventListener(new ChildEventListener() {
+        postsReference.limitToLast(30).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Message post = dataSnapshot.getValue(Message.class);

@@ -44,7 +44,7 @@ public class MessageListAdapter extends BaseAdapter {
         mContext = context;
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         this.messagesListReference = messagesListReference;
-        messagesListReference.addChildEventListener(new ChildEventListener() {
+        messagesListReference.limitToLast(30).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Message message = dataSnapshot.getValue(Message.class);
