@@ -185,7 +185,7 @@ public class ChatFragment extends Fragment {
                     // sending standard message without an image
                     chatReference.push().setValue(message.toMap());
                 }
-                
+
                 // ensure future messages don't use previous image
                 mImage = null;
                 // clear the chat input

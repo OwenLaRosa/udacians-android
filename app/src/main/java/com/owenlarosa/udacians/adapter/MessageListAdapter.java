@@ -163,8 +163,13 @@ public class MessageListAdapter extends BaseAdapter {
 
             }
         });
-        // message contents stored directly in object
-        viewHolder.contentTextView.setText(message.getContent());
+        if (message.getContent() != null && !message.getContent().equals("")) {
+            // message contents stored directly in object
+            viewHolder.contentTextView.setVisibility(View.VISIBLE);
+            viewHolder.contentTextView.setText(message.getContent());
+        } else {
+            viewHolder.contentTextView.setVisibility(View.GONE);
+        }
         // message may also contain URL for attached image
         if (message.getImageUrl() != null && !message.getImageUrl().equals("")) {
             viewHolder.contentImageView.setVisibility(View.VISIBLE);
