@@ -165,6 +165,15 @@ public class MessageListAdapter extends BaseAdapter {
         });
         // message contents stored directly in object
         viewHolder.contentTextView.setText(message.getContent());
+        // message may also contain URL for attached image
+        if (message.getImageUrl() != null && !message.getImageUrl().equals("")) {
+            viewHolder.contentImageView.setVisibility(View.VISIBLE);
+            Glide.with(mContext)
+                    .load(message.getImageUrl())
+                    .into(viewHolder.contentImageView);
+        } else {
+            viewHolder.contentImageView.setVisibility(View.GONE);
+        }
 
         // time should be formatted as hours:minutes
         Date date = new Date(message.getDate());
