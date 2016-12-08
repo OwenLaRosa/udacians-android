@@ -20,14 +20,21 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.owenlarosa.udacians.data.BasicProfile;
 import com.owenlarosa.udacians.data.ProfileInfo;
+
+import java.io.ByteArrayOutputStream;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,6 +75,9 @@ public class EditProfileFragment extends Fragment {
     DatabaseReference mBasicReference;
     DatabaseReference mProfileReference;
 
+    private FirebaseStorage mFirebaseStorage;
+    private StorageReference mPublicImageStorage;
+
     // image currently displayed in post authoring view
     private Bitmap mImage;
 
@@ -80,9 +90,14 @@ public class EditProfileFragment extends Fragment {
         mContext = getActivity();
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference userReference = mFirebaseDatabase.getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference userReference = mFirebaseDatabase.getReference().child("users").child(user);
         mBasicReference = userReference.child("basic");
         mProfileReference = userReference.child("profile");
+
+        mFirebaseStorage = FirebaseStorage.getInstance();
+        StorageReference storageReference = mFirebaseStorage.getReferenceFromUrl("gs://udacians-df696.appspot.com");
+        mPublicImageStorage = storageReference.child(user).child("public").child("images");
 
         if (savedInstanceState == null) {
             // prefill the data for the first launch
@@ -196,6 +211,23 @@ public class EditProfileFragment extends Fragment {
         mProfileReference.child("blog").setValue(blogEditText.getText().toString());
         mProfileReference.child("linkedin").setValue(linkedinEditText.getText().toString());
         mProfileReference.child("twitter").setValue(twitterEditText.getText().toString());
+        if (mImage != null) {
+            // user has changed their profile picture
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            mImage.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            byte[] binaryData = outputStream.toByteArray();
+            // use the current date to generate a unique file name for the image
+            String imageName = new Date().toString() + ".jpg";
+            UploadTask uploadTask = mPublicImageStorage.child(imageName).putBytes(binaryData);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    mProfileReference.child("photo").setValue(taskSnapshot.getDownloadUrl().toString());
+                    // reset so image is not uploaded twice
+                    mImage = null;
+                }
+            });
+        }
     }
 
     // on Android Marshmallow and later, permissions for reading the image must be requested at runtime
