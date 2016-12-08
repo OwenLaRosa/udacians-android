@@ -24,8 +24,6 @@
         android:id="@+id/drawer_profile_image_view"
         android:layout_width="@dimen/drawer_profile_icon_size"
         android:layout_height="@dimen/drawer_profile_icon_size"
-        android:background="@color/colorAccent"
-        android:layout_marginLeft="@dimen/edge_margin"
         android:layout_marginStart="@dimen/edge_margin"
         android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
 
@@ -35,9 +33,7 @@
         android:layout_height="wrap_content"
         style="@style/TextAppearance.AppCompat.Title"
         android:textColor="@color/white"
-        android:text="Owen LaRosa"
         android:maxLines="1"
-        android:layout_marginLeft="@dimen/edge_margin"
         android:layout_marginStart="@dimen/edge_margin"
         android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
 
@@ -47,9 +43,7 @@
         android:layout_height="wrap_content"
         style="@style/TextAppearance.AppCompat.Caption"
         android:textColor="@color/white"
-        android:text="Code Reviewer at Udacity"
         android:maxLines="1"
-        android:layout_marginLeft="@dimen/edge_margin"
         android:layout_marginStart="@dimen/edge_margin"
         android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
 

@@ -13,6 +13,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -30,10 +38,13 @@ public class NavigationDrawerAdapter extends BaseAdapter {
     private TypedArray navIcons;
     private Context mContext;
 
+    private FirebaseDatabase mFirebaseDatabase;
+
     public NavigationDrawerAdapter(Context context) {
         mContext = context;
         navItems = mContext.getResources().getStringArray(R.array.navigation_items);
         navIcons = mContext.getResources().obtainTypedArray(R.array.navigation_icons);
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
     }
 
     // number of navigation items
@@ -82,6 +93,8 @@ public class NavigationDrawerAdapter extends BaseAdapter {
                     mContext.startActivity(intent);
                 }
             });
+            // user's basic profile info is shown in header
+            populateHeader(holder);
         } else {
             // subsequent views contain standard drawer tabs
             ItemViewHolder holder = null;
@@ -132,6 +145,49 @@ public class NavigationDrawerAdapter extends BaseAdapter {
         ProfileViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
+    }
+
+    private void populateHeader(final ProfileViewHolder viewHolder) {
+        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference userBasicReference = mFirebaseDatabase.getReference().child("users").child(user).child("basic");
+        DatabaseReference nameReference = userBasicReference.child("name");
+        nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                viewHolder.nameTextView.setText(dataSnapshot.getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        DatabaseReference titleReference = userBasicReference.child("title");
+        titleReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                viewHolder.titleTextView.setText(dataSnapshot.getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        DatabaseReference photoReference = userBasicReference.child("photo");
+        photoReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Glide.with(mContext)
+                        .load(dataSnapshot.getValue(String.class))
+                        .into(viewHolder.profileImageView);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }
