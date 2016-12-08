@@ -5,7 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:padding="@dimen/chat_view_inter_item_margin"
+    android:paddingStart="@dimen/activity_horizontal_margin"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/vertical_edge_margin"
+    android:paddingBottom="@dimen/vertical_edge_margin"
     android:baselineAligned="false">
     
     <ImageButton
@@ -16,7 +19,6 @@
         android:background="@color/white"
         android:src="@drawable/camera"
         android:contentDescription="@string/a11y_add_image"
-        android:layout_marginRight="@dimen/chat_view_inter_item_margin"
         android:layout_marginEnd="@dimen/chat_view_inter_item_margin"/>
 
     <LinearLayout
@@ -25,7 +27,6 @@
         android:orientation="vertical"
         android:layout_weight="1"
         android:layout_gravity="bottom"
-        android:layout_marginRight="@dimen/chat_view_inter_item_margin"
         android:layout_marginEnd="@dimen/chat_view_inter_item_margin">
 
         <ImageView
@@ -33,9 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/image_preview_height"
             android:scaleType="fitStart"
-            android:visibility="gone"
-            android:paddingStart="@dimen/chat_edittext_horizontal_padding"
-            android:paddingEnd="@dimen/chat_edittext_horizontal_padding"/>
+            android:visibility="gone"/>
 
         <EditText
             android:id="@+id/chat_input_text_field"
