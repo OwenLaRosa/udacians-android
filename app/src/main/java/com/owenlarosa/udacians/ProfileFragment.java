@@ -121,22 +121,6 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
         mContext = getActivity();
         mResources = getResources();
 
-        final PostsListAdapter postsAdapter = new PostsListAdapter(getActivity(), mUserId, PostsListAdapter.PostsType.Person);
-        postsListView.setAdapter(postsAdapter);
-        headerView = new ProfileView(getActivity());
-        postsListView.addHeaderView(headerView);
-        headerView.writePostView.delegate = this;
-        // set up the button to add an image to post
-        headerView.writePostView.addImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // make sure read permissions are enabled before loading image
-                verifyStoragePermissions((Activity) mContext);
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, RESULT_PICK_IMAGE);
-            }
-        });
-
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference userReference = mFirebaseDatabase.getReference().child("users").child(mUserId);
         mBasicReference = userReference.child("basic");
@@ -186,9 +170,29 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
         mPostsReference = userReference.child("posts");
         // connections stored under user currently signed into the app
         String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        final PostsListAdapter postsAdapter = new PostsListAdapter(getActivity(), mUserId, PostsListAdapter.PostsType.Person);
+        postsListView.setAdapter(postsAdapter);
+
         if (user.equals(mUserId)) {
+            // users can't add themselves as a connection
             connectButton.setVisibility(View.GONE);
+            // user can post on their own wall
+            headerView = new ProfileView(getActivity());
+            postsListView.addHeaderView(headerView);
+            headerView.writePostView.delegate = this;
+            // set up the button to add an image to post
+            headerView.writePostView.addImageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // make sure read permissions are enabled before loading image
+                    verifyStoragePermissions((Activity) mContext);
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(intent, RESULT_PICK_IMAGE);
+                }
+            });
         } else {
+            // users can add others as connections
             mIsConnectionReference = mFirebaseDatabase.getReference().child("users").child(user).child("connections").child(mUserId);
             mIsConnectionReference.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -211,6 +215,21 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
 
                 }
             });
+            headerView = new ProfileView(getActivity());
+            postsListView.addHeaderView(headerView);
+            headerView.writePostView.delegate = this;
+            // set up the button to add an image to post
+            headerView.writePostView.addImageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // make sure read permissions are enabled before loading image
+                    verifyStoragePermissions((Activity) mContext);
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(intent, RESULT_PICK_IMAGE);
+                }
+            });
+            // users can't post on others' profile
+            headerView.writePostView.setVisibility(View.GONE);
         }
 
         // storage is used for uploading images
