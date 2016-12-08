@@ -28,10 +28,13 @@
             android:id="@+id/edit_profile_image_button"
             android:layout_width="match_parent"
             android:layout_height="96dp"
+            android:scaleType="fitCenter"
             android:background="@color/white"
             android:layout_column="0"
             android:layout_columnSpan="2"
-            android:layout_marginBottom="@dimen/vertical_edge_margin"/>
+            android:layout_marginBottom="@dimen/vertical_edge_margin"
+            android:paddingTop="@dimen/vertical_edge_margin"
+            android:paddingBottom="@dimen/vertical_edge_margin"/>
 
         <TextView
             android:layout_width="wrap_content"
