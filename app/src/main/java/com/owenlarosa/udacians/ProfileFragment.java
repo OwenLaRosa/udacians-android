@@ -312,7 +312,7 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
         if (mImage != null) {
             // message contains an image to be uploaded
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            mImage.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            mImage.compress(Bitmap.CompressFormat.JPEG, 50, outputStream);
             byte[] binaryData = outputStream.toByteArray();
             // use the current date to generate a unique file name for the image
             String imageName = new Date().toString() + ".jpg";
