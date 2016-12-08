@@ -186,28 +186,32 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
         mPostsReference = userReference.child("posts");
         // connections stored under user currently signed into the app
         String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mIsConnectionReference = mFirebaseDatabase.getReference().child("users").child(user).child("connections").child(mUserId);
-        mIsConnectionReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null) {
-                    // connection is added, show option to remove
-                    mIsConnection = true;
-                    connectButton.setImageResource(R.drawable.remove_connection);
-                    connectButton.setBackgroundTintList(ColorStateList.valueOf(mResources.getColor(R.color.colorRemove)));
-                } else {
-                    // not a connection yet, show option to add
-                    mIsConnection = false;
-                    connectButton.setImageResource(R.drawable.add_connection);
-                    connectButton.setBackgroundTintList(ColorStateList.valueOf(mResources.getColor(R.color.colorAccent)));
+        if (user.equals(mUserId)) {
+            connectButton.setVisibility(View.GONE);
+        } else {
+            mIsConnectionReference = mFirebaseDatabase.getReference().child("users").child(user).child("connections").child(mUserId);
+            mIsConnectionReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.getValue() != null) {
+                        // connection is added, show option to remove
+                        mIsConnection = true;
+                        connectButton.setImageResource(R.drawable.remove_connection);
+                        connectButton.setBackgroundTintList(ColorStateList.valueOf(mResources.getColor(R.color.colorRemove)));
+                    } else {
+                        // not a connection yet, show option to add
+                        mIsConnection = false;
+                        connectButton.setImageResource(R.drawable.add_connection);
+                        connectButton.setBackgroundTintList(ColorStateList.valueOf(mResources.getColor(R.color.colorAccent)));
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }
 
         // storage is used for uploading images
         mFirebaseStorage = FirebaseStorage.getInstance();
