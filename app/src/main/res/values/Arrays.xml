@@ -10,6 +10,7 @@
         <item>@string/nav_jobs</item>
         <item>@string/nav_settings</item>
         <item>@string/nav_help</item>
+        <item>@string/nav_logout</item>
     </array>
 
     <integer-array name="navigation_icons">
@@ -21,6 +22,7 @@
         <item>@drawable/job</item>
         <item>@drawable/settings</item>
         <item>@drawable/info</item>
+        <item>@drawable/logout</item>
     </integer-array>
 
 </resources>

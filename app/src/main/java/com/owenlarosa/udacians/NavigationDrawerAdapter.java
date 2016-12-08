@@ -148,6 +148,10 @@ public class NavigationDrawerAdapter extends BaseAdapter {
     }
 
     private void populateHeader(final ProfileViewHolder viewHolder) {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            // not authenticated, don't attempt to populate the header
+            return;
+        }
         String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference userBasicReference = mFirebaseDatabase.getReference().child("users").child(user).child("basic");
         DatabaseReference nameReference = userBasicReference.child("name");

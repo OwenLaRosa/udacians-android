@@ -1,12 +1,14 @@
 package com.owenlarosa.udacians;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
@@ -30,22 +31,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.CookieManager;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import okhttp3.CookieJar;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 /**
  * Created by Owen LaRosa on 10/30/16.
@@ -66,6 +62,7 @@ public class LoginFragment extends Fragment {
     String authToken = "";
 
     private Unbinder mUnbinder;
+    private Context mContext;
 
     // cookie manager is used to ensure the XSRF token is properly saved
     // this will ensure full profile info is available to be synced
@@ -85,10 +82,12 @@ public class LoginFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
 
+        mContext = getActivity();
+
         mFirebaseDatabase = FirebaseDatabase.getInstance();
 
         // initialize the cookie jar
-        mCookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(getActivity()));
+        mCookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(mContext));
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -141,7 +140,7 @@ public class LoginFragment extends Fragment {
         getView().post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -174,7 +173,7 @@ public class LoginFragment extends Fragment {
                     // immediately return if the login fails
                     Log.d(LOG_TAG, "failed to get xsrf token");
                     invalidCredentials = true;
-                    displayToast(getString(R.string.incorrect_credentials));
+                    displayToast(mContext.getString(R.string.incorrect_credentials));
                     return null;
                 }
                 // if successful, proceed to get the Firebase auth token
@@ -224,7 +223,7 @@ public class LoginFragment extends Fragment {
                 // if the credentials were invalid, a toast would have already been shown
                 // only display this message if login failed for another reason
                 if (!invalidCredentials) {
-                    displayToast(getString(R.string.connection_failed));
+                    displayToast(mContext.getString(R.string.connection_failed));
                 }
                 setUIState(true);
             }
@@ -336,11 +335,11 @@ public class LoginFragment extends Fragment {
             DatabaseReference enrollmentsReference = userReference.child("enrollments");
             enrollmentsReference.setValue(enrollmentsMap);
             // store the auth token to speed up future logins
-            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
-            editor.putString(getString(R.string.pref_auth_token), authToken);
+            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
+            editor.putString(mContext.getString(R.string.pref_auth_token), authToken);
             editor.apply();
             // once authenticated, dismiss the login screen
-            getActivity().finish();
+            ((AppCompatActivity) mContext).finish();
             setUIState(true);
         }
     }

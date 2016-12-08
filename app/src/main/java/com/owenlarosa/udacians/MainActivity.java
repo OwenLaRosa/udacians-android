@@ -15,6 +15,9 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
+import com.franmontiel.persistentcookiejar.PersistentCookieJar;
+import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
+import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
@@ -52,11 +55,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user == null) {
-                    presentLoginScreen();
+                if (user != null) {
+                    // user has logged in, must notify adapter so nav drawer's header is populated
+                    ((NavigationDrawerAdapter) navigationDrawer.getAdapter()).notifyDataSetChanged();
                 }
             }
         };
+        FirebaseAuth.getInstance().addAuthStateListener(mAuthStateListener);
 
         // populate the nav drawer with its static content
         navigationDrawer.setAdapter(new NavigationDrawerAdapter(this));
@@ -68,6 +73,9 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i == 0) {
                     // show user's profile info
+                } else if (i == 9) {
+                    // logout button tapped
+                    logout();
                 } else {
                     if (lastSelectedView == view) {
                         // tab currently selected, just return
@@ -136,6 +144,17 @@ public class MainActivity extends AppCompatActivity {
     private void presentLoginScreen() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+    }
+
+    /**
+     * Signs out the current user and presents the login screen
+     */
+    private void logout() {
+        // logout button
+        PersistentCookieJar cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(this));
+        cookieJar.clear();
+        FirebaseAuth.getInstance().signOut();
+        presentLoginScreen();
     }
 
 }
