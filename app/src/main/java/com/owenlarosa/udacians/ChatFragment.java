@@ -185,12 +185,12 @@ public class ChatFragment extends Fragment {
                     // sending standard message without an image
                     chatReference.push().setValue(message.toMap());
                 }
-
-
+                
                 // ensure future messages don't use previous image
                 mImage = null;
                 // clear the chat input
                 chatEntry.messageTextField.setText("");
+                chatEntry.imagePreview.setVisibility(View.GONE);
                 chatEntry.messageTextField.setCompoundDrawables(null, null, null, null);
             }
         });
@@ -224,7 +224,8 @@ public class ChatFragment extends Fragment {
                 cursor.close();
                 // show selected bitmap in the preview pane
                 mImage = BitmapFactory.decodeFile(picturePath);
-                chatEntry.messageTextField.setCompoundDrawables(new BitmapDrawable(mImage), new BitmapDrawable(mImage), new BitmapDrawable(mImage), new BitmapDrawable(mImage));
+                chatEntry.imagePreview.setVisibility(VISIBLE);
+                chatEntry.imagePreview.setImageBitmap(mImage);
             }
         }
     }
