@@ -101,11 +101,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         FirebaseAuth.getInstance().addAuthStateListener(mAuthStateListener);
 
         // populate the nav drawer with its static content
-        NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(this);
+        final NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(this);
         navigationDrawer.setAdapter(adapter);
         navigationDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            private View lastSelectedView;
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -115,18 +113,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     // logout button tapped
                     logout();
                 } else {
-                    if (lastSelectedView == view) {
+                    if (i == adapter.getSelected()) {
                         // tab currently selected, just return
                         drawerLayout.closeDrawer(GravityCompat.START);
                         return;
                     }
 
-                    // reset color of previous view, highlight selected view's background
-                    if (lastSelectedView != null) {
-                        lastSelectedView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                    }
-                    view.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                    lastSelectedView = view;
+                    adapter.setSelected(i);
 
                     // insert appropriate fragment into frame layout
                     Fragment fragment = new Fragment();
@@ -167,11 +160,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 }
             }
         });
-        // select the map view (second item in the list
-        int clickPosition = 1;
-        navigationDrawer.performItemClick(adapter.getView(clickPosition, null, null),
-                clickPosition,
-                0);
+        if (savedInstanceState == null) {
+            // show map screen the first time the app launches
+            Fragment fragment = new MainMapFragment();
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.view_container, fragment, FRAGMENT_TAG)
+                    .commit();
+            //adapter.getView(1, null, null).setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        }
     }
 
     @Override

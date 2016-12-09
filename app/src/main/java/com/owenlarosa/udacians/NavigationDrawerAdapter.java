@@ -37,6 +37,19 @@ public class NavigationDrawerAdapter extends BaseAdapter {
     private String[] navItems;
     private TypedArray navIcons;
     private Context mContext;
+    // index of the currently selected view
+    // initial value is 1 (index of map item) since this is selected by default
+    private int selected = 1;
+
+    public int getSelected() {
+        return selected;
+    }
+
+    public void setSelected(int selected) {
+        // update the selection color of the list
+        notifyDataSetChanged();
+        this.selected = selected;
+    }
 
     private FirebaseDatabase mFirebaseDatabase;
 
@@ -105,6 +118,12 @@ public class NavigationDrawerAdapter extends BaseAdapter {
                 cell.setTag(holder);
             } else {
                 holder = (ItemViewHolder) cell.getTag();
+            }
+            // the selected standard view should be highlighted
+            if (i == selected) {
+                cell.setBackgroundColor(mContext.getResources().getColor(R.color.colorAccent));
+            } else {
+                cell.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimary));
             }
             // standard views contain a title and an icon
             // because the first view is different, the first standard view is at index 0 in items array
