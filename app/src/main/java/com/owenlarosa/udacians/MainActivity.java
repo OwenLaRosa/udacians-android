@@ -286,7 +286,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        // retry the connection to location services
+        setupGoogleApiClient();
     }
 
 
