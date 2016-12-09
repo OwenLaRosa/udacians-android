@@ -2,6 +2,7 @@ package com.owenlarosa.udacians;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -180,6 +181,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
             case Person:
                 Location location = dataSnapshot.getValue(Location.class);
                 pin.position(new LatLng(location.getLatitude(), location.getLongitude()));
+                pin.icon(BitmapDescriptorFactory.fromResource(R.drawable.user_pin));
                 // add the marker and store it for handling click events later
                 marker = mGoogleMap.addMarker(pin);
                 pinMappings.put(marker, data);
@@ -187,14 +189,14 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
             case Event:
                 Location eventLocation = dataSnapshot.getValue(Location.class);
                 pin.position(new LatLng(eventLocation.getLatitude(), eventLocation.getLongitude()));
-                pin.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                pin.icon(BitmapDescriptorFactory.fromResource(R.drawable.event_pin));
                 marker = mGoogleMap.addMarker(pin);
                 pinMappings.put(marker, data);
                 break;
             case Topic:
                 Location topicLocation = dataSnapshot.getValue(Location.class);
                 pin.position(new LatLng(topicLocation.getLatitude(), topicLocation.getLongitude()));
-                pin.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                pin.icon(BitmapDescriptorFactory.fromResource(R.drawable.topic_pin));
                 marker = mGoogleMap.addMarker(pin);
                 pinMappings.put(marker, data);
                 // key is the topic ID
@@ -205,7 +207,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
                 pin.position(new LatLng(article.getLatitude(), article.getLongitude()));
                 pin.title(article.getTitle());
                 pin.snippet(article.getAuthor());
-                pin.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                pin.icon(BitmapDescriptorFactory.fromResource(R.drawable.blog_pin));
                 marker = mGoogleMap.addMarker(pin);
                 pinMappings.put(marker, data);
                 // save url so it can be referenced later
