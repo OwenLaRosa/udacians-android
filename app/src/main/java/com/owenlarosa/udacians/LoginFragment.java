@@ -2,6 +2,7 @@ package com.owenlarosa.udacians;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -339,8 +340,11 @@ public class LoginFragment extends Fragment {
             editor.putString(mContext.getString(R.string.pref_auth_token), authToken);
             editor.apply();
             // once authenticated, dismiss the login screen
+            Intent intent = new Intent(mContext, MainActivity.class);
+            mContext.startActivity(intent);
             ((AppCompatActivity) mContext).finish();
-            setUIState(true);
+            // don't listen for future changes, otherwise this AsyncTask will be called multiple times
+            FirebaseAuth.getInstance().removeAuthStateListener(mAuthStateListener);
         }
     }
 

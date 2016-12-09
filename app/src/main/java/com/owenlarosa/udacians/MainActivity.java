@@ -155,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
         cookieJar.clear();
         FirebaseAuth.getInstance().signOut();
         presentLoginScreen();
+        //finish();
     }
 
 }
