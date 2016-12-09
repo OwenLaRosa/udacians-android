@@ -101,7 +101,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         FirebaseAuth.getInstance().addAuthStateListener(mAuthStateListener);
 
         // populate the nav drawer with its static content
-        navigationDrawer.setAdapter(new NavigationDrawerAdapter(this));
+        NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(this);
+        navigationDrawer.setAdapter(adapter);
         navigationDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             private View lastSelectedView;
@@ -166,6 +167,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 }
             }
         });
+        // select the map view (second item in the list
+        int clickPosition = 1;
+        navigationDrawer.performItemClick(adapter.getView(clickPosition, null, null),
+                clickPosition,
+                0);
     }
 
     @Override
