@@ -38,6 +38,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -248,8 +249,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     public void onLocationChanged(Location location) {
-        double longitude = location.getLongitude();
-        double latitude = location.getLatitude();
+        // ensure users in same city will have pins in slightly different locations
+        Location obfuscatedLocation = obfuscateLocation(location);
+        double longitude = obfuscatedLocation.getLongitude();
+        double latitude = obfuscatedLocation.getLatitude();
         if (Geocoder.isPresent()) {
             Geocoder geocoder = new Geocoder(this);
             try {
@@ -290,5 +293,30 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         setupGoogleApiClient();
     }
 
+    /**
+     * Shifts coordinates randomly by a few decimal places
+     * The shift in either cardinal direction is no greater than 0.001 degrees latitude/longitude
+     * The purpose is to randomize locations that fall on the same coordinate
+     * So if two users live in the same city, their pins will be distinguishable
+     * @param location original location
+     * @return location near to the original with randomly offset coordinates
+     */
+    public Location obfuscateLocation(Location location) {
+        double maxOffset = 0.005;
+        // do not obfuscate coordinates that could potentially become invalid (off the map)
+        if (Math.abs(location.getLatitude()) > (90.0 - 0.25)) return location;
+        if (Math.abs(location.getLongitude()) > (180.0 - 0.25)) return location;
+        // random number is between 0 and 1
+        // multiply to ensure it's between 0 and 0.25
+        double latOffset = new Random().nextDouble() * maxOffset;
+        double lonOffset = new Random().nextDouble() * maxOffset;
+        // randomly negate the offsets
+        if (new Random().nextBoolean()) latOffset = -latOffset;
+        if (new Random().nextBoolean()) lonOffset = -lonOffset;
+        // shift latitude and longitude by their respective offsets
+        location.setLatitude(location.getLatitude() + latOffset);
+        location.setLongitude(location.getLongitude() + lonOffset);
+        return location;
+    }
 
 }
