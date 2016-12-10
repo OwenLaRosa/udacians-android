@@ -209,10 +209,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
      * Signs out the current user and presents the login screen
      */
     private void logout() {
-        // logout button
+        // remove XSRF token from cookie store
+        // ensures future logins won't use cookies from the previous user's session
         PersistentCookieJar cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(this));
         cookieJar.clear();
+        // unauthenticate from the database
         FirebaseAuth.getInstance().signOut();
+        // remove auth toke, future launches will go directly to login screen if logged out
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.edit().putString(getString(R.string.pref_auth_token), "").apply();
+        // allow the user to login and finish this activity
         presentLoginScreen();
     }
 
