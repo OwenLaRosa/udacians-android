@@ -82,8 +82,8 @@ public class BlogFeedAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int i) {
-        return null;
+    public String getItem(int i) {
+        return articles.get(i);
     }
 
     @Override
