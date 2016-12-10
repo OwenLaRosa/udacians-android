@@ -2,19 +2,21 @@ package com.owenlarosa.udacians.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.owenlarosa.udacians.NavigationDrawerAdapter;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udacians.R;
 
-import org.w3c.dom.Text;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,15 +28,52 @@ import butterknife.ButterKnife;
 public class BlogFeedAdapter extends BaseAdapter {
 
     private Context mContext;
+    private ArrayList<String> articles = new ArrayList<String>();
+
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference articlesReference;
 
     public BlogFeedAdapter(Context context) {
         mContext = context;
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        articlesReference = mFirebaseDatabase.getReference().child("articles");
+        articlesReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                // user ID of the article poster is the key
+                String userId = dataSnapshot.getKey();
+                articles.add(userId);
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                // articles will be removed if a user adds a new one (replaces it)
+                String userId = dataSnapshot.getValue(String.class);
+                articles.remove(userId);
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
     public int getCount() {
-        // 10 views as placeholders
-        return 10;
+        return articles.size();
     }
 
     @Override
@@ -59,6 +98,8 @@ public class BlogFeedAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) cell.getTag();
         }
+        String userId = articles.get(i);
+        populateViewHolder(holder, userId);
         return cell;
     }
 
@@ -73,6 +114,46 @@ public class BlogFeedAdapter extends BaseAdapter {
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
+    }
+
+    private void populateViewHolder(final ViewHolder viewHolder, String userId) {
+        DatabaseReference articleReference = articlesReference.child(userId);
+        DatabaseReference titleReference = articleReference.child("title");
+        titleReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                viewHolder.titleTextView.setText(dataSnapshot.getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        DatabaseReference authorReference = articleReference.child("author");
+        authorReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                viewHolder.authorTextView.setText(dataSnapshot.getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        DatabaseReference urlReference = articleReference.child("url");
+        urlReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                viewHolder.urlTextView.setText(dataSnapshot.getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }
