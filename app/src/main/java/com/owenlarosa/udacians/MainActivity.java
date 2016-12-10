@@ -202,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private void presentLoginScreen() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+        finish();
     }
 
     /**
@@ -213,7 +214,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         cookieJar.clear();
         FirebaseAuth.getInstance().signOut();
         presentLoginScreen();
-        finish();
     }
 
     public void setupGoogleApiClient() {
