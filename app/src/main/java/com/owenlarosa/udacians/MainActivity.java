@@ -109,6 +109,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i == 0) {
                     // show user's profile info
+                    Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                    intent.putExtra(ProfileFragment.EXTRA_USERID, FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    startActivity(intent);
                 } else if (i == 9) {
                     // logout button tapped
                     logout();

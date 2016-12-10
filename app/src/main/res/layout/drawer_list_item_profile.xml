@@ -3,7 +3,11 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorPrimary"
+    android:clickable="false"
+    android:descendantFocusability="blocksDescendants"
+    android:focusable="false"
+    android:focusableInTouchMode="false">
 
     <Button
         android:id="@+id/drawer_edit_profile_button"
@@ -25,7 +29,10 @@
         android:layout_width="@dimen/drawer_profile_icon_size"
         android:layout_height="@dimen/drawer_profile_icon_size"
         android:layout_marginStart="@dimen/edge_margin"
-        android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
+        android:layout_marginBottom="@dimen/vertical_inter_item_space"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"/>
 
     <TextView
         android:id="@+id/drawer_profile_name_text_view"
@@ -35,7 +42,10 @@
         android:textColor="@color/white"
         android:maxLines="1"
         android:layout_marginStart="@dimen/edge_margin"
-        android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
+        android:layout_marginBottom="@dimen/vertical_inter_item_space"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"/>
 
     <TextView
         android:id="@+id/drawer_profile_title_text_view"
@@ -45,6 +55,9 @@
         android:textColor="@color/white"
         android:maxLines="1"
         android:layout_marginStart="@dimen/edge_margin"
-        android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
+        android:layout_marginBottom="@dimen/vertical_inter_item_space"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"/>
 
 </LinearLayout>
