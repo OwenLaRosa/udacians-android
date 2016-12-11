@@ -2,7 +2,6 @@ package com.owenlarosa.udacians;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -35,7 +34,7 @@ import butterknife.Unbinder;
  * Created by Owen LaRosa on 11/17/16.
  */
 
-public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener {
+public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapLongClickListener {
 
     private Unbinder mUnbinder;
     private GoogleMap mGoogleMap;
@@ -78,7 +77,13 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mGoogleMap.setOnInfoWindowClickListener(this);
         mGoogleMap.setOnMarkerClickListener(this);
+        mGoogleMap.setOnMapLongClickListener(this);
         syncData();
+    }
+
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+
     }
 
     private void syncData() {
