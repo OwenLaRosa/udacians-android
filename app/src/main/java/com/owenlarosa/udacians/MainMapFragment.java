@@ -1,6 +1,9 @@
 package com.owenlarosa.udacians;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -37,6 +40,7 @@ import butterknife.Unbinder;
 public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapLongClickListener {
 
     private Unbinder mUnbinder;
+    private Context mContext;
     private GoogleMap mGoogleMap;
 
     private FirebaseDatabase mFirebaseDatabase;
@@ -58,6 +62,8 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
+
+        mContext = getActivity();
 
         MapFragment mapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -83,7 +89,15 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
 
     @Override
     public void onMapLongClick(LatLng latLng) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(mContext.getString(R.string.add_new_prompt));
+        builder.setItems(R.array.add_new_items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
 
+            }
+        });
+        builder.create().show();
     }
 
     private void syncData() {

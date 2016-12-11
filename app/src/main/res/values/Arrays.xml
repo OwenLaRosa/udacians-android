@@ -25,4 +25,10 @@
         <item>@drawable/logout</item>
     </integer-array>
 
+    <string-array name="add_new_items">
+        <item>@string/type_topic</item>
+        <item>@string/type_article</item>
+        <item>@string/type_event</item>
+    </string-array>
+
 </resources>

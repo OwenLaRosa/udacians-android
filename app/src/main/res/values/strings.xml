@@ -69,6 +69,14 @@
     <string name="nd_beta_suffix">Beta</string>
     <!-- Designates user who posted a discussion topic -->
     <string name="discussion_posted_by">Posted by <xliff:g id="name">%1$s</xliff:g></string>
+    
+    <!-- Adding new data to the map -->
+    <!-- When asking users what type of data they would like to add -->
+    <string name="add_new_prompt">Add new&#8230;</string>
+    <!-- Choices of different types of data to add -->
+    <string name="type_topic">Topic</string>
+    <string name="type_article">Article</string>
+    <string name="type_event">Event</string>
 
     <!-- content descriptions -->
     <string name="a11y_udacians_logo">Udacians</string>
