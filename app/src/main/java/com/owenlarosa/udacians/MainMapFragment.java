@@ -27,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udacians.data.Article;
 import com.owenlarosa.udacians.data.Location;
+import com.owenlarosa.udacians.views.MultipleInputView;
 
 import java.util.HashMap;
 
@@ -94,7 +95,23 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
         builder.setItems(R.array.add_new_items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
+                MultipleInputView multipleInputView = null;
+                switch (i) {
+                    case 0: // topic
+                        multipleInputView = new MultipleInputView(mContext, MultipleInputView.Type.Topic);
+                        break;
+                    case 1: // article
+                        multipleInputView = new MultipleInputView(mContext, MultipleInputView.Type.Article);
+                        break;
+                    case 2: // event
+                        multipleInputView = new MultipleInputView(mContext, MultipleInputView.Type.Event);
+                        break;
+                    default:
+                        break;
+                }
+                if (multipleInputView != null) {
+                    multipleInputView.show();
+                }
             }
         });
         builder.create().show();
