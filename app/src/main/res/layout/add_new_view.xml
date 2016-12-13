@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"/>
 
@@ -17,7 +18,6 @@
         android:id="@+id/input_subtitle_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="What would you like to discuss with other students?"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_below="@id/input_title_text_view"/>
@@ -26,7 +26,6 @@
         android:id="@+id/input_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Discussion prompt"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_below="@id/input_subtitle_text_view"/>
@@ -35,7 +34,6 @@
         android:id="@+id/input_back_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Prev"
         android:textColor="@color/white"
         app:backgroundTint="@color/colorAccent"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
@@ -47,7 +45,6 @@
         android:id="@+id/input_next_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Next"
         android:textColor="@color/white"
         app:backgroundTint="@color/colorAccent"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
