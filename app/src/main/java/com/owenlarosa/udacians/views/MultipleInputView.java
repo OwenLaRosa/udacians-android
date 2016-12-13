@@ -121,6 +121,7 @@ public class MultipleInputView extends Dialog {
                     // discussion prompt
                     subtitleTextView.setText(R.string.input_topic_p1_subtitle);
                     inputEditText.setHint(R.string.input_topic_p1_hint);
+                    inputEditText.setText(contents.get(Keys.NAME));
                     backButton.setText(mContext.getString(R.string.input_cancel));
                     backButton.setOnClickListener(cancelClickListener);
                     nextButton.setText(mContext.getString(R.string.input_submit));
@@ -133,6 +134,7 @@ public class MultipleInputView extends Dialog {
                     // article title
                     subtitleTextView.setText(R.string.input_article_p1_subtitle);
                     inputEditText.setHint(R.string.input_article_p1_hint);
+                    inputEditText.setText(contents.get(Keys.TITLE));
                     backButton.setText(mContext.getString(R.string.input_cancel));
                     backButton.setOnClickListener(cancelClickListener);
                     nextButton.setText(mContext.getString(R.string.input_next));
@@ -141,6 +143,7 @@ public class MultipleInputView extends Dialog {
                     // article URL
                     subtitleTextView.setText(R.string.input_article_p2_subtitle);
                     inputEditText.setHint(R.string.input_article_p2_hint);
+                    inputEditText.setText(contents.get(Keys.URL));
                     backButton.setText(mContext.getString(R.string.input_back));
                     backButton.setOnClickListener(previousPageClickListener);
                     nextButton.setText(mContext.getString(R.string.input_submit));
@@ -153,6 +156,7 @@ public class MultipleInputView extends Dialog {
                     // event name
                     subtitleTextView.setText(R.string.input_event_p1_subtitle);
                     inputEditText.setHint(R.string.input_event_p1_hint);
+                    inputEditText.setText(contents.get(Keys.NAME));
                     backButton.setText(mContext.getString(R.string.input_cancel));
                     backButton.setOnClickListener(cancelClickListener);
                     nextButton.setText(mContext.getString(R.string.input_next));
@@ -161,6 +165,7 @@ public class MultipleInputView extends Dialog {
                     // event location
                     subtitleTextView.setText(R.string.input_event_p2_subtitle);
                     inputEditText.setHint(R.string.input_event_p2_hint);
+                    inputEditText.setText(contents.get(Keys.PLACE));
                     backButton.setText(mContext.getString(R.string.input_back));
                     backButton.setOnClickListener(previousPageClickListener);
                     nextButton.setText(mContext.getString(R.string.input_next));
@@ -169,6 +174,7 @@ public class MultipleInputView extends Dialog {
                     // description of the event
                     subtitleTextView.setText(R.string.input_event_p3_subtitle);
                     inputEditText.setHint(R.string.input_event_p3_hint);
+                    inputEditText.setText(contents.get(Keys.ABOUT));
                     // event details should allow multi-line input
                     inputEditText.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                     backButton.setText(mContext.getString(R.string.input_back));
