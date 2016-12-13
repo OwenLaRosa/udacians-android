@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.FirebaseDatabase;
 import com.owenlarosa.udacians.R;
 
 import java.util.HashMap;
@@ -32,8 +34,10 @@ public class MultipleInputView extends Dialog {
     private Type mType;
     // page/prompt screen the user is currently on, starts counting at 0
     private int pageIndex = 0;
-    //
+    // contents of the data to be pushed to Firebase
     private HashMap<String, String> contents = new HashMap<String, String>();
+    // latitude and longitude of the touch location used to present this dialog
+    private LatLng mCoordinates;
 
     // general title, signifies posting a topic, article, or an event
     private TextView titleTextView;
@@ -88,10 +92,11 @@ public class MultipleInputView extends Dialog {
         Topic, Article, Event;
     }
 
-    public MultipleInputView(Context context, Type type) {
+    public MultipleInputView(Context context, Type type, LatLng coordinates) {
         super(context);
         mContext = context;
         mType = type;
+        mCoordinates = coordinates;
     }
 
     @Override

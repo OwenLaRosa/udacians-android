@@ -89,7 +89,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
     }
 
     @Override
-    public void onMapLongClick(LatLng latLng) {
+    public void onMapLongClick(final LatLng latLng) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(mContext.getString(R.string.add_new_prompt));
         builder.setItems(R.array.add_new_items, new DialogInterface.OnClickListener() {
@@ -98,13 +98,13 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
                 MultipleInputView multipleInputView = null;
                 switch (i) {
                     case 0: // topic
-                        multipleInputView = new MultipleInputView(mContext, MultipleInputView.Type.Topic);
+                        multipleInputView = new MultipleInputView(mContext, MultipleInputView.Type.Topic, latLng);
                         break;
                     case 1: // article
-                        multipleInputView = new MultipleInputView(mContext, MultipleInputView.Type.Article);
+                        multipleInputView = new MultipleInputView(mContext, MultipleInputView.Type.Article, latLng);
                         break;
                     case 2: // event
-                        multipleInputView = new MultipleInputView(mContext, MultipleInputView.Type.Event);
+                        multipleInputView = new MultipleInputView(mContext, MultipleInputView.Type.Event, latLng);
                         break;
                     default:
                         break;
