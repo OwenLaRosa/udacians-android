@@ -12,11 +12,16 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.owenlarosa.udacians.R;
 
 import java.util.HashMap;
+
+import static com.owenlarosa.udacians.R.drawable.event;
 
 /**
  * Created by Owen LaRosa on 12/11/16.
@@ -94,11 +99,11 @@ public class MultipleInputView extends Dialog {
         public void onClick(View view) {
             // save input from the last page
             updateContents();
-            // data is pushed to location reference, so include the coordinates
-            contents.put(Keys.LONGITUDE, mCoordinates.longitude);
-            contents.put(Keys.LATITUDE, mCoordinates.latitude);
             switch (mType) {
                 case Topic:
+                    // data is pushed to location reference, so include the coordinates
+                    contents.put(Keys.LONGITUDE, mCoordinates.longitude);
+                    contents.put(Keys.LATITUDE, mCoordinates.latitude);
                     // name is stored outside of the topic_location reference
                     String name = (String) contents.get(Keys.NAME);
                     contents.remove(Keys.NAME);
@@ -112,11 +117,70 @@ public class MultipleInputView extends Dialog {
                     topicMessageReference.removeValue();
                     break;
                 case Article:
+                    // data is pushed to location reference, so include the coordinates
+                    contents.put(Keys.LONGITUDE, mCoordinates.longitude);
+                    contents.put(Keys.LATITUDE, mCoordinates.latitude);
                     DatabaseReference articleReference = mFirebaseDatabase.getReference().child("articles").child(mUserId);
                     articleReference.removeValue();
                     articleReference.setValue(contents);
                     break;
                 case Event:
+                    // coordinates are store separately from actual event data
+                    HashMap<String, Double> coordinateMap = new HashMap<String, Double>();
+                    coordinateMap.put(Keys.LONGITUDE, mCoordinates.longitude);
+                    coordinateMap.put(Keys.LATITUDE, mCoordinates.latitude);
+                    DatabaseReference eventLocationReference = mFirebaseDatabase.getReference().child("event_locations").child(mUserId);
+                    // remove reference first so UI can update properly
+                    eventLocationReference.removeValue();
+                    eventLocationReference.setValue(coordinateMap);
+                    // event data is stored separately, in the "info" child
+                    DatabaseReference eventReference = mFirebaseDatabase.getReference().child("events").child(mUserId);
+                    DatabaseReference eventInfoReference = eventReference.child("info");
+                    eventInfoReference.setValue(contents);
+                    // clear posts and members list
+                    DatabaseReference eventPostsReference = eventReference.child("posts");
+                    eventPostsReference.removeValue();
+                    final DatabaseReference eventMembersReference = eventReference.child("members");
+                    eventMembersReference.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            // because users did not voluntarily join the new event, it should be removed from their events list
+                            String userId = dataSnapshot.getKey();
+                            // remove the event unless it was created by the logged in user
+                            if (!userId.equals(mUserId)) {
+                                // reference that lists this event on a user's profile
+                                DatabaseReference userEventReference = mFirebaseDatabase.getReference().child("users").child(userId).child("events").child(mUserId);
+                                userEventReference.removeValue();
+                            }
+                        }
+
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                    // remove all members from the events list
+                    eventMembersReference.removeValue();
+                    // make sure the user who posted the event is added as a member
+                    DatabaseReference thisUserEventReference = mFirebaseDatabase.getReference().child("users").child(mUserId).child("events").child(mUserId);
+                    thisUserEventReference.setValue(true);
+                    DatabaseReference memberReference = mFirebaseDatabase.getReference().child("events").child(mUserId).child("members").child(mUserId);
+                    memberReference.setValue(true);
                     break;
             }
             dismiss();
