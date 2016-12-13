@@ -112,6 +112,9 @@ public class MultipleInputView extends Dialog {
                     topicMessageReference.removeValue();
                     break;
                 case Article:
+                    DatabaseReference articleReference = mFirebaseDatabase.getReference().child("articles").child(mUserId);
+                    articleReference.removeValue();
+                    articleReference.setValue(contents);
                     break;
                 case Event:
                     break;
