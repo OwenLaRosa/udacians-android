@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.owenlarosa.udacians.R;
 
@@ -28,6 +30,8 @@ public class MultipleInputView extends Dialog {
         private static final String URL = "url";
         private static final String PLACE = "place";
         private static final String ABOUT = "about";
+        private static final String LONGITUDE = "longitude";
+        private static final String LATITUDE = "latitude";
     }
 
     private Context mContext;
@@ -35,9 +39,11 @@ public class MultipleInputView extends Dialog {
     // page/prompt screen the user is currently on, starts counting at 0
     private int pageIndex = 0;
     // contents of the data to be pushed to Firebase
-    private HashMap<String, String> contents = new HashMap<String, String>();
+    private HashMap<String, Object> contents = new HashMap<String, Object>();
     // latitude and longitude of the touch location used to present this dialog
     private LatLng mCoordinates;
+    // ID of the currently logged in user
+    private String mUserId;
 
     // general title, signifies posting a topic, article, or an event
     private TextView titleTextView;
@@ -62,6 +68,8 @@ public class MultipleInputView extends Dialog {
         }
     };
 
+    FirebaseDatabase mFirebaseDatabase;
+
     // navigate to the previous page
     private View.OnClickListener previousPageClickListener = new View.OnClickListener() {
         @Override
@@ -84,7 +92,31 @@ public class MultipleInputView extends Dialog {
     private View.OnClickListener submitClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
+            // save input from the last page
+            updateContents();
+            // data is pushed to location reference, so include the coordinates
+            contents.put(Keys.LONGITUDE, mCoordinates.longitude);
+            contents.put(Keys.LATITUDE, mCoordinates.latitude);
+            switch (mType) {
+                case Topic:
+                    // name is stored outside of the topic_location reference
+                    String name = (String) contents.get(Keys.NAME);
+                    contents.remove(Keys.NAME);
+                    // push the coordinates as a topic location
+                    DatabaseReference topicLocationReference = mFirebaseDatabase.getReference().child("topic_locations").child(mUserId);
+                    topicLocationReference.setValue(contents);
+                    // Rename the topic and clear old messages
+                    DatabaseReference topicNameReference = mFirebaseDatabase.getReference().child("topics").child(mUserId).child("info").child("name");
+                    topicNameReference.setValue(name);
+                    DatabaseReference topicMessageReference = mFirebaseDatabase.getReference().child("topics").child(mUserId).child("messages");
+                    topicMessageReference.removeValue();
+                    break;
+                case Article:
+                    break;
+                case Event:
+                    break;
+            }
+            dismiss();
         }
     };
 
@@ -97,6 +129,8 @@ public class MultipleInputView extends Dialog {
         mContext = context;
         mType = type;
         mCoordinates = coordinates;
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
     @Override
@@ -126,7 +160,7 @@ public class MultipleInputView extends Dialog {
                     // discussion prompt
                     subtitleTextView.setText(R.string.input_topic_p1_subtitle);
                     inputEditText.setHint(R.string.input_topic_p1_hint);
-                    inputEditText.setText(contents.get(Keys.NAME));
+                    inputEditText.setText((String) contents.get(Keys.NAME));
                     backButton.setText(mContext.getString(R.string.input_cancel));
                     backButton.setOnClickListener(cancelClickListener);
                     nextButton.setText(mContext.getString(R.string.input_submit));
@@ -139,7 +173,7 @@ public class MultipleInputView extends Dialog {
                     // article title
                     subtitleTextView.setText(R.string.input_article_p1_subtitle);
                     inputEditText.setHint(R.string.input_article_p1_hint);
-                    inputEditText.setText(contents.get(Keys.TITLE));
+                    inputEditText.setText((String) contents.get(Keys.TITLE));
                     backButton.setText(mContext.getString(R.string.input_cancel));
                     backButton.setOnClickListener(cancelClickListener);
                     nextButton.setText(mContext.getString(R.string.input_next));
@@ -148,7 +182,7 @@ public class MultipleInputView extends Dialog {
                     // article URL
                     subtitleTextView.setText(R.string.input_article_p2_subtitle);
                     inputEditText.setHint(R.string.input_article_p2_hint);
-                    inputEditText.setText(contents.get(Keys.URL));
+                    inputEditText.setText((String) contents.get(Keys.URL));
                     backButton.setText(mContext.getString(R.string.input_back));
                     backButton.setOnClickListener(previousPageClickListener);
                     nextButton.setText(mContext.getString(R.string.input_submit));
@@ -161,7 +195,7 @@ public class MultipleInputView extends Dialog {
                     // event name
                     subtitleTextView.setText(R.string.input_event_p1_subtitle);
                     inputEditText.setHint(R.string.input_event_p1_hint);
-                    inputEditText.setText(contents.get(Keys.NAME));
+                    inputEditText.setText((String) contents.get(Keys.NAME));
                     backButton.setText(mContext.getString(R.string.input_cancel));
                     backButton.setOnClickListener(cancelClickListener);
                     nextButton.setText(mContext.getString(R.string.input_next));
@@ -170,7 +204,7 @@ public class MultipleInputView extends Dialog {
                     // event location
                     subtitleTextView.setText(R.string.input_event_p2_subtitle);
                     inputEditText.setHint(R.string.input_event_p2_hint);
-                    inputEditText.setText(contents.get(Keys.PLACE));
+                    inputEditText.setText((String) contents.get(Keys.PLACE));
                     backButton.setText(mContext.getString(R.string.input_back));
                     backButton.setOnClickListener(previousPageClickListener);
                     nextButton.setText(mContext.getString(R.string.input_next));
@@ -179,7 +213,7 @@ public class MultipleInputView extends Dialog {
                     // description of the event
                     subtitleTextView.setText(R.string.input_event_p3_subtitle);
                     inputEditText.setHint(R.string.input_event_p3_hint);
-                    inputEditText.setText(contents.get(Keys.ABOUT));
+                    inputEditText.setText((String) contents.get(Keys.ABOUT));
                     // event details should allow multi-line input
                     inputEditText.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                     backButton.setText(mContext.getString(R.string.input_back));
