@@ -28,6 +28,8 @@
         android:id="@+id/drawer_profile_image_view"
         android:layout_width="@dimen/drawer_profile_icon_size"
         android:layout_height="@dimen/drawer_profile_icon_size"
+        android:padding="@dimen/image_border_width"
+        android:background="@color/white"
         android:layout_marginStart="@dimen/edge_margin"
         android:layout_marginBottom="@dimen/vertical_inter_item_space"
         android:clickable="false"

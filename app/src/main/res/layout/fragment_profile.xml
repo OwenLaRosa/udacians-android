@@ -15,7 +15,8 @@
         <RelativeLayout
             android:id="@+id/profile_header_view"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:background="@color/colorPrimary">
 
             <ImageView
@@ -63,7 +64,8 @@
         <ListView
             android:id="@+id/posts_list_view"
             android:layout_width="match_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
             android:background="@color/white"
             android:paddingBottom="@dimen/vertical_edge_margin"
             android:clipToPadding="false"
