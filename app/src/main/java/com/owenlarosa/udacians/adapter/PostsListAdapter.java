@@ -245,7 +245,7 @@ public class PostsListAdapter extends BaseAdapter {
         if (user.equals(post.getSender()) || user.equals(mUid)) {
             viewHolder.deleteButton.setVisibility(View.VISIBLE);
         } else {
-            viewHolder.deleteButton.setVisibility(View.INVISIBLE);
+            viewHolder.deleteButton.setVisibility(View.GONE);
         }
         Date date = new Date(post.getDate());
         String formattedTime = new SimpleDateFormat("H:mm").format(date);

@@ -1,78 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingStart="@dimen/edge_margin"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/vertical_inter_item_space"
     android:paddingEnd="@dimen/edge_margin"
-    android:paddingTop="@dimen/vertical_inter_item_space"
-    android:paddingBottom="@dimen/vertical_inter_item_space">
+    android:paddingStart="@dimen/edge_margin"
+    android:paddingTop="@dimen/vertical_inter_item_space">
 
-    <ImageView
-        android:id="@+id/display_post_profile_image_view"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="#22000000"
-        android:layout_marginRight="@dimen/horizontal_inter_item_space"
-        android:layout_marginEnd="@dimen/horizontal_inter_item_space"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/display_post_profile_image_view"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="@dimen/horizontal_inter_item_space"
+            android:background="#22000000" />
+
+        <TextView
+            android:id="@+id/display_post_name_text_view"
+            style="@style/Base.TextAppearance.AppCompat.Title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@id/display_post_profile_image_view"
+            android:maxLines="1"
+            android:textColor="@color/colorPrimaryDark" />
+
+        <TextView
+            android:id="@+id/display_post_time_text_view"
+            style="@style/Base.TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/display_post_name_text_view"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:maxLines="1" />
+
+        <TextView
+            android:id="@+id/display_post_content_text_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/display_post_name_text_view"
+            android:layout_marginBottom="@dimen/vertical_inter_item_space"
+            android:layout_toEndOf="@id/display_post_profile_image_view"/>
+
+        <ImageView
+            android:id="@+id/display_post_content_image_view"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/image_preview_height"
+            android:layout_below="@id/display_post_content_text_view"
+            android:layout_marginTop="@dimen/vertical_inter_item_space"
+            android:layout_toEndOf="@id/display_post_profile_image_view"
+            android:scaleType="fitStart"
+            android:visibility="gone" />
+
+    </RelativeLayout>
 
     <ImageButton
         android:id="@+id/display_post_delete_button"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:background="@drawable/delete"/>
+        android:background="@drawable/delete"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/edge_margin"/>
 
-    <TextView
-        android:id="@+id/display_post_name_text_view"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        style="@style/Base.TextAppearance.AppCompat.Title"
-        android:maxLines="1"
-        android:textColor="@color/colorPrimaryDark"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/display_post_profile_image_view"
-        android:layout_toEndOf="@id/display_post_profile_image_view"/>
-
-    <TextView
-        android:id="@+id/display_post_time_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/Base.TextAppearance.AppCompat.Caption"
-        android:maxLines="1"
-        android:text="12:30 PM"
-        android:layout_alignBaseline="@id/display_post_name_text_view"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@id/display_post_delete_button"
-        android:layout_toStartOf="@id/display_post_delete_button"/>
-    
-    <TextView
-        android:id="@+id/display_post_content_text_view"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/display_post_profile_image_view"
-        android:layout_toEndOf="@id/display_post_profile_image_view"
-        android:layout_toLeftOf="@id/display_post_delete_button"
-        android:layout_toStartOf="@id/display_post_delete_button"
-        android:layout_below="@id/display_post_name_text_view"
-        android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
-
-    <ImageView
-        android:id="@+id/display_post_content_image_view"
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/image_preview_height"
-        android:visibility="gone"
-        android:scaleType="fitStart"
-        android:layout_below="@id/display_post_content_text_view"
-        android:layout_toRightOf="@id/display_post_profile_image_view"
-        android:layout_toEndOf="@id/display_post_profile_image_view"
-        android:layout_toLeftOf="@id/display_post_delete_button"
-        android:layout_toStartOf="@id/display_post_delete_button"
-        android:layout_marginTop="@dimen/vertical_inter_item_space"/>
-
-</RelativeLayout>
+</LinearLayout>
