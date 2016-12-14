@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.api.client.util.Data;
@@ -113,8 +114,9 @@ public class ConnectionsListAdapter extends BaseAdapter {
         holder.messageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, ChatActivity.class);
-                mContext.startActivity(intent);
+                Toast.makeText(mContext, "Direct messages not implemented yet", Toast.LENGTH_SHORT).show();
+                //Intent intent = new Intent(mContext, ChatActivity.class);
+                //mContext.startActivity(intent);
             }
         });
         return cell;
