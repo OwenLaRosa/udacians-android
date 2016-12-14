@@ -320,7 +320,13 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
             @Override
             public void onClick(View view) {
                 // convert to Uri for use with intent
-                Uri linkUri = Uri.parse(link);
+                final String urlPrefix = "http://";
+                Uri linkUri = null;
+                if (link.startsWith(urlPrefix)) {
+                    linkUri = Uri.parse(link);
+                } else {
+                    linkUri = Uri.parse(urlPrefix + link);
+                }
                 // open the link in the browser
                 Intent intent = new Intent(Intent.ACTION_VIEW, linkUri);
                 startActivity(intent);
