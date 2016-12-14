@@ -129,8 +129,16 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 BasicProfile profile = dataSnapshot.getValue(BasicProfile.class);
                 nameTextView.setText(profile.getName());
-                titleTextView.setText(profile.getTitle());
-                headerView.aboutTextView.setText(profile.getAbout());
+                if (profile.getTitle() != null && !profile.getTitle().equals("")) {
+                    titleTextView.setText(profile.getTitle());
+                } else {
+                    titleTextView.setText(getString(R.string.title_default));
+                }
+                if (profile.getAbout() != null && !profile.getAbout().equals("")) {
+                    headerView.aboutTextView.setText(profile.getAbout());
+                } else {
+                    headerView.aboutTextView.setText(getString(R.string.about_default));
+                }
                 Glide.with(getActivity())
                         .load(profile.getPhoto())
                         .into(profilePictureImageView);

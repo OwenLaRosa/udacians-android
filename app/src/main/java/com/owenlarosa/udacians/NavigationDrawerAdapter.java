@@ -189,7 +189,12 @@ public class NavigationDrawerAdapter extends BaseAdapter {
         titleReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                viewHolder.titleTextView.setText(dataSnapshot.getValue(String.class));
+                String title = dataSnapshot.getValue(String.class);
+                if (title != null && !title.equals("")) {
+                    viewHolder.titleTextView.setText(title);
+                } else {
+                    viewHolder.titleTextView.setText(mContext.getString(R.string.title_default));
+                }
             }
 
             @Override

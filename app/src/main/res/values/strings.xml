@@ -21,6 +21,8 @@
     <string name="about">About</string>
     <string name="post">Post</string>
     <string name="post_placeholder">Write post here</string>
+    <string name="title_default">Udacian</string>
+    <string name="about_default">I\'m a Udacian!</string>
 
     <!-- Displayed on the chat screen -->
     <string name="enter_message">Enter message</string>
