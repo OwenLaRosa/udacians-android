@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -65,9 +64,14 @@ public class ChatFragment extends Fragment {
 
     private Context mContext;
     Unbinder mUnbinder;
+    // id of the chat, either course ID or user ID of the creator
+    String chatId = "";
 
     // image currently displayed in post authoring view
     private Bitmap mImage;
+    // true if sending a message will cause the user to join the chat
+    // false if already joined chat
+    private Boolean shouldJoinChat;
 
     private FirebaseDatabase mFirebaseDatabase;
 
@@ -82,7 +86,6 @@ public class ChatFragment extends Fragment {
 
         mContext = getActivity();
 
-        String chatId = "";
         boolean direct;
 
         Intent intent = getActivity().getIntent();
@@ -97,7 +100,7 @@ public class ChatFragment extends Fragment {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
 
         // set up storage for uploading images
-        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mFirebaseStorage = FirebaseStorage.getInstance();
         StorageReference storageReference = mFirebaseStorage.getReferenceFromUrl("gs://udacians-df696.appspot.com");
         mPublicImageStorage = storageReference.child(user).child("public").child("images");
@@ -137,6 +140,8 @@ public class ChatFragment extends Fragment {
 
                     }
                 });
+                // this discussion is already on the user's list
+                shouldJoinChat = false;
             } else {
                 DatabaseReference nameReference = mFirebaseDatabase.getReference().child("topics").child(chatId).child("info").child("name");
                 // title should be name/prompt of the topic
@@ -145,6 +150,25 @@ public class ChatFragment extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String name = dataSnapshot.getValue(String.class);
                         ((AppCompatActivity) getActivity()).setTitle(name);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                // determine if sending a message will cause the user to join (add to discussions list)
+                DatabaseReference isMemberReference = mFirebaseDatabase.getReference().child("users").child(user).child("topics").child(chatId);
+                isMemberReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getValue() == null) {
+                            // user has not joined yet
+                            shouldJoinChat = true;
+                        } else {
+                            // discussion is already in the user's list
+                            shouldJoinChat = false;
+                        }
                     }
 
                     @Override
@@ -192,6 +216,13 @@ public class ChatFragment extends Fragment {
                 chatEntry.messageTextField.setText("");
                 chatEntry.imagePreview.setVisibility(View.GONE);
                 chatEntry.messageTextField.setCompoundDrawables(null, null, null, null);
+
+                // add discussion to the user's list if they haven't already been added
+                if (shouldJoinChat != null && shouldJoinChat) {
+                    DatabaseReference isMemberReference = mFirebaseDatabase.getReference().child("users").child(user).child("topics").child(chatId);
+                    isMemberReference.setValue(true);
+                    shouldJoinChat = false;
+                }
             }
         });
 
