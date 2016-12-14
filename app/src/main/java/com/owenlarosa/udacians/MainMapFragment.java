@@ -57,6 +57,9 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
     private HashMap<Marker, PinData> pinMappings = new HashMap<Marker, PinData>();
     private HashMap<Marker, String> articleUrls = new HashMap<Marker, String>();
     private HashMap<Marker, PinData> topicIds = new HashMap<Marker, PinData>();
+    // reference markers by ID for their corresponding data
+    // if data with a certain ID is deleted or replaced, old pins will be removed
+    private HashMap<String, Marker> idMappings = new HashMap<>();
 
     @Nullable
     @Override
@@ -131,12 +134,12 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                removeMarkerWithKey(dataSnapshot.getKey());
+            }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
@@ -156,7 +159,9 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                removeMarkerWithKey(dataSnapshot.getKey());
+            }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
@@ -176,7 +181,9 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                removeMarkerWithKey(dataSnapshot.getKey());
+            }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
@@ -196,7 +203,9 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                removeMarkerWithKey(dataSnapshot.getKey());
+            }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
@@ -221,6 +230,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
                 // add the marker and store it for handling click events later
                 marker = mGoogleMap.addMarker(pin);
                 pinMappings.put(marker, data);
+                idMappings.put(data.key, marker);
                 break;
             case Event:
                 Location eventLocation = dataSnapshot.getValue(Location.class);
@@ -228,6 +238,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
                 pin.icon(BitmapDescriptorFactory.fromResource(R.drawable.event_pin));
                 marker = mGoogleMap.addMarker(pin);
                 pinMappings.put(marker, data);
+                idMappings.put(data.key, marker);
                 break;
             case Topic:
                 Location topicLocation = dataSnapshot.getValue(Location.class);
@@ -237,6 +248,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
                 pinMappings.put(marker, data);
                 // key is the topic ID
                 topicIds.put(marker, data);
+                idMappings.put(data.key, marker);
                 break;
             case Article:
                 Article article = dataSnapshot.getValue(Article.class);
@@ -248,6 +260,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
                 pinMappings.put(marker, data);
                 // save url so it can be referenced later
                 articleUrls.put(marker, article.getUrl());
+                idMappings.put(data.key, marker);
                 break;
             case Job:
                 break;
@@ -353,6 +366,17 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
         DatabaseReference authorNameReference = mFirebaseDatabase.getReference().child("users").child(userId).child("basic").child("name");
         setMarkerString(marker, articleTitleReference, true);
         setMarkerString(marker, authorNameReference, false);
+    }
+
+    /**
+     * Delete a marker with the corresponding key from the map
+     * @param key Key from a database snapshot that was removed
+     */
+    private void removeMarkerWithKey(String key) {
+        Marker marker = idMappings.get(key);
+        if (marker != null) {
+            marker.remove();
+        }
     }
 
     /**
