@@ -115,6 +115,9 @@ public class MultipleInputView extends Dialog {
                     topicNameReference.setValue(name);
                     DatabaseReference topicMessageReference = mFirebaseDatabase.getReference().child("topics").child(mUserId).child("messages");
                     topicMessageReference.removeValue();
+                    // add the topic to this user's list
+                    DatabaseReference userTopicReference = mFirebaseDatabase.getReference().child("users").child(mUserId).child("topics").child(mUserId);
+                    userTopicReference.setValue(true);
                     break;
                 case Article:
                     // data is pushed to location reference, so include the coordinates
