@@ -111,16 +111,6 @@ public class EditProfileFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (getActivity().isFinishing()) {
-            // data should only be saved when activity is permantly closed
-            // it should not be saved for other lifecycle events such as rotation
-            saveChanges();
-        }
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == RESULT_PICK_IMAGE && resultCode == RESULT_OK && null != intent) {
             Uri imagePath = intent.getData();
