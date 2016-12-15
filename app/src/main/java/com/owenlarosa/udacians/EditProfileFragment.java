@@ -145,7 +145,7 @@ public class EditProfileFragment extends Fragment {
         startActivityForResult(intent, RESULT_PICK_IMAGE);
     }
 
-    @OnClick(R.id.edit_reset_button)
+    @OnClick(R.id.edit_save_button)
     public void resetChanges() {
         loadData();
     }
