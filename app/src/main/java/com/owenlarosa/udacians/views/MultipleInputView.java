@@ -109,6 +109,7 @@ public class MultipleInputView extends Dialog {
                     contents.remove(Keys.NAME);
                     // push the coordinates as a topic location
                     DatabaseReference topicLocationReference = mFirebaseDatabase.getReference().child("topic_locations").child(mUserId);
+                    topicLocationReference.removeValue();
                     topicLocationReference.setValue(contents);
                     // Rename the topic and clear old messages
                     DatabaseReference topicNameReference = mFirebaseDatabase.getReference().child("topics").child(mUserId).child("info").child("name");
