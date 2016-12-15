@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -53,6 +54,8 @@ public class EditProfileFragment extends Fragment {
     // user selected an image from the gallery
     private static final int RESULT_PICK_IMAGE = 1;
 
+    @BindView(R.id.edit_save_button)
+    Button saveChangesButton;
     @BindView(R.id.edit_profile_image_button)
     ImageButton profileImageButton;
     @BindView(R.id.edit_title_text_field)
@@ -145,11 +148,6 @@ public class EditProfileFragment extends Fragment {
         startActivityForResult(intent, RESULT_PICK_IMAGE);
     }
 
-    @OnClick(R.id.edit_save_button)
-    public void resetChanges() {
-        loadData();
-    }
-
     /**
      * Populate text fields with current profile data
      */
@@ -204,7 +202,8 @@ public class EditProfileFragment extends Fragment {
     /**
      * Upload new profile data to the server
      */
-    private void saveChanges() {
+    @OnClick(R.id.edit_save_button)
+    public void saveChanges() {
         mBasicReference.child("title").setValue(titleEditText.getText().toString());
         mBasicReference.child("about").setValue(aboutEditText.getText().toString());
         mProfileReference.child("site").setValue(siteEditText.getText().toString());
@@ -212,6 +211,9 @@ public class EditProfileFragment extends Fragment {
         mProfileReference.child("linkedin").setValue(linkedinEditText.getText().toString());
         mProfileReference.child("twitter").setValue(twitterEditText.getText().toString());
         if (mImage != null) {
+            // don't allow multiple saves while image is uploading
+            saveChangesButton.setEnabled(false);
+            saveChangesButton.setText(getString(R.string.uploading_photo));
             // user has changed their profile picture
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             mImage.compress(Bitmap.CompressFormat.JPEG, 50, outputStream);
@@ -222,9 +224,12 @@ public class EditProfileFragment extends Fragment {
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    mProfileReference.child("photo").setValue(taskSnapshot.getDownloadUrl().toString());
+                    mBasicReference.child("photo").setValue(taskSnapshot.getDownloadUrl().toString());
                     // reset so image is not uploaded twice
                     mImage = null;
+                    // enable the save button for further changes
+                    saveChangesButton.setEnabled(true);
+                    saveChangesButton.setText(getString(R.string.save_changes));
                 }
             });
         }

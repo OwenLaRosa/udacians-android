@@ -52,6 +52,8 @@
     <string name="twitter" translatable="false">Twitter</string>
     <!-- Reset save changes made on edit profile screen -->
     <string name="save_changes">Save Changes</string>
+    <!-- text of the save changes button when uploading new profile picture -->
+    <string name="uploading_photo">Uploading photo&#8230;</string>
 
     <!-- Event screen -->
     <!-- Used to show event details in blue header areas -->
