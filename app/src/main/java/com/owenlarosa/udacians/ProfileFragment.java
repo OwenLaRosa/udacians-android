@@ -53,6 +53,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static android.R.string.no;
 import static android.app.Activity.RESULT_OK;
 import static android.view.View.VISIBLE;
 
@@ -154,18 +155,33 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ProfileInfo profileInfo = dataSnapshot.getValue(ProfileInfo.class);
+                // exit if valid profile info was not returned
+                if (profileInfo == null) {
+                    headerView.linksLinearLayout.setVisibility(View.GONE);
+                    return;
+                }
+                // if the content does not contain actual links (e.g. all empty strings)
+                boolean noLinks = true;
                 // check if links of each type exist, and if so add them to the layout
                 if (profileInfo.getSite() != null && !profileInfo.getSite().equals("")) {
                     addLinkButton(LinkType.Personal, profileInfo.getSite());
+                    noLinks = false;
                 }
                 if (profileInfo.getBlog() != null && !profileInfo.getBlog().equals("")) {
                     addLinkButton(LinkType.Blog, profileInfo.getBlog());
+                    noLinks = false;
                 }
                 if (profileInfo.getLinkedin() != null && !profileInfo.getLinkedin().equals("")) {
                     addLinkButton(LinkType.Linkedin, profileInfo.getLinkedin());
+                    noLinks = false;
                 }
                 if (profileInfo.getTwitter() != null && !profileInfo.getTwitter().equals("")) {
                     addLinkButton(LinkType.Twitter, profileInfo.getTwitter());
+                    noLinks = false;
+                }
+                // there may be valid data but no actual links to show; view should be gone in this case
+                if (noLinks) {
+                    headerView.linksLinearLayout.setVisibility(View.GONE);
                 }
             }
 
