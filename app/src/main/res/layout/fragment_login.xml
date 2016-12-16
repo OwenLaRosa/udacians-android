@@ -26,6 +26,7 @@
         android:layout_height="100dp"
         android:layout_gravity="center"
         android:scaleType="fitCenter"
+        android:src="@mipmap/ic_launcher"
         android:contentDescription="@string/a11y_udacians_logo"
         android:layout_marginBottom="@dimen/login_inter_item_space"/>
 
