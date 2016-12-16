@@ -130,7 +130,7 @@ public class BlogFeedAdapter extends BaseAdapter {
 
             }
         });
-        DatabaseReference authorReference = articleReference.child("author");
+        DatabaseReference authorReference = mFirebaseDatabase.getReference().child("users").child(userId).child("basic").child("name");
         authorReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
