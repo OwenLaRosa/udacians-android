@@ -1,6 +1,5 @@
 package com.owenlarosa.udacians;
 
-import android.*;
 import android.Manifest;
 import android.app.Fragment;
 import android.content.Intent;
@@ -17,7 +16,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     FrameLayout viewContainer;
     @BindView(R.id.left_drawer)
     ListView navigationDrawer;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     Unbinder unbinder;
 
@@ -99,6 +101,23 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
         };
         FirebaseAuth.getInstance().addAuthStateListener(mAuthStateListener);
+
+        mDrawerToggle = new ActionBarDrawerToggle(this,
+                drawerLayout,
+                R.drawable.menu,
+                R.string.open_drawer,
+                R.string.close_drawer) {
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+            }
+        };
+        drawerLayout.setDrawerListener(mDrawerToggle);
 
         // populate the nav drawer with its static content
         final NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(this);
@@ -163,6 +182,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 }
             }
         });
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.menu);
         if (savedInstanceState == null) {
             // show map screen the first time the app launches
             Fragment fragment = new MainMapFragment();
@@ -171,6 +193,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     .commit();
             //adapter.getView(1, null, null).setBackgroundColor(getResources().getColor(R.color.colorAccent));
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

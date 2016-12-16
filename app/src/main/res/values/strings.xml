@@ -42,6 +42,10 @@
     <string name="nav_help">Help</string>
     <string name="nav_logout">Logout</string>
 
+    <!-- navigation drawer toggle -->
+    <string name="open_drawer">Open drawer</string>
+    <string name="close_drawer">Close drawer</string>
+
     <!-- edit profile screen -->
     <string name="profile_picture">Profile Picture</string>
     <string name="job_title">Title</string>
