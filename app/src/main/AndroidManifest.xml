@@ -37,6 +37,10 @@
         <activity android:name=".ChatActivity" />
         <activity android:name=".EventActivity" />
         <activity android:name=".LoginActivity"></activity>
+        <provider
+            android:authorities="com.owenlarosa.udacians.contentprovider"
+            android:name=".contentprovider.generated.JobsProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>
