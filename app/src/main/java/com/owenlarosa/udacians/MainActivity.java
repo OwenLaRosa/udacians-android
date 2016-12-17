@@ -36,6 +36,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.owenlarosa.udacians.syncadapter.JobsSyncAdapter;
 
 import java.io.IOException;
 import java.util.List;
@@ -321,6 +322,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 syncUserLocation(latitude, longitude, null);
             }
         }
+        JobsSyncAdapter.initializeSyncAdapter(this);
     }
 
     @Override

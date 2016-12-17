@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.owenlarosa.udacians">
 
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"
+        android:maxSdkVersion="22"/>
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -40,7 +44,24 @@
         <provider
             android:authorities="com.owenlarosa.udacians.contentprovider"
             android:name=".contentprovider.generated.JobsProvider"
-            android:exported="false"/>
+            android:exported="true"/>
+        <service android:name=".syncadapter.JobsAuthenticatorService">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+        <service android:name=".syncadapter.JobsSyncService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/sync_adapter" />
+        </service>
     </application>
 
 </manifest>

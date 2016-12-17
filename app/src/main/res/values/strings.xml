@@ -129,4 +129,7 @@
     <!-- used to store cookies from Udacity API -->
     <string name="pref_cookies">cookies</string>
 
+    <string name="sync_account_type" translatable="false">com.owenlarosa.udacians</string>
+    <string name="content_authority" translatable="false">com.owenlarosa.udacians.contentprovider.JobsProvider</string>
+
 </resources>
