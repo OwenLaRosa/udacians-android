@@ -2,59 +2,55 @@ package com.owenlarosa.udaciansapp.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.owenlarosa.udaciansapp.R;
+import com.owenlarosa.udaciansapp.contentprovider.JobsDatabase;
+import com.owenlarosa.udaciansapp.contentprovider.JobsListColumns;
+import com.owenlarosa.udaciansapp.contentprovider.JobsProvider;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
 
 /**
  * Created by Owen LaRosa on 11/14/16.
  */
 
-public class JobsListAdapter extends BaseAdapter {
+public class JobsListAdapter extends CursorAdapter {
 
     private Context mContext;
 
-    public JobsListAdapter(Context context) {
-        mContext = context;
+    public JobsListAdapter(Context context, Cursor cursor) {
+        super(context, cursor, 0);
     }
 
     @Override
-    public int getCount() {
-        // 10 views as placeholders
-        return 10;
+    public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
+        View view = LayoutInflater.from(context).inflate(R.layout.jobs_list_item, viewGroup, false);
+        ViewHolder viewHolder = new ViewHolder(view);
+        view.setTag(viewHolder);
+        return view;
     }
 
     @Override
-    public long getItemId(int i) {
-        return 0;
+    public void bindView(View view, Context context, Cursor cursor) {
+        ViewHolder viewHolder = (ViewHolder) view.getTag();
+        String title = cursor.getString(cursor.getColumnIndex(JobsListColumns.TITLE));
+        viewHolder.titleTextView.setText(title);
+        String company = cursor.getString(cursor.getColumnIndex(JobsListColumns.COMPANY));
+        viewHolder.companyTextView.setText(company);
+        String location = cursor.getString(cursor.getColumnIndex(JobsListColumns.LOCATION));
+        viewHolder.locationTextView.setText(location);
     }
 
-    @Override
-    public Object getItem(int i) {
-        return null;
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        View cell = view;
-        ViewHolder holder = null;
-        if (cell == null) {
-            LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
-            cell = inflater.inflate(R.layout.jobs_list_item, viewGroup, false);
-            holder = new ViewHolder(cell);
-            cell.setTag(holder);
-        } else {
-            holder = (ViewHolder) cell.getTag();
-        }
-        return cell;
-    }
 
     static class ViewHolder {
         @BindView(R.id.job_title_text_view)
