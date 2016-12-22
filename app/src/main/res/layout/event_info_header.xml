@@ -40,7 +40,7 @@
         android:layout_marginStart="@dimen/edge_margin"
         android:clipToPadding="false"/>
 
-    <com.owenlarosa.udacians.views.WritePostView
+    <com.owenlarosa.udaciansapp.views.WritePostView
         android:id="@+id/event_write_post_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

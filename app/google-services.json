@@ -36,6 +36,37 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:875028642433:android:d57dfc116736620e",
+        "android_client_info": {
+          "package_name": "com.owenlarosa.udaciansapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "875028642433-d0ojidt4mpmpt6ea2iipjp34fr93n4rt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7raFj7_ZMzC1oFmdyrzxLf-UdsQ8zr4k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"
