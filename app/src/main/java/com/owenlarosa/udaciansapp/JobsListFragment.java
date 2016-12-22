@@ -2,12 +2,15 @@ package com.owenlarosa.udaciansapp;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +20,17 @@ import com.owenlarosa.udaciansapp.adapter.JobsListAdapter;
 import com.owenlarosa.udaciansapp.contentprovider.JobsListColumns;
 import com.owenlarosa.udaciansapp.contentprovider.JobsProvider;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.Vector;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by Owen LaRosa on 11/14/16.
@@ -34,6 +45,8 @@ public class JobsListFragment extends Fragment implements LoaderManager.LoaderCa
 
     private Unbinder mUnbinder;
     private Context mContext;
+    private View view;
+    private OkHttpClient mClient = new OkHttpClient();
 
     private JobsListAdapter mJobsAdapter;
     private Cursor mCursor;
@@ -45,10 +58,17 @@ public class JobsListFragment extends Fragment implements LoaderManager.LoaderCa
         mUnbinder = ButterKnife.bind(this, rootView);
 
         mContext = getActivity();
+        view = getView();
 
         mJobsAdapter = new JobsListAdapter(mContext, mCursor);
         listView.setAdapter(mJobsAdapter);
         getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                getJobsForKeyword("android+developer");
+            }
+        });
 
         return rootView;
     }
@@ -63,7 +83,7 @@ public class JobsListFragment extends Fragment implements LoaderManager.LoaderCa
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return new CursorLoader(mContext,
                 JobsProvider.Jobs.JOBS,
-                new String[] {JobsListColumns.TITLE, JobsListColumns.COMPANY, JobsListColumns.LOCATION, JobsListColumns.URL},
+                new String[] {JobsListColumns._ID, JobsListColumns.TITLE, JobsListColumns.COMPANY, JobsListColumns.LOCATION, JobsListColumns.URL},
                 null,
                 null,
                 null);
@@ -78,6 +98,62 @@ public class JobsListFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mJobsAdapter.swapCursor(null);
+    }
+
+    private void getJobsForKeyword(String keyword) {
+        final String BASE_URL = "http://service.dice.com/api/rest/jobsearch/v1/simple.json?";
+        final String PARAM_SEARCH_TEXT = "text";
+        String url = new StringBuilder()
+                .append(BASE_URL)
+                .append(PARAM_SEARCH_TEXT)
+                .append("=")
+                .append(keyword)
+                .append("&pgcnt=20")
+                .toString();
+        Request request = new Request.Builder()
+                .url(BASE_URL)
+                .build();
+        try {
+            Response response = mClient.newCall(request).execute();
+            String responseText = response.body().string();
+            JSONObject root = new JSONObject(responseText);
+            JSONArray results = root.getJSONArray("resultItemList");
+
+            Vector<ContentValues> contentValuesVector = new Vector<ContentValues>(results.length());
+
+            for (int i = 0; i < results.length(); i++) {
+                JSONObject job = results.getJSONObject(i);
+                String link = job.getString("detailUrl");
+                String title = job.getString("jobTitle");
+                String company = job.getString("company");
+                String location = job.getString("location");
+                String date = job.getString("date");
+
+                ContentValues jobValues = new ContentValues();
+                jobValues.put(JobsListColumns.URL, link);
+                jobValues.put(JobsListColumns.TITLE, title);
+                jobValues.put(JobsListColumns.COMPANY, company);
+                jobValues.put(JobsListColumns.LOCATION, location);
+                jobValues.put(JobsListColumns.DATE, 1);
+
+                contentValuesVector.add(jobValues);
+            }
+            if (contentValuesVector.size() > 0) {
+                // delete all existing jobs from the database and replace them with the new jobs
+                ContentValues[] cvArray = new ContentValues[contentValuesVector.size()];
+                contentValuesVector.toArray(cvArray);
+                mContext.getContentResolver().delete(JobsProvider.Jobs.JOBS, null, null);
+                mContext.getContentResolver().bulkInsert(JobsProvider.Jobs.JOBS, cvArray);
+            }
+            view.post(new Runnable() {
+                @Override
+                public void run() {
+                    mJobsAdapter.notifyDataSetChanged();
+                }
+            });
+        } catch (Exception e) {
+            Log.e("", e.getLocalizedMessage());
+        }
     }
 
 }

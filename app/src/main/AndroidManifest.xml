@@ -42,8 +42,8 @@
         <activity android:name="com.owenlarosa.udaciansapp.EventActivity" />
         <activity android:name="com.owenlarosa.udaciansapp.LoginActivity"></activity>
         <provider
-            android:authorities="com.owenlarosa.udaciansapp.contentprovider"
-            android:name="com.owenlarosa.udaciansapp.contentprovider.generated.JobsProvider"
+            android:authorities="com.owenlarosa.udaciansapp.contentprovider.JobsProvider"
+            android:name=".contentprovider.generated.JobsProvider"
             android:exported="true"/>
         <service android:name="com.owenlarosa.udaciansapp.syncadapter.JobsAuthenticatorService">
             <intent-filter>
