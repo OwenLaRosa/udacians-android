@@ -71,7 +71,8 @@ public class JobsListFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-
+        mJobsAdapter.swapCursor(cursor);
+        mCursor = cursor;
     }
 
     @Override
