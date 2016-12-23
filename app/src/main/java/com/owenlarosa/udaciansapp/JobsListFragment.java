@@ -5,8 +5,10 @@ import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.owenlarosa.udaciansapp.adapter.JobsListAdapter;
@@ -23,9 +26,6 @@ import com.owenlarosa.udaciansapp.contentprovider.JobsProvider;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.util.Enumeration;
 import java.util.Vector;
 
 import butterknife.BindView;
@@ -64,6 +64,16 @@ public class JobsListFragment extends Fragment implements LoaderManager.LoaderCa
 
         mJobsAdapter = new JobsListAdapter(mContext, mCursor);
         listView.setAdapter(mJobsAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mCursor.moveToPosition(i);
+                String urlString = mCursor.getString(mCursor.getColumnIndex(JobsListColumns.URL));
+                Uri uri = Uri.parse(urlString);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                mContext.startActivity(intent);
+            }
+        });
         getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
         AsyncTask.execute(new Runnable() {
             @Override
