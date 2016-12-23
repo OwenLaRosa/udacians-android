@@ -23,6 +23,9 @@ import com.owenlarosa.udaciansapp.contentprovider.JobsProvider;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
 import java.util.Vector;
 
 import butterknife.BindView;
@@ -58,7 +61,6 @@ public class JobsListFragment extends Fragment implements LoaderManager.LoaderCa
         mUnbinder = ButterKnife.bind(this, rootView);
 
         mContext = getActivity();
-        view = getView();
 
         mJobsAdapter = new JobsListAdapter(mContext, mCursor);
         listView.setAdapter(mJobsAdapter);
@@ -66,11 +68,17 @@ public class JobsListFragment extends Fragment implements LoaderManager.LoaderCa
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                getJobsForKeyword("android+developer");
+                getJobsForKeyword("android");
             }
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        this.view = view;
     }
 
     @Override
@@ -108,10 +116,11 @@ public class JobsListFragment extends Fragment implements LoaderManager.LoaderCa
                 .append(PARAM_SEARCH_TEXT)
                 .append("=")
                 .append(keyword)
-                .append("&pgcnt=20")
+                .append("&pgcnt=30")
+                .append("&sort=1")
                 .toString();
         Request request = new Request.Builder()
-                .url(BASE_URL)
+                .url(url)
                 .build();
         try {
             Response response = mClient.newCall(request).execute();
