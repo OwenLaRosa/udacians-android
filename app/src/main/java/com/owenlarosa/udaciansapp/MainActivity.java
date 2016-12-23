@@ -275,10 +275,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference locationReference = mFirebaseDatabase.getReference().child("locations").child(user);
         com.owenlarosa.udaciansapp.data.Location location = new com.owenlarosa.udaciansapp.data.Location();
-        location.setLatitude(latitude);
-        location.setLongitude(longitude);
-        location.setLocation(place);
-        locationReference.setValue(location);
+        if (place != null) {
+            // ideally we want to write all the data at once so everything is updated
+            location.setLatitude(latitude);
+            location.setLongitude(longitude);
+            location.setLocation(place);
+            locationReference.setValue(location);
+        } else {
+            // in cases where the place is null, lat and lon should be updaed individually
+            // location is not changed since it may have had a previous value
+            // reverse geocoding may not always return null for this place, so just use the old one
+            DatabaseReference longitudeReference = locationReference.child("longitude");
+            longitudeReference.setValue(longitude);
+            DatabaseReference latitudeReference = locationReference.child("latitude");
+            latitudeReference.setValue(latitude);
+        }
     }
 
     @Override
