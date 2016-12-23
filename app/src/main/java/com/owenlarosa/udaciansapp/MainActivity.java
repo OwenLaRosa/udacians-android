@@ -313,6 +313,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
                 if (addresses.size() != 0) {
                     Address address = addresses.get(0);
+                    // store the address locally so it can be used to help find jobs in the area
+                    Utils.setJobSearchLocation(this, address);
                     String place = null;
                     if (address.getLocality() != null) {
                         // locality will generally return city and postal code

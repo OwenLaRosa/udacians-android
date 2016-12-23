@@ -78,7 +78,10 @@ public class JobsListFragment extends Fragment implements LoaderManager.LoaderCa
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                getJobsForKeyword("android");
+                String city = Utils.getJobSearchLocation(mContext);
+                if (city != null) {
+                    getJobsForKeyword("android", city);
+                }
             }
         });
 
@@ -118,7 +121,7 @@ public class JobsListFragment extends Fragment implements LoaderManager.LoaderCa
         mJobsAdapter.swapCursor(null);
     }
 
-    private void getJobsForKeyword(String keyword) {
+    private void getJobsForKeyword(String keyword, String city) {
         final String BASE_URL = "http://service.dice.com/api/rest/jobsearch/v1/simple.json?";
         final String PARAM_SEARCH_TEXT = "text";
         String url = new StringBuilder()
@@ -126,6 +129,8 @@ public class JobsListFragment extends Fragment implements LoaderManager.LoaderCa
                 .append(PARAM_SEARCH_TEXT)
                 .append("=")
                 .append(keyword)
+                .append("&city=")
+                .append(city)
                 .append("&pgcnt=30")
                 .append("&sort=1")
                 .toString();
