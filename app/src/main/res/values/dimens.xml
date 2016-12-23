@@ -43,6 +43,15 @@
     <dimen name="drawer_profile_icon_size">96dp</dimen>
     <dimen name="image_border_width">2dp</dimen>
 
+    <!-- dimensions for jobs widget -->
+    <dimen name="widget_margin">8dp</dimen>
+    <dimen name="widget_list_default_width">250dp</dimen>
+    <dimen name="widget_list_default_height">180dp</dimen>
+    <dimen name="widget_list_min_resize_width">220dp</dimen>
+    <dimen name="widget_list_min_resize_height">@dimen/widget_list_default_height</dimen>
+    <dimen name="jobs_widget_text_size">24dp</dimen>
+    <dimen name="jobs_widget_text_width">38dp</dimen>
+
     <!-- dimensions used on all layouts -->
     <dimen name="edge_margin">16dp</dimen>
     <dimen name="horizontal_inter_item_space">8dp</dimen>
