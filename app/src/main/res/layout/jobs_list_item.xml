@@ -17,7 +17,6 @@
         android:maxLines="1"
         android:textStyle="bold"
         android:textColor="@color/colorPrimaryDark"
-        android:text="Junior Android Developer"
         android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
 
     <TextView
@@ -25,14 +24,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="5"
-        android:text="Google"
-        android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
+        android:textColor="@color/black"
+        android:layout_marginBottom="@dimen/vertical_inter_item_space" />
 
     <TextView
         android:id="@+id/job_location_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="Cambridge, MA"/>
+        android:textColor="@color/black"/>
 
 </LinearLayout>

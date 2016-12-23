@@ -168,6 +168,7 @@ public class JobsListFragment extends Fragment implements LoaderManager.LoaderCa
                 @Override
                 public void run() {
                     mJobsAdapter.notifyDataSetChanged();
+                    Utils.updateWidget(mContext);
                 }
             });
         } catch (Exception e) {
