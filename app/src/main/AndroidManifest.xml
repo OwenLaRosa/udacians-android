@@ -45,7 +45,7 @@
         <provider
             android:authorities="com.owenlarosa.udaciansapp.contentprovider.JobsProvider"
             android:name=".contentprovider.generated.JobsProvider"
-            android:exported="true"/>
+            android:exported="false"/>
         <service android:name="com.owenlarosa.udaciansapp.syncadapter.JobsAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
