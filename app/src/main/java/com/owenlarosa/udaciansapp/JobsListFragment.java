@@ -49,7 +49,6 @@ public class JobsListFragment extends Fragment implements LoaderManager.LoaderCa
     private Unbinder mUnbinder;
     private Context mContext;
     private View view;
-    private OkHttpClient mClient = new OkHttpClient();
 
     private JobsListAdapter mJobsAdapter;
     private Cursor mCursor;
@@ -80,7 +79,10 @@ public class JobsListFragment extends Fragment implements LoaderManager.LoaderCa
             public void run() {
                 String city = Utils.getJobSearchLocation(mContext);
                 if (city != null) {
-                    getJobsForKeyword("android", city);
+                    if (Utils.getJobsForKeyword(mContext, "android", city)) {
+                        // update list and widget on main thread if task succeeds
+                        updateLists();
+                    }
                 }
             }
         });
@@ -121,64 +123,17 @@ public class JobsListFragment extends Fragment implements LoaderManager.LoaderCa
         mJobsAdapter.swapCursor(null);
     }
 
-    private void getJobsForKeyword(String keyword, String city) {
-        final String BASE_URL = "http://service.dice.com/api/rest/jobsearch/v1/simple.json?";
-        final String PARAM_SEARCH_TEXT = "text";
-        String url = new StringBuilder()
-                .append(BASE_URL)
-                .append(PARAM_SEARCH_TEXT)
-                .append("=")
-                .append(keyword)
-                .append("&city=")
-                .append(city)
-                .append("&pgcnt=30")
-                .append("&sort=1")
-                .toString();
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-        try {
-            Response response = mClient.newCall(request).execute();
-            String responseText = response.body().string();
-            JSONObject root = new JSONObject(responseText);
-            JSONArray results = root.getJSONArray("resultItemList");
-
-            Vector<ContentValues> contentValuesVector = new Vector<ContentValues>(results.length());
-
-            for (int i = 0; i < results.length(); i++) {
-                JSONObject job = results.getJSONObject(i);
-                String link = job.getString("detailUrl");
-                String title = job.getString("jobTitle");
-                String company = job.getString("company");
-                String location = job.getString("location");
-                String date = job.getString("date");
-
-                ContentValues jobValues = new ContentValues();
-                jobValues.put(JobsListColumns.URL, link);
-                jobValues.put(JobsListColumns.TITLE, title);
-                jobValues.put(JobsListColumns.COMPANY, company);
-                jobValues.put(JobsListColumns.LOCATION, location);
-                jobValues.put(JobsListColumns.DATE, 1);
-
-                contentValuesVector.add(jobValues);
+    /**
+     * Update the adapter and widget on main thread
+     */
+    private void updateLists() {
+        view.post(new Runnable() {
+            @Override
+            public void run() {
+                mJobsAdapter.notifyDataSetChanged();
+                Utils.updateWidget(mContext);
             }
-            if (contentValuesVector.size() > 0) {
-                // delete all existing jobs from the database and replace them with the new jobs
-                ContentValues[] cvArray = new ContentValues[contentValuesVector.size()];
-                contentValuesVector.toArray(cvArray);
-                mContext.getContentResolver().delete(JobsProvider.Jobs.JOBS, null, null);
-                mContext.getContentResolver().bulkInsert(JobsProvider.Jobs.JOBS, cvArray);
-            }
-            view.post(new Runnable() {
-                @Override
-                public void run() {
-                    mJobsAdapter.notifyDataSetChanged();
-                    Utils.updateWidget(mContext);
-                }
-            });
-        } catch (Exception e) {
-            Log.e("", e.getLocalizedMessage());
-        }
+        });
     }
 
 }
