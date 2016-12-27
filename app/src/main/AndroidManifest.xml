@@ -80,6 +80,10 @@
             android:enabled="true"
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
+        <service
+            android:name=".widget.UpdateWidgetService"
+            android:enabled="true"
+            android:exported="false"/>
     </application>
 
 </manifest>

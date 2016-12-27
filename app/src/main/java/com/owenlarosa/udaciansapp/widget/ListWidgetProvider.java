@@ -1,12 +1,14 @@
 package com.owenlarosa.udaciansapp.widget;
 
 import android.annotation.TargetApi;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.icu.util.Calendar;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
@@ -15,12 +17,19 @@ import com.owenlarosa.udaciansapp.MainActivity;
 import com.owenlarosa.udaciansapp.R;
 import com.owenlarosa.udaciansapp.Utils;
 
+import static android.R.attr.x;
+
 /**
  * Created by Owen LaRosa on 12/23/16.
  */
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class ListWidgetProvider extends AppWidgetProvider {
+
+    // repeating alarm to perform automatic updates for widget
+    // referenced from http://www.parallelrealities.co.uk/2011/09/using-alarmmanager-for-updating-android.html
+
+    private PendingIntent service = null;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -41,6 +50,24 @@ public class ListWidgetProvider extends AppWidgetProvider {
             }
             appWidgetManager.updateAppWidget(id, remoteViews);
         }
+
+        // after updating the widget, schedule the next time the widget should update
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, UpdateWidgetService.class);
+
+        if (service == null) {
+            service = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        }
+
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, System.currentTimeMillis(), AlarmManager.INTERVAL_DAY, service);
+    }
+
+    @Override
+    public void onDisabled(Context context) {
+        super.onDisabled(context);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(service);
     }
 
     @Override
