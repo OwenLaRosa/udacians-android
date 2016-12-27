@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import com.bumptech.glide.util.Util;
 import com.owenlarosa.udaciansapp.Utils;
 
 /**
@@ -27,10 +28,15 @@ public class UpdateWidgetService extends Service {
     }
 
     private void updateJobs() {
-
-
-        // notify the widgets to reflect the changes
-        Utils.updateWidget(getApplicationContext());
+        String city = Utils.getJobSearchLocation(getApplicationContext());
+        if (city == null) {
+            // don't fetch jobs if the city is not known
+            return;
+        }
+        if (Utils.getJobsForKeyword(getApplicationContext(), "android", city)) {
+            // update widget once the download has succeeded
+            Utils.updateWidget(getApplicationContext());
+        }
     }
 
     @Nullable
