@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Menu used to filter users shown on connections screen -->
+
+    <item
+        android:id="@+id/menu_sort_connections"
+        android:title="@string/menu_item_connections"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_sort_followers"
+        android:title="@string/menu_item_followers"
+        app:showAsAction="never"/>
+
+</menu>

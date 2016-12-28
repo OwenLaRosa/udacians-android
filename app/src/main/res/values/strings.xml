@@ -140,4 +140,9 @@
     <string name="sync_account_type" translatable="false">com.owenlarosa.udacians</string>
     <string name="content_authority" translatable="false">com.owenlarosa.udacians.contentprovider.JobsProvider</string>
 
+    <!-- menu item titles -->
+    <!-- On connections screen, users can sort between connections (following) and followers -->
+    <string name="menu_item_connections">Connections</string>
+    <string name="menu_item_followers">Followers</string>
+
 </resources>
