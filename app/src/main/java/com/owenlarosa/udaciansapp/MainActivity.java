@@ -252,6 +252,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         // remove auth toke, future launches will go directly to login screen if logged out
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.edit().putString(getString(R.string.pref_auth_token), "").apply();
+        // clear job search keywords used for updating widget
+        Utils.resetKeywordsInPreferences(MainActivity.this);
         // allow the user to login and finish this activity
         presentLoginScreen();
     }

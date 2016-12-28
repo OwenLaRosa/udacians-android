@@ -335,6 +335,11 @@ public class LoginFragment extends Fragment {
             // sync user's enrollments with the database
             DatabaseReference enrollmentsReference = userReference.child("enrollments");
             enrollmentsReference.setValue(enrollmentsMap);
+            // save keywords for job search for offline use
+            // these are preloaded and saved so they can be used by the widget
+            // widget may update while not authenticated with database, so this should be done
+            // while we have read permissions
+            Utils.storeJobKeywords(mContext);
             // store the auth token to speed up future logins
             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
             editor.putString(mContext.getString(R.string.pref_auth_token), authToken);

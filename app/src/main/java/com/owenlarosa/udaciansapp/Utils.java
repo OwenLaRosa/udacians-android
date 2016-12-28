@@ -8,15 +8,20 @@ import android.location.Address;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udaciansapp.contentprovider.JobsListColumns;
 import com.owenlarosa.udaciansapp.contentprovider.JobsProvider;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Vector;
-import java.util.prefs.Preferences;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -71,7 +76,38 @@ public class Utils {
         return preferences.getString(context.getString(R.string.pref_city), null);
     }
 
+    // Downloading and updating jobs for the list and widget
+
     private static final OkHttpClient client = new OkHttpClient();
+
+    /**
+     * Searches for jobs in the user's location based on their keywords
+     * Clears database of old jobs replacing them with new ones
+     * @param context Used to access preference manager
+     * @return true if successfully updated jobs, otherwise false
+     */
+    public static boolean updateJobs(Context context) {
+        String city = Utils.getJobSearchLocation(context);
+        if (city == null) {
+            // don't fetch jobs if the city is not known
+            return false;
+        }
+        String[] keywords = Utils.readKeywordsFromPreferences(context);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < keywords.length; i++) {
+            stringBuilder.append(keywords[i]);
+            if (i != keywords.length - 1) {
+                // add plus symbol between all keywords, not after the last one
+                stringBuilder.append("+");
+            }
+        }
+        String searchText = stringBuilder.toString();
+        if (searchText.equals("")) {
+            // exit if no job search keywords match the user
+            return false;
+        }
+        return getJobsForKeyword(context, searchText, city);
+    }
 
     public static boolean getJobsForKeyword(final Context context, String keyword, String city) {
         final String BASE_URL = "http://service.dice.com/api/rest/jobsearch/v1/simple.json?";
@@ -126,6 +162,103 @@ public class Utils {
             Log.e("", e.getLocalizedMessage());
             return false;
         }
+    }
+
+    /**
+     * Download job keywords based on enrolled courses and write them to shared preferences
+     * this should be called after syncing profile/enrollments data in the login procedure
+     * @param context Used to access the preference manager
+     */
+    public static void storeJobKeywords(final Context context) {
+        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference enrollmentsReference = firebaseDatabase.getReference().child("users").child(user).child("enrollments");
+        enrollmentsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // determine the number of enrollments of the user
+                // this ensures we know when all possible job keywords have downloaded
+                int enrollments = 0;
+                final ArrayList<String> courseIds = new ArrayList<>();
+                for (DataSnapshot child: dataSnapshot.getChildren()) {
+                    enrollments++;
+                    courseIds.add(child.getKey());
+                }
+                if (enrollments == 0) {
+                    // exit if the user has no enrollments
+                    return;
+                }
+                final ArrayList<String> keywords = new ArrayList<>();
+                for (DataSnapshot child: dataSnapshot.getChildren()) {
+                    final String courseId = child.getKey();
+                    DatabaseReference jobKeywordReference = firebaseDatabase.getReference().child("nano_degrees").child(courseId).child("keyword");
+                    jobKeywordReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            String keyword = dataSnapshot.getValue(String.class);
+                            handleAdd(keyword);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            // default if no matching keywords were found
+                            handleAdd(null);
+                        }
+
+                        private void handleAdd(String keyword) {
+                            keywords.add(keyword);
+                            if (keywords.size() >= courseIds.size()) {
+                                // all keywords have been downloaded, should save them for later use
+                                writeKeywordsToPreferences(keywords, context);
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    /**
+     * Store job keywords as encoded string into shared preferences
+     * @param keywords List of keywords, may contain elements that are null
+     * @param context Used to access preference manager
+     */
+    private static void writeKeywordsToPreferences(ArrayList<String> keywords, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String keyword: keywords) {
+            // omit courses that do not have relevant keywords
+            if (keyword != null) {
+                stringBuilder.append(keyword).append(",");
+            }
+        }
+        String encodedKeywords = stringBuilder.toString();
+        preferences.edit().putString(context.getString(R.string.pref_job_keywords), encodedKeywords).apply();
+    }
+
+    /**
+     * Clear job keywords from preferences
+     * Should be called when the user logs out
+     * @param context Used to access preference manager
+     */
+    public static void resetKeywordsInPreferences(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        preferences.edit().putString(context.getString(R.string.pref_job_keywords), "").apply();
+    }
+
+    /**
+     * Retrieve saved job keywords as an array
+     * @param context Used to access preference manager
+     * @return Array of job keywords, empty if there are none
+     */
+    public static String[] readKeywordsFromPreferences(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(context.getString(R.string.pref_job_keywords), "").split(",");
     }
 
 }

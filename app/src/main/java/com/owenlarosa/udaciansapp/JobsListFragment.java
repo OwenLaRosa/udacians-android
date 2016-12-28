@@ -2,7 +2,6 @@ package com.owenlarosa.udaciansapp;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -12,7 +11,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,17 +21,10 @@ import com.owenlarosa.udaciansapp.adapter.JobsListAdapter;
 import com.owenlarosa.udaciansapp.contentprovider.JobsListColumns;
 import com.owenlarosa.udaciansapp.contentprovider.JobsProvider;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.Vector;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * Created by Owen LaRosa on 11/14/16.
@@ -77,12 +68,8 @@ public class JobsListFragment extends Fragment implements LoaderManager.LoaderCa
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                String city = Utils.getJobSearchLocation(mContext);
-                if (city != null) {
-                    if (Utils.getJobsForKeyword(mContext, "android", city)) {
-                        // update list and widget on main thread if task succeeds
-                        updateLists();
-                    }
+                if (Utils.updateJobs(mContext)) {
+                    updateLists();
                 }
             }
         });
