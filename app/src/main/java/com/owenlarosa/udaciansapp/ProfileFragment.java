@@ -17,6 +17,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -89,6 +92,8 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
     private DatabaseReference mProfileReference;
     private DatabaseReference mPostsReference;
     private DatabaseReference mIsConnectionReference;
+    private DatabaseReference mFollowerReference;
+    private DatabaseReference mFollowerCountReference;
 
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mPublicImageStorage;
@@ -216,6 +221,7 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
         } else {
             // users can add others as connections
             mIsConnectionReference = mFirebaseDatabase.getReference().child("users").child(user).child("connections").child(mUserId);
+            mFollowerReference = mFirebaseDatabase.getReference().child("users").child(mUserId).child("followers").child(user);
             mIsConnectionReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -253,6 +259,8 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
             // users can't post on others' profile
             headerView.writePostView.setVisibility(View.GONE);
         }
+        // total number of users following this user's profile
+        mFollowerCountReference = userReference.child("follower_count");
 
         // storage is used for uploading images
         mFirebaseStorage = FirebaseStorage.getInstance();
@@ -289,9 +297,45 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
         if (mIsConnection) {
             // remove the connection
             mIsConnectionReference.removeValue();
+            mFollowerReference.removeValue();
+            // Firebase doesn't allow counting direct children without downloading subchildren
+            // For efficiency, a separate counter is used with transactions to avoid race conditions
+            mFollowerCountReference.runTransaction(new Transaction.Handler() {
+                @Override
+                public Transaction.Result doTransaction(MutableData mutableData) {
+                    if (mutableData != null) {
+                        mutableData.setValue((Long) mutableData.getValue() - 1);
+                    }
+                    return Transaction.success(mutableData);
+                }
+
+                @Override
+                public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                    Long followerCount = dataSnapshot.getValue(Long.class);
+                }
+            });
         } else {
             // add the connection
             mIsConnectionReference.setValue(true);
+            mFollowerReference.setValue(true);
+            // increasing the follower count
+            mFollowerCountReference.runTransaction(new Transaction.Handler() {
+                @Override
+                public Transaction.Result doTransaction(MutableData mutableData) {
+                    if (mutableData.getValue() == null) {
+                        // first follower, value should be set to 1
+                        mutableData.setValue(1);
+                    } else {
+                        mutableData.setValue((Long) mutableData.getValue() + 1);
+                    }
+                    return Transaction.success(mutableData);
+                }
+
+                @Override
+                public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                    Long followerCount = dataSnapshot.getValue(Long.class);
+                }
+            });
         }
     }
 
