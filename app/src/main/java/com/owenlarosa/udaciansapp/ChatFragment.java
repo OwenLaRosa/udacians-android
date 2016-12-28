@@ -108,7 +108,7 @@ public class ChatFragment extends Fragment {
         final DatabaseReference chatReference;
         if (direct) {
             // direct messages
-            chatReference = mFirebaseDatabase.getReference().child("users").child(chatId).child("messages");
+            chatReference = Utils.getDirectChatReference(user, chatId);
             DatabaseReference nameReference = mFirebaseDatabase.getReference().child("users").child(chatId).child("basic").child("name");
             // title should be name of user sending DMs to
             nameReference.addListenerForSingleValueEvent(new ValueEventListener() {

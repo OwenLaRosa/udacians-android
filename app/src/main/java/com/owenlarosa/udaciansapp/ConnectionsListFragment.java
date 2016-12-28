@@ -21,7 +21,7 @@ import butterknife.Unbinder;
  * Created by Owen LaRosa on 11/12/16.
  */
 
-public class ConnectionsListFragment extends Fragment {
+public class  ConnectionsListFragment extends Fragment {
 
     @BindView(R.id.connections_list_view)
     ListView listView;

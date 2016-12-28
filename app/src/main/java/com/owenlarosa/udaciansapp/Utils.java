@@ -261,4 +261,32 @@ public class Utils {
         return preferences.getString(context.getString(R.string.pref_job_keywords), "").split(",");
     }
 
+    // direct messaging
+
+    /**
+     * Gets a database reference of a direct message node
+     * References start at the direct_messages node
+     * The two next children are the user IDs, lesser one first, then greater one
+     * This indicates no particular relationship about the data hierarchy
+     * It only ensures the paths are consistent and that both user IDs are captured
+     * by the security rules
+     * @param user1 Currently logged in user
+     * @param user2 User they're messaging
+     * @return Reference to the direct messages
+     */
+    public static DatabaseReference getDirectChatReference(String user1, String user2) {
+        // User IDs are long integers, so we can compare their numeric values
+        Long user1long = Long.parseLong(user1);
+        Long user2long = Long.parseLong(user2);
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference messagesReference = firebaseDatabase.getReference().child("direct_messages");
+        DatabaseReference chatReference;
+        if (user1long < user2long) {
+            chatReference = messagesReference.child(user1).child(user2);
+        } else {
+            chatReference = messagesReference.child(user2).child(user1);
+        }
+        return chatReference;
+    }
+
 }

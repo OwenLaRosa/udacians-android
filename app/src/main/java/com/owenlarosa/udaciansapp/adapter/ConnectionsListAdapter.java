@@ -2,6 +2,7 @@ package com.owenlarosa.udaciansapp.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.owenlarosa.udaciansapp.ChatActivity;
+import com.owenlarosa.udaciansapp.ChatFragment;
 import com.owenlarosa.udaciansapp.R;
 
 import java.util.ArrayList;
@@ -93,7 +96,7 @@ public class ConnectionsListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(final int i, View view, ViewGroup viewGroup) {
         View cell = view;
         ViewHolder holder = null;
         if (cell == null) {
@@ -109,9 +112,11 @@ public class ConnectionsListAdapter extends BaseAdapter {
         holder.messageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mContext, "Direct messages not implemented yet", Toast.LENGTH_SHORT).show();
-                //Intent intent = new Intent(mContext, ChatActivity.class);
-                //mContext.startActivity(intent);
+                String userId = connections.get(i);
+                Intent intent = new Intent(mContext, ChatActivity.class);
+                intent.putExtra(ChatFragment.EXTRA_CHAT, userId);
+                intent.putExtra(ChatFragment.EXTRA_DIRECT, true);
+                mContext.startActivity(intent);
             }
         });
         return cell;
