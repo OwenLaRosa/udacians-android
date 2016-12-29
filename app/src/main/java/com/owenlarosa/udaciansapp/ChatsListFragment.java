@@ -1,6 +1,7 @@
 package com.owenlarosa.udaciansapp;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -28,17 +29,21 @@ public class ChatsListFragment extends Fragment {
 
     @BindView(R.id.chats_list_view)
     ListView listView;
+    private DiscussionsListAdapter adapter;
 
     Unbinder mUnbinder;
+    private Context mContext;
+    private String mUser;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_chats_list, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
+        mContext = getActivity();
 
-        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        final DiscussionsListAdapter adapter = new DiscussionsListAdapter(getActivity(), user);
+        mUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        adapter = new DiscussionsListAdapter(mContext, mUser, false);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -68,8 +73,15 @@ public class ChatsListFragment extends Fragment {
 
         switch (id) {
             case R.id.menu_sort_groups:
+                // general course discussions and topic where this user is a participant
+                adapter = new DiscussionsListAdapter(mContext, mUser, false);
+                listView.setAdapter(adapter);
                 return true;
             case R.id.menu_sort_direct:
+                // users this user has sent or received direct messages
+                // sorted with recent ones displayed first
+                adapter = new DiscussionsListAdapter(mContext, mUser, true);
+                listView.setAdapter(adapter);
                 return true;
         }
 

@@ -20,6 +20,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udaciansapp.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+import javax.annotation.Nonnull;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,20 +35,76 @@ import butterknife.OnClick;
 
 public class DiscussionsListAdapter extends BaseAdapter {
 
+    private class DirectDiscussion implements Comparable<DirectDiscussion> {
+
+        String userId;
+        long lastUpdated;
+
+        public DirectDiscussion(String userId, long lastUpdated) {
+            this.userId = userId;
+            this.lastUpdated = lastUpdated;
+        }
+
+        @Override
+        public int compareTo(@Nonnull DirectDiscussion directDiscussion) {
+            return lastUpdated > directDiscussion.lastUpdated ? 1 : 0;
+        }
+    }
+
     private Context mContext;
-    private String mUserId;
+    private boolean mIsDirect;
 
     private ArrayList<String> discussions = new ArrayList<String>();
+    private ArrayList<DirectDiscussion> directDiscussions = new ArrayList<>();
 
-    FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
-    DatabaseReference enrollmentsReference;
-    DatabaseReference topicsReference;
+    private FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference topicsReference;
+    private DatabaseReference directMessagesReference;
 
-    public DiscussionsListAdapter(Context context, String userId) {
-        mUserId = userId;
+    public DiscussionsListAdapter(Context context, String userId, boolean direct) {
+        mIsDirect = direct;
         mContext = context;
-        DatabaseReference userReference = mFirebaseDatabase.getReference().child("users").child(mUserId);
-        enrollmentsReference = userReference.child("enrollments");
+        DatabaseReference userReference = mFirebaseDatabase.getReference().child("users").child(userId);
+        if (mIsDirect) {
+            directMessagesReference = userReference.child("direct_messages");
+            directMessagesReference.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    String userId = dataSnapshot.getKey();
+                    Long timestamp = dataSnapshot.getValue(Long.class);
+                    directDiscussions.add(new DirectDiscussion(userId, timestamp));
+                    // direct chats should be listed with most recent shown first
+                    Collections.sort(directDiscussions);
+                    notifyDataSetChanged();
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    // even though these are different instances, this will remove the object
+                    // ArrayList.remove() uses Object.equals() rather than looking for a specific instance
+                    String userId = dataSnapshot.getKey();
+                    Long timestamp = dataSnapshot.getValue(Long.class);
+                    directDiscussions.remove(new DirectDiscussion(userId, timestamp));
+                    notifyDataSetChanged();
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+        DatabaseReference enrollmentsReference = userReference.child("enrollments");
         enrollmentsReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -110,8 +170,13 @@ public class DiscussionsListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        // number of courses + discussions user participates in
-        return discussions.size();
+        if (mIsDirect) {
+            // number of active direct discussions
+            return directDiscussions.size();
+        } else {
+            // number of courses + discussions user participates in
+            return discussions.size();
+        }
     }
 
     @Override
@@ -121,23 +186,44 @@ public class DiscussionsListAdapter extends BaseAdapter {
 
     @Override
     public String getItem(int i) {
-        return discussions.get(i);
+        if (mIsDirect) {
+            return directDiscussions.get(i).userId;
+        } else {
+            return discussions.get(i);
+        }
     }
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         View cell = view;
         ViewHolder holder = null;
+        DirectViewHolder directHolder = null;
         if (cell == null) {
             LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
-            cell = inflater.inflate(R.layout.chats_list_item, viewGroup, false);
-            holder = new ViewHolder(cell);
-            cell.setTag(holder);
+            if (mIsDirect) {
+                cell = inflater.inflate(R.layout.connections_list_item, viewGroup, false);
+                directHolder = new DirectViewHolder(cell);
+                cell.setTag(directHolder);
+            } else {
+                cell = inflater.inflate(R.layout.chats_list_item, viewGroup, false);
+                holder = new ViewHolder(cell);
+                cell.setTag(holder);
+            }
         } else {
-            holder = (ViewHolder) cell.getTag();
+            if (mIsDirect) {
+                directHolder = (DirectViewHolder) cell.getTag();
+            } else {
+                holder = (ViewHolder) cell.getTag();
+            }
         }
-        String topic = discussions.get(i);
-        populateViewHolder(holder, topic);
+        String topic;
+        if (mIsDirect) {
+            topic = directDiscussions.get(i).userId;
+            populateDirectViewHolder(directHolder, topic);
+        } else {
+            topic = discussions.get(i);
+            populateViewHolder(holder, topic);
+        }
 
         return cell;
     }
@@ -162,6 +248,24 @@ public class DiscussionsListAdapter extends BaseAdapter {
         public void leaveChat() {
             // remove this topic from the user's list
             topicsReference.child(id).removeValue();
+        }
+
+    }
+
+    class DirectViewHolder extends ConnectionsListAdapter.ViewHolder {
+
+        public DirectViewHolder(View view) {
+            super(view);
+            // normally this button contains a message icon, but tapping the list opens the chat
+            // instead this button should be supplied as a leave button
+            messageButton.setBackgroundResource(R.drawable.delete);
+        }
+
+        public String id;
+
+        @OnClick(R.id.message_button)
+        public void removeChat() {
+            directMessagesReference.child(id).removeValue();
         }
 
     }
@@ -269,5 +373,73 @@ public class DiscussionsListAdapter extends BaseAdapter {
         }
     }
 
-}
+    /**
+     * Populate view with data pertaining to a direct chat
+     * @param viewHolder view to be populated
+     * @param userId user the conversation is with
+     */
+    private void populateDirectViewHolder(final DirectViewHolder viewHolder, String userId) {
+        viewHolder.id = userId;
+        DatabaseReference userBasicReference = mFirebaseDatabase.getReference().child("users").child(userId).child("basic");
+        DatabaseReference nameReference = userBasicReference.child("name");
+        nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String name = dataSnapshot.getValue(String.class);
+                viewHolder.nameTextView.setText(name);
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        DatabaseReference titleReference = userBasicReference.child("title");
+        titleReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String title = dataSnapshot.getValue(String.class);
+                viewHolder.titleTextView.setText(title);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        DatabaseReference photoReference = userBasicReference.child("photo");
+        photoReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String photoUrl = dataSnapshot.getValue(String.class);
+                Glide.with(mContext)
+                        .load(photoUrl)
+                        .into(viewHolder.profileImageView);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        DatabaseReference locationReference = mFirebaseDatabase.getReference().child("locations").child(userId).child("location");
+        locationReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    String location = dataSnapshot.getValue(String.class);
+                    viewHolder.locationTextView.setText(location);
+                } else {
+                    // location not available in string form
+                    viewHolder.locationTextView.setText(mContext.getString(R.string.unknown_location));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+}
