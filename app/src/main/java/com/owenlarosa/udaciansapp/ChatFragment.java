@@ -25,6 +25,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -75,6 +76,9 @@ public class ChatFragment extends Fragment {
 
     private FirebaseDatabase mFirebaseDatabase;
 
+    private DatabaseReference mSenderDirectMessageReference;
+    private DatabaseReference mRecipientDirectMessageReference;
+
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mPublicImageStorage;
 
@@ -86,7 +90,7 @@ public class ChatFragment extends Fragment {
 
         mContext = getActivity();
 
-        boolean direct;
+        final boolean direct;
 
         Intent intent = getActivity().getIntent();
         if (intent != null) {
@@ -106,6 +110,8 @@ public class ChatFragment extends Fragment {
         mPublicImageStorage = storageReference.child(user).child("public").child("images");
 
         final DatabaseReference chatReference;
+        mSenderDirectMessageReference = mFirebaseDatabase.getReference().child("users").child(user).child("direct_messages").child(chatId);
+        mRecipientDirectMessageReference = mFirebaseDatabase.getReference().child("users").child(chatId).child("direct_messages").child(user);
         if (direct) {
             // direct messages
             chatReference = Utils.getDirectChatReference(user, chatId);
@@ -222,6 +228,11 @@ public class ChatFragment extends Fragment {
                     DatabaseReference isMemberReference = mFirebaseDatabase.getReference().child("users").child(user).child("topics").child(chatId);
                     isMemberReference.setValue(true);
                     shouldJoinChat = false;
+                }
+
+                if (direct) {
+                    mSenderDirectMessageReference.setValue(ServerValue.TIMESTAMP);
+                    mRecipientDirectMessageReference.setValue(ServerValue.TIMESTAMP);
                 }
             }
         });
