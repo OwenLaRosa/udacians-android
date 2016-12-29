@@ -42,11 +42,17 @@ public class ConnectionsListAdapter extends BaseAdapter {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mConnectionsReference;
 
-    public ConnectionsListAdapter(Context context, String user) {
+    public ConnectionsListAdapter(Context context, String user, boolean followers) {
         mUser = user;
         mContext = context;
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mConnectionsReference = mFirebaseDatabase.getReference().child("users").child(mUser).child("connections");
+        if (followers) {
+            // users who have added this user as a connection
+            mConnectionsReference = mFirebaseDatabase.getReference().child("users").child(mUser).child("followers");
+        } else {
+            // users that this user has added as a connection
+            mConnectionsReference = mFirebaseDatabase.getReference().child("users").child(mUser).child("connections");
+        }
         mConnectionsReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {

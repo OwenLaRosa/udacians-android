@@ -1,6 +1,7 @@
 package com.owenlarosa.udaciansapp;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -28,17 +29,22 @@ public class  ConnectionsListFragment extends Fragment {
 
     @BindView(R.id.connections_list_view)
     ListView listView;
+    private ConnectionsListAdapter adapter;
 
     Unbinder mUnbinder;
+    Context mContext;
+    String mUser;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_connections_list, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
+        mContext = getActivity();
 
-        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        final ConnectionsListAdapter adapter = new ConnectionsListAdapter(getActivity(), user);
+        mUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        // should show connections this user has added by default
+        adapter = new ConnectionsListAdapter(mContext, mUser, false);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -65,8 +71,14 @@ public class  ConnectionsListFragment extends Fragment {
         int id = item.getItemId();
 
         if (id == R.id.menu_sort_connections) {
+            // connections added by this user
+            adapter = new ConnectionsListAdapter(mContext, mUser, false);
+            listView.setAdapter(adapter);
             return true;
         } else if (id == R.id.menu_sort_followers) {
+            // users who added this one as a connection
+            adapter = new ConnectionsListAdapter(mContext, mUser, true);
+            listView.setAdapter(adapter);
             return true;
         }
 
