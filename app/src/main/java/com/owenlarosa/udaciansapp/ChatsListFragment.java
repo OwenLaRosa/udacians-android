@@ -34,6 +34,8 @@ public class ChatsListFragment extends Fragment {
     Unbinder mUnbinder;
     private Context mContext;
     private String mUser;
+    // true if list is showing direct chats, false for group discussions
+    private boolean mDirect = false;
 
     @Nullable
     @Override
@@ -52,7 +54,7 @@ public class ChatsListFragment extends Fragment {
                 String chatId = adapter.getItem(i);
                 intent.putExtra(ChatFragment.EXTRA_CHAT, chatId);
                 // chats on this screen are public topics, not DMs
-                intent.putExtra(ChatFragment.EXTRA_DIRECT, false);
+                intent.putExtra(ChatFragment.EXTRA_DIRECT, mDirect);
                 startActivity(intent);
             }
         });
@@ -74,12 +76,14 @@ public class ChatsListFragment extends Fragment {
         switch (id) {
             case R.id.menu_sort_groups:
                 // general course discussions and topic where this user is a participant
+                mDirect = false;
                 adapter = new DiscussionsListAdapter(mContext, mUser, false);
                 listView.setAdapter(adapter);
                 return true;
             case R.id.menu_sort_direct:
                 // users this user has sent or received direct messages
                 // sorted with recent ones displayed first
+                mDirect = true;
                 adapter = new DiscussionsListAdapter(mContext, mUser, true);
                 listView.setAdapter(adapter);
                 return true;
