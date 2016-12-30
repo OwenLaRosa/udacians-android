@@ -22,6 +22,8 @@ import com.owenlarosa.udaciansapp.R;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.annotation.Nonnull;
 
@@ -56,12 +58,15 @@ public class DiscussionsListAdapter extends BaseAdapter {
 
     private ArrayList<String> discussions = new ArrayList<String>();
     private ArrayList<DirectDiscussion> directDiscussions = new ArrayList<>();
+    // references a DirectDiscussion based on chat id
+    // because this data changes frequently, it benefits from O(1) lookup time
+    private HashMap<String, DirectDiscussion> idToDiscussion = new HashMap<>();
 
     private FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference topicsReference;
     private DatabaseReference directMessagesReference;
 
-    public DiscussionsListAdapter(Context context, String userId, boolean direct) {
+    public DiscussionsListAdapter(Context context, String userId, final boolean direct) {
         mIsDirect = direct;
         mContext = context;
         DatabaseReference userReference = mFirebaseDatabase.getReference().child("users").child(userId);
@@ -73,8 +78,53 @@ public class DiscussionsListAdapter extends BaseAdapter {
                     String userId = dataSnapshot.getKey();
                     Long timestamp = dataSnapshot.getValue(Long.class);
                     directDiscussions.add(new DirectDiscussion(userId, timestamp));
-                    // direct chats should be listed with most recent shown first
                     Collections.sort(directDiscussions);
+                    notifyDataSetChanged();
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    String userId = dataSnapshot.getKey();
+                    Long timestamp = dataSnapshot.getValue(Long.class);
+                    for (int i = 0; i < directDiscussions.size(); i++) {
+                        if (directDiscussions.get(i).userId.equals(userId)) {
+                            directDiscussions.remove(i);
+                            directDiscussions.add(0, new DirectDiscussion(userId, timestamp));
+                            break;
+                        }
+                    }
+                    notifyDataSetChanged();
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    String userId = dataSnapshot.getKey();
+                    for (int i = 0; i < directDiscussions.size(); i++) {
+                        if (directDiscussions.get(i).equals(userId)) {
+                            directDiscussions.remove(i);
+                            break;
+                        }
+                    }
+                    notifyDataSetChanged();
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        } else {
+            DatabaseReference enrollmentsReference = userReference.child("enrollments");
+            enrollmentsReference.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    String course = dataSnapshot.getKey();
+                    discussions.add(course);
                     notifyDataSetChanged();
                 }
 
@@ -85,11 +135,39 @@ public class DiscussionsListAdapter extends BaseAdapter {
 
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    // even though these are different instances, this will remove the object
-                    // ArrayList.remove() uses Object.equals() rather than looking for a specific instance
-                    String userId = dataSnapshot.getKey();
-                    Long timestamp = dataSnapshot.getValue(Long.class);
-                    directDiscussions.remove(new DirectDiscussion(userId, timestamp));
+                    String course = dataSnapshot.getKey();
+                    discussions.remove(course);
+                    notifyDataSetChanged();
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+            topicsReference = userReference.child("topics");
+            topicsReference.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    String topic = dataSnapshot.getKey();
+                    discussions.add(topic);
+                    notifyDataSetChanged();
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    String topic = dataSnapshot.getKey();
+                    discussions.remove(topic);
                     notifyDataSetChanged();
                 }
 
@@ -104,68 +182,6 @@ public class DiscussionsListAdapter extends BaseAdapter {
                 }
             });
         }
-        DatabaseReference enrollmentsReference = userReference.child("enrollments");
-        enrollmentsReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String course = dataSnapshot.getKey();
-                discussions.add(course);
-                notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                String course = dataSnapshot.getKey();
-                discussions.remove(course);
-                notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        topicsReference = userReference.child("topics");
-        topicsReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String topic = dataSnapshot.getKey();
-                discussions.add(topic);
-                notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                String topic = dataSnapshot.getKey();
-                discussions.remove(topic);
-                notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
     @Override
