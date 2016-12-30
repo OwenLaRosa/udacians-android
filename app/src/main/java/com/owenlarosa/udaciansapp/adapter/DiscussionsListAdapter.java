@@ -19,13 +19,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udaciansapp.R;
 
+import net.simonvt.schematic.annotation.Database;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
-
-import javax.annotation.Nonnull;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,7 +36,7 @@ import butterknife.OnClick;
 
 public class DiscussionsListAdapter extends BaseAdapter {
 
-    private class DirectDiscussion implements Comparable<DirectDiscussion> {
+    private class DirectDiscussion {
 
         String userId;
         long lastUpdated;
@@ -45,11 +44,6 @@ public class DiscussionsListAdapter extends BaseAdapter {
         public DirectDiscussion(String userId, long lastUpdated) {
             this.userId = userId;
             this.lastUpdated = lastUpdated;
-        }
-
-        @Override
-        public int compareTo(@Nonnull DirectDiscussion directDiscussion) {
-            return lastUpdated > directDiscussion.lastUpdated ? 1 : 0;
         }
     }
 
@@ -78,7 +72,12 @@ public class DiscussionsListAdapter extends BaseAdapter {
                     String userId = dataSnapshot.getKey();
                     Long timestamp = dataSnapshot.getValue(Long.class);
                     directDiscussions.add(new DirectDiscussion(userId, timestamp));
-                    Collections.sort(directDiscussions);
+                    Collections.sort(directDiscussions, new Comparator<DirectDiscussion>() {
+                        @Override
+                        public int compare(DirectDiscussion t1, DirectDiscussion t2) {
+                            return (int) t2.lastUpdated - (int) t1.lastUpdated;
+                        }
+                    });
                     notifyDataSetChanged();
                 }
 
