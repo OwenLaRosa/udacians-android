@@ -30,6 +30,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.owenlarosa.udaciansapp.R.string.post;
+
 /**
  * Created by Owen LaRosa on 11/25/16.
  */
@@ -53,6 +55,7 @@ public class PostsListAdapter extends BaseAdapter {
 
     // References to Firebase Database
     private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference postLinksReference;
     private DatabaseReference postsReference;
 
     public PostsListAdapter(Context context, String userId, PostsType type) {
@@ -73,16 +76,32 @@ public class PostsListAdapter extends BaseAdapter {
 
         // set up the firebase references
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        postsReference = mFirebaseDatabase.getReference().child(root).child(mUid).child("posts");
-        postsReference.limitToLast(30).addChildEventListener(new ChildEventListener() {
+        postsReference = mFirebaseDatabase.getReference().child("posts");
+        postLinksReference = mFirebaseDatabase.getReference().child(root).child(mUid).child("posts");
+        postLinksReference.limitToLast(10).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Message post = dataSnapshot.getValue(Message.class);
-                String id = dataSnapshot.getKey();
-                iDtoMessage.put(id, post);
-                posts.add(post);
-                post.setId(id);
-                notifyDataSetChanged();
+                String messageId = dataSnapshot.getKey();
+                final Long timestamp = dataSnapshot.getValue(Long.class);
+                postsReference.child(messageId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Message post = dataSnapshot.getValue(Message.class);
+                        // profile posts from this reference do not always contain a date
+                        // the timestamp is the value of a child of postLinksReference
+                        post.setDate(timestamp);
+                        String id = dataSnapshot.getKey();
+                        iDtoMessage.put(id, post);
+                        posts.add(post);
+                        post.setId(id);
+                        notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
 
             @Override
@@ -172,7 +191,7 @@ public class PostsListAdapter extends BaseAdapter {
 
         @OnClick(R.id.display_post_delete_button)
         public void deletePost() {
-            postsReference.child(id).removeValue();
+            postLinksReference.child(id).removeValue();
         }
 
     }

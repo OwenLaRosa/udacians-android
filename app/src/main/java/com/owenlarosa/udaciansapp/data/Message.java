@@ -73,11 +73,21 @@ public class Message {
      * @return map of the properties
      */
     public Map<String, Object> toMap() {
+        Map<String, Object> mapped = toProfilePost();
+        mapped.put("date", ServerValue.TIMESTAMP);
+        return mapped;
+    }
+
+    /**
+     * Creates a map specifically for posts on the user's profile
+     * Same as toMap() excluding the timestamp
+     * @return Map of the properties
+     */
+    public Map<String, Object> toProfilePost() {
         Map<String, Object> mapped = new HashMap<>();
         mapped.put("sender", sender);
         mapped.put("content", content);
         mapped.put("imageUrl", imageUrl);
-        mapped.put("date", ServerValue.TIMESTAMP);
         return mapped;
     }
 

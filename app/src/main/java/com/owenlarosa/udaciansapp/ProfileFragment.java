@@ -17,7 +17,6 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,12 +28,15 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.api.client.util.Data;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -90,6 +92,7 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mBasicReference;
     private DatabaseReference mProfileReference;
+    private DatabaseReference mPostLinksReference;
     private DatabaseReference mPostsReference;
     private DatabaseReference mIsConnectionReference;
     private DatabaseReference mFollowerReference;
@@ -100,6 +103,13 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
 
     // whether or not this user is a connection
     private boolean mIsConnection = false;
+
+    // Pushing new messages generates a random unique ID on the server
+    // to retrieve the generated ID, the snapshot needs to be detected in a listener
+    // if this is true, that means the link reference should be updated
+    // if not, that means the listener received an existing post that already
+    // has been linked and given a timestamp
+    private boolean shouldSetPostLink = false;
 
     private Context mContext;
     // ensures resources can be accessed even if not attached to activity
@@ -194,7 +204,39 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
             }
         });
         // used to write new posts, reading posts is handled by the adapter
-        mPostsReference = userReference.child("posts");
+        mPostLinksReference = userReference.child("posts");
+        mPostsReference = mFirebaseDatabase.getReference().child("posts");
+        mPostsReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (shouldSetPostLink) {
+                    String messageId = dataSnapshot.getKey();
+                    mPostLinksReference.child(messageId).setValue(ServerValue.TIMESTAMP);
+                }
+                // if for some reason there are subsequent loads, ensure a link position is not set
+                shouldSetPostLink = false;
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         // connections stored under user currently signed into the app
         String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -417,14 +459,19 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     // use map so server generates timestamp
                     message.setImageUrl(taskSnapshot.getDownloadUrl().toString());
-                    mPostsReference.push().setValue(message.toMap());
+                    DatabaseReference pushPostReference = mPostsReference.push();
+                    pushPostReference.setValue(message.toMap());
+                    mPostLinksReference.child(pushPostReference.getKey()).setValue(ServerValue.TIMESTAMP);
                     // reset for a new message to be sent
                     mImage = null;
+                    // once a post has been created, make sure the link can be set
+                    shouldSetPostLink = true;
                 }
             });
         } else {
             // no image? just send the message without
             mPostsReference.push().setValue(message.toMap());
+            shouldSetPostLink = true;
         }
     }
 
