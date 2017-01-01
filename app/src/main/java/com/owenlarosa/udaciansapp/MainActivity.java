@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                             fragment = new MainMapFragment();
                             break;
                         case 2:
-                            // show posts feed
+                            fragment = new PostFeedFragment();
                             break;
                         case 3:
                             fragment = new ConnectionsListFragment();
