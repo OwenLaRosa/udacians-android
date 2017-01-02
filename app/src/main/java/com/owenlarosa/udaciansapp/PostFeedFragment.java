@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.owenlarosa.udaciansapp.adapter.PostFeedAdapter;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -28,6 +31,10 @@ public class PostFeedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_feed, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
+
+        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        PostFeedAdapter adapter = new PostFeedAdapter(getActivity(), user);
+        feedListView.setAdapter(adapter);
 
         return rootView;
     }
