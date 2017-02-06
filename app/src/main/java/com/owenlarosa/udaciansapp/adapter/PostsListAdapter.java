@@ -58,7 +58,7 @@ public class PostsListAdapter extends BaseAdapter {
     private DatabaseReference postLinksReference;
     private DatabaseReference postsReference;
 
-    public PostsListAdapter(Context context, String userId, PostsType type) {
+    public PostsListAdapter(Context context, String userId, final PostsType type) {
         mContext = context;
         mUid = userId;
 
@@ -81,27 +81,39 @@ public class PostsListAdapter extends BaseAdapter {
         postLinksReference.limitToLast(10).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String messageId = dataSnapshot.getKey();
-                final Long timestamp = dataSnapshot.getValue(Long.class);
-                postsReference.child(messageId).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Message post = dataSnapshot.getValue(Message.class);
-                        // profile posts from this reference do not always contain a date
-                        // the timestamp is the value of a child of postLinksReference
-                        post.setDate(timestamp);
-                        String id = dataSnapshot.getKey();
-                        iDtoMessage.put(id, post);
-                        posts.add(post);
-                        post.setId(id);
-                        notifyDataSetChanged();
-                    }
+                if (type == PostsType.Event) {
+                    // message objects for posts in events are stored directly in a child of the event
+                    Message post = dataSnapshot.getValue(Message.class);
+                    String id = dataSnapshot.getKey();
+                    iDtoMessage.put(id, post);
+                    posts.add(post);
+                    post.setId(id);
+                    notifyDataSetChanged();
+                } else {
+                    // message objects for posts on user profiles are all stored in the "posts" child
+                    // they need to be referenced separately by the message ID
+                    String messageId = dataSnapshot.getKey();
+                    final Long timestamp = dataSnapshot.getValue(Long.class);
+                    postsReference.child(messageId).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Message post = dataSnapshot.getValue(Message.class);
+                            // profile posts from this reference do not always contain a date
+                            // the timestamp is the value of a child of postLinksReference
+                            post.setDate(timestamp);
+                            String id = dataSnapshot.getKey();
+                            iDtoMessage.put(id, post);
+                            posts.add(post);
+                            post.setId(id);
+                            notifyDataSetChanged();
+                        }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
+                }
             }
 
             @Override
