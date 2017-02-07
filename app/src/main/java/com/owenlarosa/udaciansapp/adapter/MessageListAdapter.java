@@ -2,6 +2,7 @@ package com.owenlarosa.udaciansapp.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.owenlarosa.udaciansapp.ProfileActivity;
+import com.owenlarosa.udaciansapp.ProfileFragment;
 import com.owenlarosa.udaciansapp.R;
 import com.owenlarosa.udaciansapp.data.Message;
 
@@ -129,13 +132,22 @@ public class MessageListAdapter extends BaseAdapter {
      * @param viewHolder View to be populated with message data
      * @param message Message to be displayed
      */
-    private void populateViewHolder(final ViewHolder viewHolder, Message message) {
+    private void populateViewHolder(final ViewHolder viewHolder, final Message message) {
         // user should see their own name in different color to easily recognize their messages
         if (message.getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
             viewHolder.nameTextView.setTextColor(mContext.getResources().getColor(R.color.colorAccent));
         } else {
             viewHolder.nameTextView.setTextColor(mContext.getResources().getColor(R.color.colorPrimaryDark));
         }
+        viewHolder.profileImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // clicking on the profile image should launch user's profile
+                Intent intent = new Intent(mContext, ProfileActivity.class);
+                intent.putExtra(ProfileFragment.EXTRA_USERID, message.getSender());
+                mContext.startActivity(intent);
+            }
+        });
         DatabaseReference userBasicReference = mFirebaseDatabase.getReference().child("users").child(message.getSender()).child("basic");
         // user data stored in separate profile reference
         final DatabaseReference nameReference = userBasicReference.child("name");
