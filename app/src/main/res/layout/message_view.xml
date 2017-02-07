@@ -7,8 +7,8 @@
     android:paddingStart="@dimen/activity_horizontal_margin"
     android:paddingEnd="@dimen/activity_horizontal_margin">
 
-    <ImageView
-        android:id="@+id/message_profile_image_view"
+    <ImageButton
+        android:id="@+id/message_profile_image_button"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginEnd="@dimen/horizontal_inter_item_space"
@@ -23,7 +23,7 @@
         android:maxLines="1"
         android:textColor="@color/colorPrimaryDark"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@id/message_profile_image_view"/>
+        android:layout_toEndOf="@id/message_profile_image_button"/>
 
     <TextView
         android:id="@+id/message_time_text_view"
@@ -43,13 +43,13 @@
         android:layout_marginTop="@dimen/vertical_inter_item_space"
         android:layout_marginBottom="@dimen/vertical_inter_item_space"
         android:layout_below="@id/message_name_text_view"
-        android:layout_toEndOf="@id/message_profile_image_view"/>
+        android:layout_toEndOf="@id/message_profile_image_button"/>
 
     <TextView
         android:id="@+id/message_content_text_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/message_profile_image_view"
+        android:layout_toEndOf="@id/message_profile_image_button"
         android:layout_below="@id/message_content_image_view"/>
 
 </RelativeLayout>

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -109,8 +110,8 @@ public class MessageListAdapter extends BaseAdapter {
     class ViewHolder {
         @BindView(R.id.message_name_text_view)
         TextView nameTextView;
-        @BindView(R.id.message_profile_image_view)
-        ImageView profileImageView;
+        @BindView(R.id.message_profile_image_button)
+        ImageButton profileImageButton;
         @BindView(R.id.message_time_text_view)
         TextView timeTextView;
         @BindView(R.id.message_content_text_view)
@@ -155,7 +156,7 @@ public class MessageListAdapter extends BaseAdapter {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Glide.with(mContext)
                         .load(dataSnapshot.getValue(String.class))
-                        .into(viewHolder.profileImageView);
+                        .into(viewHolder.profileImageButton);
             }
 
             @Override
