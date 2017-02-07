@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                     intent.putExtra(ProfileFragment.EXTRA_USERID, FirebaseAuth.getInstance().getCurrentUser().getUid());
                     startActivity(intent);
-                } else if (i == 10) {
+                } else if (i == 9) {
                     // logout button tapped
                     logout();
                 } else {
@@ -169,9 +169,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                             fragment = new BlogsFragment();
                             break;
                         case 8:
-                            fragment = new SettingsFragment();
-                            break;
-                        case 9:
                             fragment = new HelpFragment();
                             break;
                         default:
