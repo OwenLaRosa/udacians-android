@@ -16,7 +16,6 @@
         android:layout_height="@dimen/chats_image_size"
         android:scaleType="centerCrop"
         android:background="@color/imagePlaceholder"
-        android:layout_marginRight="@dimen/horizontal_inter_item_space"
         android:layout_marginEnd="@dimen/horizontal_inter_item_space"/>
 
     <LinearLayout
