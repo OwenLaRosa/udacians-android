@@ -26,6 +26,7 @@
 
     <EditText
         android:id="@+id/input_edit_text"
+        android:labelFor="@id/input_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="viewStart"

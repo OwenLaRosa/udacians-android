@@ -13,6 +13,7 @@
 
         <ImageButton
             android:id="@+id/write_post_image_button"
+            android:contentDescription="@string/a11y_add_image"
             android:layout_width="@dimen/button_size"
             android:layout_height="@dimen/button_size"
             android:background="@color/white"
@@ -44,6 +45,7 @@
 
     <ImageView
         android:id="@+id/write_post_image_view"
+        android:contentDescription="@string/a11y_photo"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/image_preview_height"
         android:scaleType="fitStart"

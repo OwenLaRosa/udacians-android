@@ -2,6 +2,7 @@ package com.owenlarosa.udaciansapp.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.owenlarosa.udaciansapp.ProfileActivity;
+import com.owenlarosa.udaciansapp.ProfileFragment;
 import com.owenlarosa.udaciansapp.R;
+import com.owenlarosa.udaciansapp.data.Event;
 import com.owenlarosa.udaciansapp.data.Message;
 
 import java.text.SimpleDateFormat;
@@ -30,8 +34,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.owenlarosa.udaciansapp.R.string.post;
-
 /**
  * Created by Owen LaRosa on 11/25/16.
  */
@@ -42,6 +44,8 @@ public class PostsListAdapter extends BaseAdapter {
         Person,
         Event,
     }
+
+    private PostsType mType;
 
     private Context mContext;
     // user id of profile to show posts for
@@ -61,6 +65,8 @@ public class PostsListAdapter extends BaseAdapter {
     public PostsListAdapter(Context context, String userId, final PostsType type) {
         mContext = context;
         mUid = userId;
+
+        mType = type;
 
         // adapter can be used for posts on user profiles or events
         // because these are at different paths in the DB, the root node is different
@@ -181,8 +187,8 @@ public class PostsListAdapter extends BaseAdapter {
      * View holder to display the contents of individual posts
      */
     class PostViewHolder {
-        @BindView(R.id.display_post_profile_image_view)
-        ImageView imageView;
+        @BindView(R.id.display_post_profile_image_button)
+        ImageButton profileImageButton;
         @BindView(R.id.display_post_delete_button)
         ImageButton deleteButton;
         @BindView(R.id.display_post_name_text_view)
@@ -213,11 +219,23 @@ public class PostsListAdapter extends BaseAdapter {
      * @param viewHolder view to display the post
      * @param post post data to display in the view
      */
-    private void populatePostViewHolder(final PostViewHolder viewHolder, Message post) {
+    private void populatePostViewHolder(final PostViewHolder viewHolder, final Message post) {
         // id used to reference post for deletion
         viewHolder.id = post.getId();
         // content is directly in the message object
         viewHolder.contentTextView.setText(post.getContent());
+        // posts should only link to profiles on events
+        // if on a user's profile, don't link as this would be redundant
+        if (mType == PostsType.Event){
+            viewHolder.profileImageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, ProfileActivity.class);
+                    intent.putExtra(ProfileFragment.EXTRA_USERID, post.getSender());
+                    mContext.startActivity(intent);
+                }
+            });
+        }
         // other data is associate with the user
         // download it separately if it hasn't been already
         DatabaseReference basicReference = mFirebaseDatabase.getReference().child("users").child(post.getSender()).child("basic");
@@ -227,6 +245,7 @@ public class PostsListAdapter extends BaseAdapter {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String name = dataSnapshot.getValue(String.class);
                 viewHolder.nameTextView.setText(name);
+                viewHolder.profileImageButton.setContentDescription(name);
             }
 
             @Override
@@ -241,7 +260,7 @@ public class PostsListAdapter extends BaseAdapter {
                 String photoUrl = dataSnapshot.getValue(String.class);
                 Glide.with(mContext)
                         .load(photoUrl)
-                        .into(viewHolder.imageView);
+                        .into(viewHolder.profileImageButton);
             }
 
             @Override

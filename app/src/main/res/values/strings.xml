@@ -122,12 +122,16 @@
 
     <!-- content descriptions -->
     <string name="a11y_udacians_logo">Udacians</string>
-    <string name="a11y_add_image">Post Image</string>
+    <string name="a11y_add_image">Add Image</string>
     <string name="a11y_add_connection">Add connection</string>
     <string name="a11y_attend_event">Attend event</string>
     <string name="a11y_message">Open messages</string>
     <string name="a11y_leave_chat">Leave chat</string>
     <string name="a11y_choose_profile_picture">Choose profile picture</string>
+    <string name="a11y_delete_post">Delete post</string>
+    <string name="a11y_profile_picture">Profile picture</string>
+    <!-- placeholder for user generated photo content -->
+    <string name="a11y_photo">Photo</string>
 
     <!-- strings used by shared preferences -->
     <string name="pref_auth_token">token</string>

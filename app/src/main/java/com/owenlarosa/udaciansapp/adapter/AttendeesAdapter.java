@@ -1,11 +1,12 @@
 package com.owenlarosa.udaciansapp.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
@@ -14,6 +15,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.owenlarosa.udaciansapp.ProfileActivity;
+import com.owenlarosa.udaciansapp.ProfileFragment;
 import com.owenlarosa.udaciansapp.R;
 
 import java.util.ArrayList;
@@ -98,7 +101,15 @@ public class AttendeesAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final ViewHolder viewHolder = (ViewHolder) holder;
         // load image based on user ID
-        String userId = members.get(position);
+        final String userId = members.get(position);
+        viewHolder.imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, ProfileActivity.class);
+                intent.putExtra(ProfileFragment.EXTRA_USERID, userId);
+                mContext.startActivity(intent);
+            }
+        });
         DatabaseReference photoReference = mFirebaseDatabase.getReference().child("users").child(userId).child("basic").child("photo");
         photoReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -106,7 +117,20 @@ public class AttendeesAdapter extends RecyclerView.Adapter {
                 String photoUrl = dataSnapshot.getValue(String.class);
                 Glide.with(mContext)
                         .load(photoUrl)
-                        .into(viewHolder.imageView);
+                        .into(viewHolder.imageButton);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        DatabaseReference nameReference = mFirebaseDatabase.getReference().child("users").child(userId).child("basic").child("name");
+        nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String name = dataSnapshot.getValue(String.class);
+                viewHolder.imageButton.setContentDescription(name);
             }
 
             @Override
@@ -122,8 +146,8 @@ public class AttendeesAdapter extends RecyclerView.Adapter {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.attendee_image_view)
-        ImageView imageView;
+        @BindView(R.id.attendee_image_button)
+        ImageButton imageButton;
 
         public ViewHolder(View view) {
             super(view);

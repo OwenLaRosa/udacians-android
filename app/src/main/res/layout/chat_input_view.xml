@@ -31,6 +31,7 @@
 
         <ImageView
             android:id="@+id/chat_input_image_preview"
+            android:contentDescription="@string/a11y_photo"
             android:layout_width="match_parent"
             android:layout_height="@dimen/image_preview_height"
             android:scaleType="fitStart"

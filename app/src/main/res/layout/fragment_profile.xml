@@ -21,6 +21,7 @@
 
             <ImageView
                 android:id="@+id/profile_image_view"
+                android:contentDescription="@string/profile_picture"
                 android:layout_width="@dimen/profile_image_size"
                 android:layout_height="@dimen/profile_image_size"
                 android:layout_alignParentBottom="true"

@@ -22,8 +22,8 @@ import butterknife.Unbinder;
 
 public class DisplayPostView extends RelativeLayout {
 
-    @BindView(R.id.display_post_profile_image_view)
-    public ImageView profileImageView;
+    @BindView(R.id.display_post_profile_image_button)
+    public ImageButton profileImageButton;
     @BindView(R.id.display_post_name_text_view)
     public TextView nameTextView;
     @BindView(R.id.display_post_time_text_view)

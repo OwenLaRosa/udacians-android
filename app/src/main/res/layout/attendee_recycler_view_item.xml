@@ -4,8 +4,8 @@
     android:layout_height="@dimen/button_size"
     android:layout_marginEnd="@dimen/horizontal_inter_item_space">
 
-    <ImageView
-        android:id="@+id/attendee_image_view"
+    <ImageButton
+        android:id="@+id/attendee_image_button"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"

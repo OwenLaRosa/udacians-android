@@ -2,27 +2,26 @@ package com.owenlarosa.udaciansapp.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.api.client.util.Data;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.owenlarosa.udaciansapp.ProfileActivity;
+import com.owenlarosa.udaciansapp.ProfileFragment;
 import com.owenlarosa.udaciansapp.R;
 import com.owenlarosa.udaciansapp.data.Message;
-
-import net.simonvt.schematic.annotation.Database;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,10 +31,6 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
-import static com.owenlarosa.udaciansapp.R.string.post;
 
 /**
  * Created by Owen LaRosa on 1/1/17.
@@ -118,8 +113,8 @@ public class PostFeedAdapter extends BaseAdapter {
     }
 
     class PostViewHolder {
-        @BindView(R.id.display_post_profile_image_view)
-        ImageView imageView;
+        @BindView(R.id.display_post_profile_image_button)
+        ImageButton profileImageButton;
         @BindView(R.id.display_post_delete_button)
         ImageButton deleteButton;
         @BindView(R.id.display_post_name_text_view)
@@ -152,7 +147,7 @@ public class PostFeedAdapter extends BaseAdapter {
         postReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Message post = dataSnapshot.getValue(Message.class);
+                final Message post = dataSnapshot.getValue(Message.class);
                 if (post.getContent() == null || post.getContent().equals("")) {
                     viewHolder.contentTextView.setVisibility(View.GONE);
                 } else {
@@ -167,11 +162,22 @@ public class PostFeedAdapter extends BaseAdapter {
                             .into(viewHolder.contentImageView);
                     viewHolder.contentImageView.setVisibility(View.VISIBLE);
                 }
+                if (!(post.getSender() == null) || !(post.getSender().equals(""))) {
+                    viewHolder.profileImageButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(mContext, ProfileActivity.class);
+                            intent.putExtra(ProfileFragment.EXTRA_USERID, post.getSender());
+                            mContext.startActivity(intent);
+                        }
+                    });
+                }
                 DatabaseReference nameReference = mFirebaseDatabase.getReference().child("users").child(post.getSender()).child("basic").child("name");
                 nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         viewHolder.nameTextView.setText(dataSnapshot.getValue(String.class));
+                        viewHolder.profileImageButton.setContentDescription(dataSnapshot.getValue(String.class));
                     }
 
                     @Override
@@ -186,7 +192,7 @@ public class PostFeedAdapter extends BaseAdapter {
                         String photoUrl = dataSnapshot.getValue(String.class);
                         Glide.with(mContext)
                                 .load(photoUrl)
-                                .into(viewHolder.imageView);
+                                .into(viewHolder.profileImageButton);
                     }
 
                     @Override
