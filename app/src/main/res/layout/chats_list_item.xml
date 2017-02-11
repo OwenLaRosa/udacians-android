@@ -29,6 +29,7 @@
             android:id="@+id/chat_name_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAlignment="viewStart"
             android:maxLines="1"
             android:textStyle="bold"
             android:textColor="@color/colorPrimaryDark"/>
@@ -36,7 +37,8 @@
         <TextView
             android:id="@+id/chat_description_text_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textAlignment="viewStart"/>
 
     </LinearLayout>
 

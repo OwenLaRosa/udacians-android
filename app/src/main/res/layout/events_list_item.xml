@@ -15,6 +15,7 @@
         android:id="@+id/event_name_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAlignment="viewStart"
         android:maxLines="1"
         android:textStyle="bold"
         android:textColor="@color/colorPrimaryDark"
@@ -24,6 +25,7 @@
         android:id="@+id/event_about_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAlignment="viewStart"
         android:maxLines="5"
         android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
 
@@ -31,6 +33,7 @@
         android:id="@+id/event_location_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAlignment="viewStart"
         android:maxLines="1"/>
 
 </LinearLayout>

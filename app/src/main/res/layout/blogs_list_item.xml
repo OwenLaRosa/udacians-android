@@ -14,25 +14,25 @@
         android:id="@+id/blog_title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAlignment="viewStart"
         android:maxLines="1"
         android:textStyle="bold"
         android:textColor="@color/colorPrimaryDark"
-        android:text="Creating a Sticker Pack for iOS 10"
         android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
 
     <TextView
         android:id="@+id/blog_author_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAlignment="viewStart"
         android:maxLines="1"
-        android:text="Owen LaRosa"
         android:layout_marginBottom="@dimen/vertical_inter_item_space"/>
 
     <TextView
         android:id="@+id/blog_url_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLines="1"
-        android:text="http://blog.owenlarosa.com/2016/09/creating-sticker-pack-for-ios-10.html"/>
+        android:textAlignment="viewStart"
+        android:maxLines="1"/>
 
 </LinearLayout>

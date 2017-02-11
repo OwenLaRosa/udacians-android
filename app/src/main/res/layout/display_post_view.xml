@@ -28,6 +28,7 @@
             style="@style/Base.TextAppearance.AppCompat.Title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:textAlignment="viewStart"
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@id/display_post_profile_image_view"
             android:maxLines="1"
@@ -38,6 +39,7 @@
             style="@style/Base.TextAppearance.AppCompat.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAlignment="viewStart"
             android:layout_alignBaseline="@id/display_post_name_text_view"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
@@ -47,6 +49,7 @@
             android:id="@+id/display_post_content_text_view"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:textAlignment="viewStart"
             android:layout_below="@id/display_post_name_text_view"
             android:layout_marginBottom="@dimen/vertical_inter_item_space"
             android:layout_toEndOf="@id/display_post_profile_image_view"/>
