@@ -127,6 +127,7 @@
     <string name="a11y_attend_event">Attend event</string>
     <string name="a11y_message">Open messages</string>
     <string name="a11y_leave_chat">Leave chat</string>
+    <string name="a11y_choose_profile_picture">Choose profile picture</string>
 
     <!-- strings used by shared preferences -->
     <string name="pref_auth_token">token</string>

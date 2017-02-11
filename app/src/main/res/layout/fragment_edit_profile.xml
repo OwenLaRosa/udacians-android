@@ -40,6 +40,7 @@
 
         <ImageButton
             android:id="@+id/edit_profile_image_button"
+            android:contentDescription="@string/a11y_choose_profile_picture"
             android:layout_width="match_parent"
             android:layout_height="96dp"
             android:scaleType="fitCenter"
@@ -60,6 +61,7 @@
 
         <EditText
             android:id="@+id/edit_title_text_field"
+            android:labelFor="@id/edit_title_text_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
@@ -79,6 +81,7 @@
 
         <EditText
             android:id="@+id/edit_about_text_field"
+            android:labelFor="@id/edit_about_text_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
@@ -101,6 +104,7 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:contentDescription="@string/personal_website"
             android:src="@drawable/personal_site"
             android:layout_column="0"
             android:layout_columnSpan="1"
@@ -109,6 +113,7 @@
 
         <EditText
             android:id="@+id/edit_site_text_field"
+            android:labelFor="@id/edit_site_text_field"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
@@ -131,6 +136,7 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:contentDescription="@string/personal_blog"
             android:layout_column="0"
             android:layout_columnSpan="1"
             android:src="@drawable/blog"
@@ -139,6 +145,7 @@
 
         <EditText
             android:id="@+id/edit_blog_text_field"
+            android:labelFor="@id/edit_blog_text_field"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
@@ -161,6 +168,7 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:contentDescription="@string/linkedin"
             android:src="@drawable/linkedin"
             android:layout_column="0"
             android:layout_columnSpan="1"
@@ -169,6 +177,7 @@
 
         <EditText
             android:id="@+id/edit_linkedin_text_field"
+            android:labelFor="@id/edit_linkedin_text_field"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
@@ -191,6 +200,7 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:contentDescription="@string/twitter"
             android:src="@drawable/twitter"
             android:layout_column="0"
             android:layout_columnSpan="1"
@@ -199,6 +209,7 @@
 
         <EditText
             android:id="@+id/edit_twitter_text_field"
+            android:labelFor="@id/edit_twitter_text_field"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
