@@ -11,6 +11,7 @@
         android:id="@+id/profile_about_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAlignment="viewStart"
         style="@style/TextAppearance.AppCompat.Title"
         android:textStyle="bold"
         android:text="@string/about"
@@ -21,6 +22,7 @@
         android:id="@+id/profile_about_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAlignment="viewStart"
         android:text="@string/about_default"
         style="@style/TextAppearance.AppCompat.Medium"
         android:layout_marginBottom="@dimen/profile_links_vertical_offset"/>

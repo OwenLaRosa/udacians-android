@@ -29,6 +29,7 @@
                 style="@style/Base.TextAppearance.AppCompat.Headline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textAlignment="viewStart"
                 android:layout_marginBottom="@dimen/event_margin_medium"
                 android:textColor="@color/white" />
 
@@ -37,6 +38,7 @@
                 style="@style/Base.TextAppearance.AppCompat.Subhead"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textAlignment="viewStart"
                 android:layout_marginBottom="@dimen/vertical_inter_item_space"
                 android:textColor="@color/white" />
 
@@ -45,6 +47,7 @@
                 style="@style/Base.TextAppearance.AppCompat.Subhead"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textAlignment="viewStart"
                 android:layout_marginBottom="@dimen/vertical_inter_item_space"
                 android:textColor="@color/white" />
 
@@ -66,7 +69,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/edge_margin"
-        android:layout_marginRight="@dimen/edge_margin"
         android:background="@color/colorAccent"
         android:clickable="true"
         android:src="@drawable/add_event"
