@@ -46,8 +46,8 @@ public class JobsSyncAdapter extends AbstractThreadedSyncAdapter {
 
     private FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
 
-    // data should update every 6 hours
-    public static final int SYNC_INTERVAL = 10;
+    // data should update every 12 hours
+    public static final int SYNC_INTERVAL = 43200;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
 
     public JobsSyncAdapter(Context context, boolean autoInitialize) {
