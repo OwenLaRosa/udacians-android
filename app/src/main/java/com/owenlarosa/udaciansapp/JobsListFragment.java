@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -20,6 +19,7 @@ import android.widget.ListView;
 import com.owenlarosa.udaciansapp.adapter.JobsListAdapter;
 import com.owenlarosa.udaciansapp.contentprovider.JobsListColumns;
 import com.owenlarosa.udaciansapp.contentprovider.JobsProvider;
+import com.owenlarosa.udaciansapp.syncadapter.JobsSyncAdapter;
 
 
 import butterknife.BindView;
@@ -64,15 +64,8 @@ public class JobsListFragment extends Fragment implements LoaderManager.LoaderCa
                 mContext.startActivity(intent);
             }
         });
+        JobsSyncAdapter.syncImmediately(mContext);
         getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                if (Utils.updateJobs(mContext)) {
-                    updateLists();
-                }
-            }
-        });
 
         return rootView;
     }

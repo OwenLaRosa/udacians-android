@@ -138,7 +138,7 @@
     <string name="pref_job_keywords">keywords</string>
 
     <string name="sync_account_type" translatable="false">com.owenlarosa.udacians</string>
-    <string name="content_authority" translatable="false">com.owenlarosa.udacians.contentprovider.JobsProvider</string>
+    <string name="content_authority" translatable="false">com.owenlarosa.udaciansapp</string>
 
     <!-- menu item titles -->
 

@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udaciansapp.R;
+import com.owenlarosa.udaciansapp.Utils;
 import com.owenlarosa.udaciansapp.contentprovider.JobsListColumns;
 import com.owenlarosa.udaciansapp.contentprovider.JobsProvider;
 
@@ -43,11 +44,11 @@ public class JobsSyncAdapter extends AbstractThreadedSyncAdapter {
     private OkHttpClient mClient = new OkHttpClient();
     private Context mContext;
 
-    private FirebaseDatabase mFirebaseDatabase;
+    private FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
 
     // data should update every 6 hours
-    public static final int SYNC_INTERVAL = 5;
-    public static final int SYNC_FLEXTIME = SYNC_INTERVAL/6;
+    public static final int SYNC_INTERVAL = 10;
+    public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
 
     public JobsSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);

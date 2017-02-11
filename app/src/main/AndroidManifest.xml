@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.owenlarosa.udaciansapp">
 
-    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"
-        android:maxSdkVersion="22"/>
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
 
     <uses-feature
@@ -43,9 +43,10 @@
         <activity android:name="com.owenlarosa.udaciansapp.EventActivity" />
         <activity android:name="com.owenlarosa.udaciansapp.LoginActivity"></activity>
         <provider
-            android:authorities="com.owenlarosa.udaciansapp.contentprovider.JobsProvider"
+            android:authorities="@string/content_authority"
             android:name=".contentprovider.generated.JobsProvider"
-            android:exported="false"/>
+            android:exported="false"
+            android:syncable="true"/>
         <service android:name="com.owenlarosa.udaciansapp.syncadapter.JobsAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />

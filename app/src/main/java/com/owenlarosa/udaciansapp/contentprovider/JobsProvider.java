@@ -13,7 +13,7 @@ import net.simonvt.schematic.annotation.TableEndpoint;
 @ContentProvider(authority = JobsProvider.AUTHORITY, database = JobsDatabase.class)
 public class JobsProvider {
 
-    public static final String AUTHORITY = "com.owenlarosa.udaciansapp.contentprovider.JobsProvider";
+    public static final String AUTHORITY = "com.owenlarosa.udaciansapp";
 
     @TableEndpoint(table = JobsDatabase.JOBS) public static class Jobs {
         @ContentUri(path = "jobs",
