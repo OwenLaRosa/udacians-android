@@ -151,7 +151,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         };
-        mLocationsReference.limitToLast(100).addChildEventListener(mLocationsEventListener);
+        mLocationsReference.orderByChild("timestamp").limitToLast(100).addChildEventListener(mLocationsEventListener);
 
         mEventsEventListener = new ChildEventListener() {
             @Override

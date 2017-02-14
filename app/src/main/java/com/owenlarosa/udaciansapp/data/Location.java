@@ -9,13 +9,15 @@ public class Location {
     private String location;
     private double longitude;
     private double latitude;
+    private long timestamp;
 
     public Location() {}
 
-    public Location(String location, double longitude, double latitude) {
+    public Location(String location, double longitude, double latitude, long timestamp) {
         this.location = location;
         this.longitude = longitude;
         this.latitude = latitude;
+        this.timestamp = timestamp;
     }
 
     public String getLocation() {
@@ -42,4 +44,11 @@ public class Location {
         this.latitude = latitude;
     }
 
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 }

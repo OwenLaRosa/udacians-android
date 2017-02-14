@@ -36,9 +36,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.owenlarosa.udaciansapp.syncadapter.JobsSyncAdapter;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -276,12 +278,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public void syncUserLocation(double latitude, double longitude, String place) {
         String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference locationReference = mFirebaseDatabase.getReference().child("locations").child(user);
-        com.owenlarosa.udaciansapp.data.Location location = new com.owenlarosa.udaciansapp.data.Location();
+        HashMap<String, Object> location = new HashMap<>();
         if (place != null) {
             // ideally we want to write all the data at once so everything is updated
-            location.setLatitude(latitude);
-            location.setLongitude(longitude);
-            location.setLocation(place);
+            location.put("latitude", latitude);
+            location.put("longitude", longitude);
+            location.put("location", place);
+            location.put("timestamp", ServerValue.TIMESTAMP);
             locationReference.setValue(location);
         } else {
             // in cases where the place is null, lat and lon should be updaed individually
@@ -291,6 +294,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             longitudeReference.setValue(longitude);
             DatabaseReference latitudeReference = locationReference.child("latitude");
             latitudeReference.setValue(latitude);
+            // also update the timestamp when the coordinates change
+            DatabaseReference timestampReference = locationReference.child("timestamp");
+            timestampReference.setValue(ServerValue.TIMESTAMP);
         }
     }
 
