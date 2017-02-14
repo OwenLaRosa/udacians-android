@@ -20,7 +20,9 @@ import com.owenlarosa.udaciansapp.contentprovider.JobsProvider;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Vector;
 
 import okhttp3.OkHttpClient;
@@ -287,6 +289,22 @@ public class Utils {
             chatReference = messagesReference.child(user2).child(user1);
         }
         return chatReference;
+    }
+
+    /**
+     * Format the date as a string
+     * @param date date to be formatted
+     * @return time with AM/PM marker is less than a day ago, otherwise month/date/year
+     */
+    public static String formatTime(Date date) {
+        Date today = new Date();
+        SimpleDateFormat dateFormat;
+        if (today.getTime() - date.getTime() <= 86400000) {
+            dateFormat = new SimpleDateFormat("h:m a");
+        } else {
+            dateFormat = new SimpleDateFormat("M/d/yy");
+        }
+        return dateFormat.format(date);
     }
 
 }

@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udaciansapp.ProfileActivity;
 import com.owenlarosa.udaciansapp.ProfileFragment;
 import com.owenlarosa.udaciansapp.R;
+import com.owenlarosa.udaciansapp.Utils;
 import com.owenlarosa.udaciansapp.data.Message;
 
 import java.text.SimpleDateFormat;
@@ -195,8 +196,7 @@ public class MessageListAdapter extends BaseAdapter {
 
         // time should be formatted as hours:minutes
         Date date = new Date(message.getDate());
-        String formattedTime = new SimpleDateFormat("H:mm").format(date);
-        viewHolder.timeTextView.setText(formattedTime);
+        viewHolder.timeTextView.setText(Utils.formatTime(date));
     }
 
     @Override

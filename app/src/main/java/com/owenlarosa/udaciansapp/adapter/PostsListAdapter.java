@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udaciansapp.ProfileActivity;
 import com.owenlarosa.udaciansapp.ProfileFragment;
 import com.owenlarosa.udaciansapp.R;
+import com.owenlarosa.udaciansapp.Utils;
 import com.owenlarosa.udaciansapp.data.Event;
 import com.owenlarosa.udaciansapp.data.Message;
 
@@ -295,7 +296,7 @@ public class PostsListAdapter extends BaseAdapter {
             viewHolder.deleteButton.setVisibility(View.GONE);
         }
         Date date = new Date(post.getDate());
-        String formattedTime = new SimpleDateFormat("H:mm").format(date);
+        String formattedTime = Utils.formatTime(date);
         viewHolder.timeTextView.setText(formattedTime);
     }
 }

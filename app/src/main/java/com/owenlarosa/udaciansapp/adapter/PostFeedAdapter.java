@@ -21,6 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udaciansapp.ProfileActivity;
 import com.owenlarosa.udaciansapp.ProfileFragment;
 import com.owenlarosa.udaciansapp.R;
+import com.owenlarosa.udaciansapp.Utils;
 import com.owenlarosa.udaciansapp.data.Message;
 
 import java.text.SimpleDateFormat;
@@ -141,7 +142,7 @@ public class PostFeedAdapter extends BaseAdapter {
      */
     private void populateViewHolder(final PostViewHolder viewHolder, PostLink postLink) {
         Date date = new Date(postLink.timestamp);
-        String formattedTime = new SimpleDateFormat("H:mm").format(date);
+        String formattedTime = Utils.formatTime(date);
         viewHolder.timeTextView.setText(formattedTime);
         DatabaseReference postReference = mFirebaseDatabase.getReference().child("posts").child(postLink.identifier);
         postReference.addListenerForSingleValueEvent(new ValueEventListener() {

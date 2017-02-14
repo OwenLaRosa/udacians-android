@@ -42,7 +42,6 @@
             android:layout_alignBaseline="@id/display_post_name_text_view"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@id/display_post_name_text_view"
             android:maxLines="1" />
 
         <TextView
