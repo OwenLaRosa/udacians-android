@@ -41,7 +41,8 @@
         <activity android:name="com.owenlarosa.udaciansapp.ProfileActivity"/>
         <activity android:name="com.owenlarosa.udaciansapp.ChatActivity" />
         <activity android:name="com.owenlarosa.udaciansapp.EventActivity" />
-        <activity android:name="com.owenlarosa.udaciansapp.LoginActivity"></activity>
+        <activity android:name="com.owenlarosa.udaciansapp.LoginActivity"
+            android:theme="@style/NoTitle"/>
         <provider
             android:authorities="@string/content_authority"
             android:name=".contentprovider.generated.JobsProvider"

@@ -8,4 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- No action bar, used on login activity -->
+    <style name="NoTitle" parent="AppTheme">
+        <item name="windowNoTitle">true</item>
+    </style>
+
 </resources>
