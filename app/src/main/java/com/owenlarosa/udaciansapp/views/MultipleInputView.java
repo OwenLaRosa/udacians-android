@@ -17,9 +17,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.owenlarosa.udaciansapp.R;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * Created by Owen LaRosa on 12/11/16.
@@ -35,6 +37,7 @@ public class MultipleInputView extends Dialog {
         private static final String ABOUT = "about";
         private static final String LONGITUDE = "longitude";
         private static final String LATITUDE = "latitude";
+        private static final String TIMESTAMP = "timestamp";
     }
 
     private Context mContext;
@@ -102,6 +105,7 @@ public class MultipleInputView extends Dialog {
                     // data is pushed to location reference, so include the coordinates
                     contents.put(Keys.LONGITUDE, mCoordinates.longitude);
                     contents.put(Keys.LATITUDE, mCoordinates.latitude);
+                    contents.put(Keys.TIMESTAMP, ServerValue.TIMESTAMP);
                     // name is stored outside of the topic_location reference
                     String name = (String) contents.get(Keys.NAME);
                     contents.remove(Keys.NAME);
@@ -122,15 +126,17 @@ public class MultipleInputView extends Dialog {
                     // data is pushed to location reference, so include the coordinates
                     contents.put(Keys.LONGITUDE, mCoordinates.longitude);
                     contents.put(Keys.LATITUDE, mCoordinates.latitude);
+                    contents.put(Keys.TIMESTAMP, ServerValue.TIMESTAMP);
                     DatabaseReference articleReference = mFirebaseDatabase.getReference().child("articles").child(mUserId);
                     articleReference.removeValue();
                     articleReference.setValue(contents);
                     break;
                 case Event:
                     // coordinates are store separately from actual event data
-                    HashMap<String, Double> coordinateMap = new HashMap<String, Double>();
+                    HashMap<String, Object> coordinateMap = new HashMap<>();
                     coordinateMap.put(Keys.LONGITUDE, mCoordinates.longitude);
                     coordinateMap.put(Keys.LATITUDE, mCoordinates.latitude);
+                    coordinateMap.put(Keys.TIMESTAMP, ServerValue.TIMESTAMP);
                     DatabaseReference eventLocationReference = mFirebaseDatabase.getReference().child("event_locations").child(mUserId);
                     // remove reference first so UI can update properly
                     eventLocationReference.removeValue();

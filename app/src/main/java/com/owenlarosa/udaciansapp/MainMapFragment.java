@@ -173,7 +173,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         };
-        mEventsReference.limitToLast(20).addChildEventListener(mEventsEventListener);
+        mEventsReference.orderByChild("timestamp").limitToLast(20).addChildEventListener(mEventsEventListener);
 
         mTopicsEventListener = new ChildEventListener() {
             @Override
@@ -195,7 +195,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         };
-        mTopicsReference.limitToLast(20).addChildEventListener(mTopicsEventListener);
+        mTopicsReference.orderByChild("timestamp").limitToLast(20).addChildEventListener(mTopicsEventListener);
 
         mArticlesEventListener = new ChildEventListener() {
             @Override
@@ -217,7 +217,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         };
-        mArticlesReference.limitToLast(20).addChildEventListener(mArticlesEventListener);
+        mArticlesReference.orderByChild("timestamp").limitToLast(20).addChildEventListener(mArticlesEventListener);
     }
 
     private void addPin(DataSnapshot dataSnapshot, PinType type) {
