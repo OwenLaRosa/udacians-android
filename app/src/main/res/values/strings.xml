@@ -117,6 +117,8 @@
     <string name="input_event_p3_subtitle">Event Details (can be edited later)</string>
     <string name="input_event_p3_hint">Competitive Hackathon, Saturday at 1:00 PM</string>
 
+    <string name="last_direct_message_time">Last message: <xliff:g id="time">%1$s</xliff:g></string>
+
     <!-- used on jobs widget -->
     <string name="jobs_widget_title">Jobs</string>
     <string name="jobs_widget_no_data">No relevant jobs found.</string>

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,12 +19,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udaciansapp.R;
+import com.owenlarosa.udaciansapp.Utils;
 
 import net.simonvt.schematic.annotation.Database;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -437,16 +440,16 @@ public class DiscussionsListAdapter extends BaseAdapter {
 
             }
         });
-        DatabaseReference locationReference = mFirebaseDatabase.getReference().child("locations").child(userId).child("location");
-        locationReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        // "location" text view is used for the time of the last message
+        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference timeStampReference = mFirebaseDatabase.getReference().child("users").child(currentUser).child("direct_messages").child(userId);
+        timeStampReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    String location = dataSnapshot.getValue(String.class);
-                    viewHolder.locationTextView.setText(location);
-                } else {
-                    // location not available in string form
-                    viewHolder.locationTextView.setText(mContext.getString(R.string.unknown_location));
+                    Long timestamp = dataSnapshot.getValue(Long.class);
+                    String formattedTime = Utils.formatTime(new Date(timestamp));
+                    viewHolder.locationTextView.setText(mContext.getString(R.string.last_direct_message_time, formattedTime));
                 }
             }
 
