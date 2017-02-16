@@ -94,9 +94,15 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (inputView != null && inputView.isShowing()) {
-            // this allows us to re-show the input view when the view state restores
-            inputView.dismiss();
+        if (inputView != null) {
+            if (inputView.isShowing()) {
+                // this allows us to re-show the input view when the view state restores
+                inputView.dismiss();
+            } else {
+                // non-showing view was dismissed by the user and should not be recreated
+                inputView.dismiss();
+                inputView = null;
+            }
         }
     }
 
