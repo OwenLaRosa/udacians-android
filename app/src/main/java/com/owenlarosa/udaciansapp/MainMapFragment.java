@@ -138,6 +138,12 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
                         break;
                 }
                 if (inputView != null) {
+                    inputView.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialogInterface) {
+                            inputView = null;
+                        }
+                    });
                     inputView.show();
                 }
             }
