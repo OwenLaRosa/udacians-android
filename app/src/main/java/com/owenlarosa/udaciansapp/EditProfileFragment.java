@@ -54,6 +54,13 @@ public class EditProfileFragment extends Fragment {
     // user selected an image from the gallery
     private static final int RESULT_PICK_IMAGE = 1;
 
+    private static final String KEY_TITLE = "title";
+    private static final String KEY_ABOUT = "about";
+    private static final String KEY_SITE = "site";
+    private static final String KEY_BLOG = "blog";
+    private static final String KEY_LINKEDIN = "linkedin";
+    private static final String KEY_TWITTER = "twitter";
+
     @BindView(R.id.edit_save_button)
     Button saveChangesButton;
     @BindView(R.id.edit_profile_image_button)
@@ -105,9 +112,33 @@ public class EditProfileFragment extends Fragment {
         if (savedInstanceState == null) {
             // prefill the data for the first launch
             loadData();
+        } else {
+            titleEditText.setEnabled(true);
+            titleEditText.setText(savedInstanceState.getString(KEY_TITLE));
+            aboutEditText.setEnabled(true);
+            aboutEditText.setText(savedInstanceState.getString(KEY_ABOUT));
+            siteEditText.setEnabled(true);
+            siteEditText.setText(savedInstanceState.getString(KEY_SITE));
+            blogEditText.setEnabled(true);
+            blogEditText.setText(savedInstanceState.getString(KEY_BLOG));
+            linkedinEditText.setEnabled(true);
+            linkedinEditText.setText(savedInstanceState.getString(KEY_LINKEDIN));
+            twitterEditText.setEnabled(true);
+            twitterEditText.setText(savedInstanceState.getString(KEY_TWITTER));
         }
 
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY_TITLE, titleEditText.getText().toString());
+        outState.putString(KEY_ABOUT, aboutEditText.getText().toString());
+        outState.putString(KEY_SITE, siteEditText.getText().toString());
+        outState.putString(KEY_BLOG, blogEditText.getText().toString());
+        outState.putString(KEY_LINKEDIN, linkedinEditText.getText().toString());
+        outState.putString(KEY_TWITTER, twitterEditText.getText().toString());
     }
 
     @Override
