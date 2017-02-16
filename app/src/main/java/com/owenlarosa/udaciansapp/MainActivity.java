@@ -129,6 +129,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i != 1) {
+                    // input view should be invalidated if switching to a different tab
+                    MainMapFragment.inputView = null;
+                }
                 if (i == 0) {
                     // show user's profile info
                     Intent intent = new Intent(MainActivity.this, ProfileActivity.class);

@@ -64,6 +64,9 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
     private HashMap<String, Marker> topicMappings = new HashMap<>();
     private HashMap<String, Marker> articleMappings = new HashMap<>();
 
+    // a carefully crafted leaky object to preserve the state of the input view
+    // this should be migrated to DialogFragment in the future, but will preserve the input view's contents
+    public static MultipleInputView inputView = null;
 
     @Nullable
     @Override
@@ -81,7 +84,20 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
                 setupMap();
             }
         });
+        if (inputView != null) {
+            // show previous input view if it existed
+            inputView.show();
+        }
         return rootView;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (inputView != null && inputView.isShowing()) {
+            // this allows us to re-show the input view when the view state restores
+            inputView.dismiss();
+        }
     }
 
     /**
@@ -102,22 +118,21 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
         builder.setItems(R.array.add_new_items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                MultipleInputView multipleInputView = null;
                 switch (i) {
                     case 0: // topic
-                        multipleInputView = new MultipleInputView(mContext, MultipleInputView.Type.Topic, latLng);
+                        inputView = new MultipleInputView(mContext, MultipleInputView.Type.Topic, latLng);
                         break;
                     case 1: // article
-                        multipleInputView = new MultipleInputView(mContext, MultipleInputView.Type.Article, latLng);
+                        inputView = new MultipleInputView(mContext, MultipleInputView.Type.Article, latLng);
                         break;
                     case 2: // event
-                        multipleInputView = new MultipleInputView(mContext, MultipleInputView.Type.Event, latLng);
+                        inputView = new MultipleInputView(mContext, MultipleInputView.Type.Event, latLng);
                         break;
                     default:
                         break;
                 }
-                if (multipleInputView != null) {
-                    multipleInputView.show();
+                if (inputView != null) {
+                    inputView.show();
                 }
             }
         });
