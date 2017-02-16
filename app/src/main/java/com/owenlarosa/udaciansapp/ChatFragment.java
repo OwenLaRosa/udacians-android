@@ -55,6 +55,9 @@ public class ChatFragment extends Fragment {
     // whether or not this chat is a direct message
     public static final String EXTRA_DIRECT = "direct";
 
+    private static final String TEXT_KEY = "text";
+    private static final String IMAGE_KEY = "image";
+
     // user selected an image from the gallery
     private static final int RESULT_PICK_IMAGE = 1;
 
@@ -247,7 +250,25 @@ public class ChatFragment extends Fragment {
             }
         });
 
+        if (savedInstanceState != null) {
+            chatEntry.messageTextField.setText(savedInstanceState.getString(TEXT_KEY));
+            if (savedInstanceState.containsKey(IMAGE_KEY)) {
+                mImage = savedInstanceState.getParcelable(IMAGE_KEY);
+                chatEntry.imagePreview.setVisibility(VISIBLE);
+                chatEntry.imagePreview.setImageBitmap(mImage);
+            }
+        }
+
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(TEXT_KEY, chatEntry.messageTextField.getText().toString());
+        if (mImage != null) {
+            outState.putParcelable(IMAGE_KEY, mImage);
+        }
     }
 
     // get image returned from gallery or camera
