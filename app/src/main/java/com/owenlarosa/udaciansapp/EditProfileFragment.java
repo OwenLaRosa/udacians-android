@@ -54,6 +54,7 @@ public class EditProfileFragment extends Fragment {
     // user selected an image from the gallery
     private static final int RESULT_PICK_IMAGE = 1;
 
+    private static final String KEY_PHOTO = "photo";
     private static final String KEY_TITLE = "title";
     private static final String KEY_ABOUT = "about";
     private static final String KEY_SITE = "site";
@@ -113,6 +114,27 @@ public class EditProfileFragment extends Fragment {
             // prefill the data for the first launch
             loadData();
         } else {
+            if (savedInstanceState.containsKey(KEY_PHOTO)) {
+                // user selected a new image but did not save it
+                mImage = savedInstanceState.getParcelable(KEY_PHOTO);
+                profileImageButton.setImageBitmap(mImage);
+            } else {
+                // user keeps original image, already stored in reference
+                DatabaseReference photoReference = mBasicReference.child("photo");
+                photoReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Glide.with(mContext)
+                                .load(dataSnapshot.getValue(String.class))
+                                .into(profileImageButton);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
             titleEditText.setEnabled(true);
             titleEditText.setText(savedInstanceState.getString(KEY_TITLE));
             aboutEditText.setEnabled(true);
@@ -133,6 +155,9 @@ public class EditProfileFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        if (mImage != null) {
+            outState.putParcelable(KEY_PHOTO, mImage);
+        }
         outState.putString(KEY_TITLE, titleEditText.getText().toString());
         outState.putString(KEY_ABOUT, aboutEditText.getText().toString());
         outState.putString(KEY_SITE, siteEditText.getText().toString());
