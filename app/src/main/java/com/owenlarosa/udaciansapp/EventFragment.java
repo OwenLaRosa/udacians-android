@@ -63,6 +63,9 @@ public class EventFragment extends Fragment implements MessageDelegate {
 
     public static final String EXTRA_USERID = "userId";
 
+    private static final String TEXT_KEY = "text";
+    private static final String IMAGE_KEY = "image";
+
     // user selected an image from the gallery
     private static final int RESULT_PICK_IMAGE = 1;
     // user took an image with the camera
@@ -223,7 +226,25 @@ public class EventFragment extends Fragment implements MessageDelegate {
         StorageReference storageReference = mFirebaseStorage.getReferenceFromUrl("gs://udacians-df696.appspot.com");
         mPublicImageStorage = storageReference.child(user).child("public").child("images");
 
+        if (savedInstanceState != null) {
+            headerView.writePostView.postEditText.setText(savedInstanceState.getString(TEXT_KEY));
+            if (savedInstanceState.containsKey(IMAGE_KEY)) {
+                mImage = (Bitmap) savedInstanceState.getParcelable(IMAGE_KEY);
+                headerView.writePostView.previewImageView.setVisibility(VISIBLE);
+                headerView.writePostView.previewImageView.setImageBitmap(mImage);
+            }
+        }
+
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(TEXT_KEY, headerView.writePostView.postEditText.getText().toString());
+        if (mImage != null) {
+            outState.putParcelable(IMAGE_KEY, mImage);
+        }
     }
 
     // get image returned from gallery or camera
