@@ -194,6 +194,10 @@ public class ChatFragment extends Fragment {
         chatEntry.sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // messages without text unless there's an image should be rejected
+                if (chatEntry.messageTextField.getText().toString().equals("") && mImage == null) {
+                    return;
+                }
                 // create a message to be sent
                 final Message message = new Message();
                 message.setSender(FirebaseAuth.getInstance().getCurrentUser().getUid());

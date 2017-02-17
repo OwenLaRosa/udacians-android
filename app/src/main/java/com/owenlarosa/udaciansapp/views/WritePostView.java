@@ -60,6 +60,10 @@ public class WritePostView extends RelativeLayout {
 
     @OnClick(R.id.create_post_button)
     public void createPost() {
+        // posts without any text should not be submitted
+        if (postEditText.getText().toString().equals("")) {
+            return;
+        }
         // create a message/post object
         Message message = new Message();
         message.setSender(FirebaseAuth.getInstance().getCurrentUser().getUid());

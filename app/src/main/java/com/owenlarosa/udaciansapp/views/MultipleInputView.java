@@ -21,7 +21,6 @@ import com.google.firebase.database.ServerValue;
 import com.owenlarosa.udaciansapp.R;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 /**
  * Created by Owen LaRosa on 12/11/16.
@@ -69,6 +68,10 @@ public class MultipleInputView extends Dialog {
         @Override
         public void onClick(View view) {
             updateContents();
+            // should not advance to next page without entering some text
+            if (inputEditText.getText().toString().equals("")) {
+                return;
+            }
             pageIndex++;
             loadInputPage();
         }

@@ -31,7 +31,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -406,14 +405,11 @@ public class EventFragment extends Fragment implements MessageDelegate {
                     .input(getString(R.string.edit_event_about_hint), headerView.aboutTextView.getText(), new MaterialDialog.InputCallback() {
                         @Override
                         public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                            eventAboutReference.setValue(input.toString());
-                            headerView.aboutTextView.setText(input.toString());
-                        }
-                    })
-                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            eventAboutReference.setValue(dialog.getInputEditText().getText().toString());
+                            String newString = input.toString();
+                            if (!newString.equals("")) {
+                                eventAboutReference.setValue(input.toString());
+                                headerView.aboutTextView.setText(input.toString());
+                            }
                         }
                     })
                     .autoDismiss(true)
