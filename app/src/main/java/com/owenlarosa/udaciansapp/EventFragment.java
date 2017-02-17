@@ -14,13 +14,14 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,6 +31,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -393,7 +396,28 @@ public class EventFragment extends Fragment implements MessageDelegate {
         int id = item.getItemId();
 
         if (id == R.id.menu_edit_about) {
-            Log.d("", "edit event about");
+            final DatabaseReference eventAboutReference = mEventReference.child("about");
+            new MaterialDialog.Builder(mContext)
+                    .title("Edit Event")
+                    .content("Tell us about this event")
+                    .positiveText("OK")
+                    .negativeText("Cancel")
+                    .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE)
+                    .input("Some details about this event", headerView.aboutTextView.getText(), new MaterialDialog.InputCallback() {
+                        @Override
+                        public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                            eventAboutReference.setValue(input.toString());
+                            headerView.aboutTextView.setText(input.toString());
+                        }
+                    })
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            eventAboutReference.setValue(dialog.getInputEditText().getText().toString());
+                        }
+                    })
+                    .autoDismiss(true)
+                    .show();
         }
         return super.onOptionsItemSelected(item);
     }
