@@ -398,12 +398,12 @@ public class EventFragment extends Fragment implements MessageDelegate {
         if (id == R.id.menu_edit_about) {
             final DatabaseReference eventAboutReference = mEventReference.child("about");
             new MaterialDialog.Builder(mContext)
-                    .title("Edit Event")
-                    .content("Tell us about this event")
-                    .positiveText("OK")
-                    .negativeText("Cancel")
+                    .title(R.string.edit_event)
+                    .content(R.string.edit_event_about_prompt)
+                    .positiveText(R.string.dialog_positive_action)
+                    .negativeText(R.string.dialog_negative_action)
                     .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE)
-                    .input("Some details about this event", headerView.aboutTextView.getText(), new MaterialDialog.InputCallback() {
+                    .input(getString(R.string.edit_event_about_hint), headerView.aboutTextView.getText(), new MaterialDialog.InputCallback() {
                         @Override
                         public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
                             eventAboutReference.setValue(input.toString());

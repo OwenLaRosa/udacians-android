@@ -159,4 +159,11 @@
 
     <string name="menu_edit_about">Edit about</string>
 
+    <string name="edit_event">Edit Event</string>
+    <string name="edit_event_about_prompt">Tell us about this event</string>
+    <string name="edit_event_about_hint">Some details about this event</string>
+
+    <string name="dialog_positive_action">OK</string>
+    <string name="dialog_negative_action">Cancel</string>
+
 </resources>
