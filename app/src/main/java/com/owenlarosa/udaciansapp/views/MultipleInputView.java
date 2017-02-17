@@ -67,11 +67,11 @@ public class MultipleInputView extends Dialog {
     private View.OnClickListener nextPageClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            updateContents();
             // should not advance to next page without entering some text
             if (inputEditText.getText().toString().equals("")) {
                 return;
             }
+            updateContents();
             pageIndex++;
             loadInputPage();
         }
@@ -101,6 +101,9 @@ public class MultipleInputView extends Dialog {
     private View.OnClickListener submitClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            if (inputEditText.getText().toString().equals("")) {
+                return;
+            }
             // save input from the last page
             updateContents();
             switch (mType) {
