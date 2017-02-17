@@ -20,6 +20,9 @@ import com.owenlarosa.udaciansapp.contentprovider.JobsProvider;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -305,6 +308,27 @@ public class Utils {
             dateFormat = new SimpleDateFormat("M/d/yy");
         }
         return dateFormat.format(date);
+    }
+
+    /**
+     * Determine if a URL is valid
+     * @param string url to check as String
+     * @return true if it is valid, otherwise false
+     */
+    public static boolean isValidUrl(String string) {
+        // referenced: http://obscuredclarity.blogspot.com/2011/10/validate-url-in-java.html
+        URL url = null;
+        try {
+            url = new URL(string);
+        } catch (MalformedURLException e) {
+            return false;
+        }
+        try {
+            url.toURI();
+        } catch (URISyntaxException e) {
+            return false;
+        }
+        return true;
     }
 
 }

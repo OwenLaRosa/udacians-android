@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.owenlarosa.udaciansapp.R;
+import com.owenlarosa.udaciansapp.Utils;
 
 import java.util.HashMap;
 
@@ -129,6 +130,23 @@ public class MultipleInputView extends Dialog {
                     userTopicReference.setValue(true);
                     break;
                 case Article:
+                    // should not be allowed to submit invalid URLs for articles
+                    String textToValidate = inputEditText.getText().toString();
+                    if (!Utils.isValidUrl(textToValidate)) {
+                        if (textToValidate.startsWith("http")) {
+                            return;
+                        }
+                    }
+                    // some users may type a valid address but omit the protocol
+                    // if so, we can retry the same text prefixed with http://
+                    inputEditText.setText("http://" + textToValidate);
+                    textToValidate = inputEditText.getText().toString();
+                    if (!Utils.isValidUrl(textToValidate)) {
+                        return;
+                    } else {
+                        // validation is successful, make sure we're using the new string
+                        contents.put(Keys.URL, textToValidate);
+                    }
                     // data is pushed to location reference, so include the coordinates
                     contents.put(Keys.LONGITUDE, mCoordinates.longitude);
                     contents.put(Keys.LATITUDE, mCoordinates.latitude);
