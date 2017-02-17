@@ -20,7 +20,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -234,6 +238,8 @@ public class EventFragment extends Fragment implements MessageDelegate {
                 headerView.writePostView.previewImageView.setImageBitmap(mImage);
             }
         }
+        // provides an edit button to change "about" section of event
+        setHasOptionsMenu(true);
 
         return rootView;
     }
@@ -374,5 +380,21 @@ public class EventFragment extends Fragment implements MessageDelegate {
                     REQUEST_EXTERNAL_STORAGE
             );
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.event_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.menu_edit_about) {
+            Log.d("", "edit event about");
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

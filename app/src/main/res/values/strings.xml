@@ -157,4 +157,6 @@
     <string name="menu_item_group">Group</string>
     <string name="menu_item_direct">Direct</string>
 
+    <string name="menu_edit_about">Edit about</string>
+
 </resources>
