@@ -256,25 +256,29 @@ public class EditProfileFragment extends Fragment {
         mBasicReference.child("title").setValue(titleEditText.getText().toString());
         mBasicReference.child("about").setValue(aboutEditText.getText().toString());
         String siteLink = Utils.getValidUrl(siteEditText.getText().toString());
-        if (siteLink != null) {
+        if (siteLink != null || siteEditText.getText().toString().equals("")) {
+            siteEditText.setBackgroundColor(mResources.getColor(R.color.white));
             mProfileReference.child(KEY_SITE).setValue(siteLink);
         } else {
             siteEditText.setBackgroundColor(mResources.getColor(R.color.invalidUrl));
         }
         String blogLink = Utils.getValidUrl(blogEditText.getText().toString());
-        if (blogLink != null) {
+        if (blogLink != null || blogEditText.getText().toString().equals("")) {
+            blogEditText.setBackgroundColor(mResources.getColor(R.color.white));
             mProfileReference.child(KEY_BLOG).setValue(blogLink);
         } else {
             blogEditText.setBackgroundColor(mResources.getColor(R.color.invalidUrl));
         }
         String linkedinLink = Utils.getValidUrl(linkedinEditText.getText().toString());
-        if (linkedinLink != null) {
+        if (linkedinLink != null || linkedinEditText.getText().toString().equals("")) {
+            linkedinEditText.setBackgroundColor(mResources.getColor(R.color.white));
             mProfileReference.child(KEY_LINKEDIN).setValue(linkedinLink);
         } else {
             linkedinEditText.setBackgroundColor(mResources.getColor(R.color.invalidUrl));
         }
         String twitterLink = Utils.getValidUrl(twitterEditText.getText().toString());
-        if (twitterLink != null) {
+        if (twitterLink != null || twitterEditText.getText().toString().equals("")) {
+            twitterEditText.setBackgroundColor(mResources.getColor(R.color.white));
             mProfileReference.child(KEY_TWITTER).setValue(twitterLink);
         } else {
             twitterEditText.setBackgroundColor(mResources.getColor(R.color.invalidUrl));
