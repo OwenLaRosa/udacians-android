@@ -8,7 +8,6 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.icu.util.Calendar;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
@@ -16,8 +15,6 @@ import android.widget.RemoteViews;
 import com.owenlarosa.udaciansapp.MainActivity;
 import com.owenlarosa.udaciansapp.R;
 import com.owenlarosa.udaciansapp.Utils;
-
-import static android.R.attr.x;
 
 /**
  * Created by Owen LaRosa on 12/23/16.
@@ -41,7 +38,7 @@ public class ListWidgetProvider extends AppWidgetProvider {
             // launch the main activity when user taps icon
             Intent intent = new Intent(context, MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-            remoteViews.setOnClickPendingIntent(R.id.widget, pendingIntent);
+            remoteViews.setPendingIntentTemplate(R.id.widget, pendingIntent);
             remoteViews.setEmptyView(R.id.widget_list, R.id.widget_empty);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
                 setRemoteAdapter(context, remoteViews);
@@ -50,16 +47,6 @@ public class ListWidgetProvider extends AppWidgetProvider {
             }
             appWidgetManager.updateAppWidget(id, remoteViews);
         }
-
-        // after updating the widget, schedule the next time the widget should update
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, UpdateWidgetService.class);
-
-        if (service == null) {
-            service = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        }
-
-        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, System.currentTimeMillis(), AlarmManager.INTERVAL_DAY, service);
     }
 
     @Override
