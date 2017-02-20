@@ -2,6 +2,7 @@ package com.owenlarosa.udaciansapp.widget;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Binder;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
@@ -69,6 +70,9 @@ public class ListWidgetRemoteViewsService extends RemoteViewsService {
                 remoteViews.setTextViewText(R.id.job_company_text_view, company);
                 String location = data.getString(data.getColumnIndex(JobsListColumns.LOCATION));
                 remoteViews.setTextViewText(R.id.job_location_text_view, location);
+                String url = data.getString(data.getColumnIndex(JobsListColumns.URL));
+                Intent fillInIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                remoteViews.setOnClickFillInIntent(R.id.job_list_item, fillInIntent);
 
                 return remoteViews;
             }
