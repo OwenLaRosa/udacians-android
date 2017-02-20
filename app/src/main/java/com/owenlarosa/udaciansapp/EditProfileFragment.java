@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -81,6 +82,7 @@ public class EditProfileFragment extends Fragment {
 
     Unbinder mUnbinder;
     private Context mContext;
+    private Resources mResources;
 
     FirebaseDatabase mFirebaseDatabase;
     DatabaseReference mBasicReference;
@@ -99,6 +101,7 @@ public class EditProfileFragment extends Fragment {
         mUnbinder = ButterKnife.bind(this, rootView);
 
         mContext = getActivity();
+        mResources = mContext.getResources();
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -252,10 +255,30 @@ public class EditProfileFragment extends Fragment {
     public void saveChanges() {
         mBasicReference.child("title").setValue(titleEditText.getText().toString());
         mBasicReference.child("about").setValue(aboutEditText.getText().toString());
-        mProfileReference.child("site").setValue(siteEditText.getText().toString());
-        mProfileReference.child("blog").setValue(blogEditText.getText().toString());
-        mProfileReference.child("linkedin").setValue(linkedinEditText.getText().toString());
-        mProfileReference.child("twitter").setValue(twitterEditText.getText().toString());
+        String siteLink = Utils.getValidUrl(siteEditText.getText().toString());
+        if (siteLink != null) {
+            mProfileReference.child(KEY_SITE).setValue(siteLink);
+        } else {
+            siteEditText.setBackgroundColor(mResources.getColor(R.color.invalidUrl));
+        }
+        String blogLink = Utils.getValidUrl(blogEditText.getText().toString());
+        if (blogLink != null) {
+            mProfileReference.child(KEY_BLOG).setValue(blogLink);
+        } else {
+            blogEditText.setBackgroundColor(mResources.getColor(R.color.invalidUrl));
+        }
+        String linkedinLink = Utils.getValidUrl(linkedinEditText.getText().toString());
+        if (linkedinLink != null) {
+            mProfileReference.child(KEY_LINKEDIN).setValue(linkedinLink);
+        } else {
+            linkedinEditText.setBackgroundColor(mResources.getColor(R.color.invalidUrl));
+        }
+        String twitterLink = Utils.getValidUrl(twitterEditText.getText().toString());
+        if (twitterLink != null) {
+            mProfileReference.child(KEY_TWITTER).setValue(twitterLink);
+        } else {
+            twitterEditText.setBackgroundColor(mResources.getColor(R.color.invalidUrl));
+        }
         if (mImage != null) {
             // don't allow multiple saves while image is uploading
             saveChangesButton.setEnabled(false);

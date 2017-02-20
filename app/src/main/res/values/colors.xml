@@ -9,4 +9,5 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="imagePlaceholder">#B0BEC5</color>
+    <color name="invalidUrl">#FF8A80</color>
 </resources>
