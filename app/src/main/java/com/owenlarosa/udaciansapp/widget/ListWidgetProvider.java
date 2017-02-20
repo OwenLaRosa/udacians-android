@@ -8,6 +8,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
@@ -22,6 +23,8 @@ import com.owenlarosa.udaciansapp.Utils;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class ListWidgetProvider extends AppWidgetProvider {
+
+    public static final String ACTION_OPEN_JOB_POSTING = "com.owenlarosa.udaciansapp.widget.ACTION_OPEN_JOB_POSTING";
 
     // repeating alarm to perform automatic updates for widget
     // referenced from http://www.parallelrealities.co.uk/2011/09/using-alarmmanager-for-updating-android.html
@@ -66,8 +69,10 @@ public class ListWidgetProvider extends AppWidgetProvider {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, getClass()));
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list);
-        } else if (intent.getAction().equals(Intent.ACTION_VIEW)) {
-            context.startActivity(intent);
+        } else if (intent.getAction().equals(ACTION_OPEN_JOB_POSTING)) {
+            Uri jobLink = Uri.parse(intent.getExtras().getString("url"));
+            Intent jobIntent = new Intent(Intent.ACTION_VIEW, jobLink);
+            context.startActivity(jobIntent);
         }
     }
 
