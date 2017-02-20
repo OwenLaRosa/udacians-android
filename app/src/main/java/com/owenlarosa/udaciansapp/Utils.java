@@ -331,4 +331,24 @@ public class Utils {
         return true;
     }
 
+    /**
+     * Validate a URL and return a valid URL as a result
+     * @param textToValidate address to be validated
+     * @return A valid URL is null if it can't be made valid
+     */
+    public static String getValidUrl(String textToValidate) {
+        if (!isValidUrl(textToValidate)) {
+            if (textToValidate.startsWith("http")) {
+                return null;
+            }
+        }
+        // users commonly omit the HTTP, see if we can make this URL valid
+        textToValidate = "http://" + textToValidate;
+        if (!Utils.isValidUrl(textToValidate)) {
+            return null;
+        } else {
+            return textToValidate;
+        }
+    }
+
 }

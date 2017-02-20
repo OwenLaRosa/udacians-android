@@ -132,20 +132,11 @@ public class MultipleInputView extends Dialog {
                 case Article:
                     // should not be allowed to submit invalid URLs for articles
                     String textToValidate = inputEditText.getText().toString();
-                    if (!Utils.isValidUrl(textToValidate)) {
-                        if (textToValidate.startsWith("http")) {
-                            return;
-                        }
-                    }
-                    // some users may type a valid address but omit the protocol
-                    // if so, we can retry the same text prefixed with http://
-                    inputEditText.setText("http://" + textToValidate);
-                    textToValidate = inputEditText.getText().toString();
-                    if (!Utils.isValidUrl(textToValidate)) {
-                        return;
+                    String validUrl = Utils.getValidUrl(textToValidate);
+                    if (validUrl != null) {
+                        contents.put(Keys.URL, validUrl);
                     } else {
-                        // validation is successful, make sure we're using the new string
-                        contents.put(Keys.URL, textToValidate);
+                        return;
                     }
                     // data is pushed to location reference, so include the coordinates
                     contents.put(Keys.LONGITUDE, mCoordinates.longitude);
