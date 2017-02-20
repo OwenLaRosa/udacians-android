@@ -162,6 +162,7 @@ public class Utils {
                 context.getContentResolver().delete(JobsProvider.Jobs.JOBS, null, null);
                 context.getContentResolver().bulkInsert(JobsProvider.Jobs.JOBS, cvArray);
             }
+            updateWidget(context);
             return true;
         } catch (Exception e) {
             Log.e("", e.getLocalizedMessage());
