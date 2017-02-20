@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private static final String FRAGMENT_TAG = "FTAG";
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 0;
 
+    public static boolean loginScreenDisplayed = false;
+
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
     @BindView(R.id.view_container)
@@ -233,13 +235,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String authToken = sharedPreferences.getString(getString(R.string.pref_auth_token), "");
         if (authToken.equals("")) {
-            presentLoginScreen();
+            if (!loginScreenDisplayed) {
+                presentLoginScreen();
+            }
         } else {
             FirebaseAuth.getInstance().signInWithCustomToken(authToken);
         }
     }
 
     private void presentLoginScreen() {
+        loginScreenDisplayed = true;
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();

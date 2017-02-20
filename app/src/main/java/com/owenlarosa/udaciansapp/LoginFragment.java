@@ -107,7 +107,6 @@ public class LoginFragment extends Fragment {
                 }
             }
         };
-        FirebaseAuth.getInstance().addAuthStateListener(mAuthStateListener);
 
         return rootView;
     }
@@ -118,6 +117,7 @@ public class LoginFragment extends Fragment {
         Log.d(LOG_TAG, emailEditText.getText().toString());
         Log.d(LOG_TAG, passwordEditText.getText().toString());
         new LoginTask().execute(emailEditText.getText().toString(), passwordEditText.getText().toString());
+        FirebaseAuth.getInstance().addAuthStateListener(mAuthStateListener);
     }
 
     /**
@@ -130,6 +130,10 @@ public class LoginFragment extends Fragment {
         loginButton.setEnabled(enabled);
         // progress bar should only be visible when logging in
         progressBar.setVisibility(enabled ? View.INVISIBLE : View.VISIBLE);
+        if (enabled) {
+            // not logging in, no need to listen for login events until next time
+            FirebaseAuth.getInstance().removeAuthStateListener(mAuthStateListener);
+        }
     }
 
     /**
@@ -343,10 +347,11 @@ public class LoginFragment extends Fragment {
             // store the auth token to speed up future logins
             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
             editor.putString(mContext.getString(R.string.pref_auth_token), authToken);
-            editor.apply();
+            editor.commit();
             // once authenticated, dismiss the login screen
             Intent intent = new Intent(mContext, MainActivity.class);
             mContext.startActivity(intent);
+            MainActivity.loginScreenDisplayed = false;
             ((AppCompatActivity) mContext).finish();
             // don't listen for future changes, otherwise this AsyncTask will be called multiple times
             FirebaseAuth.getInstance().removeAuthStateListener(mAuthStateListener);
