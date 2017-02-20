@@ -66,6 +66,8 @@ public class ListWidgetProvider extends AppWidgetProvider {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, getClass()));
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list);
+        } else if (intent.getAction().equals(Intent.ACTION_VIEW)) {
+            context.startActivity(intent);
         }
     }
 
