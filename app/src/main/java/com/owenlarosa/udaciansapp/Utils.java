@@ -315,7 +315,7 @@ public class Utils {
      * @param string url to check as String
      * @return true if it is valid, otherwise false
      */
-    public static boolean isValidUrl(String string) {
+    private static boolean isValidUrl(String string) {
         // referenced: http://obscuredclarity.blogspot.com/2011/10/validate-url-in-java.html
         URL url = null;
         try {
@@ -334,20 +334,20 @@ public class Utils {
     /**
      * Validate a URL and return a valid URL as a result
      * @param textToValidate address to be validated
-     * @return A valid URL is null if it can't be made valid
+     * @return A valid URL, or null if it can't be made valid
      */
     public static String getValidUrl(String textToValidate) {
-        if (!isValidUrl(textToValidate)) {
-            if (textToValidate.startsWith("http")) {
-                return null;
-            }
+        if (isValidUrl(textToValidate)) {
+            return textToValidate;
+        } else if (textToValidate.startsWith("http")) {
+            return null;
         }
         // users commonly omit the HTTP, see if we can make this URL valid
-        textToValidate = "http://" + textToValidate;
-        if (!Utils.isValidUrl(textToValidate)) {
+        String textWithHttpPrefix = "http://" + textToValidate;
+        if (!Utils.isValidUrl(textWithHttpPrefix)) {
             return null;
         } else {
-            return textToValidate;
+            return textWithHttpPrefix;
         }
     }
 
