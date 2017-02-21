@@ -39,7 +39,7 @@ public class ListWidgetProvider extends AppWidgetProvider {
 
             // launch the main activity when user taps icon
             Intent intent = new Intent(ACTION_OPEN_JOB_POSTING);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
             remoteViews.setPendingIntentTemplate(R.id.widget_list, pendingIntent);
             remoteViews.setEmptyView(R.id.widget_list, R.id.widget_empty);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -71,6 +71,7 @@ public class ListWidgetProvider extends AppWidgetProvider {
         } else if (intent.getAction().equals(ACTION_OPEN_JOB_POSTING)) {
             Uri jobLink = Uri.parse(intent.getExtras().getString("url"));
             Intent jobIntent = new Intent(Intent.ACTION_VIEW, jobLink);
+            jobIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(jobIntent);
         }
     }
