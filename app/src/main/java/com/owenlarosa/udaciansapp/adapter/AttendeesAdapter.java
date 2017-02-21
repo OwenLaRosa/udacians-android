@@ -1,5 +1,6 @@
 package com.owenlarosa.udaciansapp.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -108,6 +109,7 @@ public class AttendeesAdapter extends RecyclerView.Adapter {
                 Intent intent = new Intent(mContext, ProfileActivity.class);
                 intent.putExtra(ProfileFragment.EXTRA_USERID, userId);
                 mContext.startActivity(intent);
+                ((Activity) mContext).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
         DatabaseReference photoReference = mFirebaseDatabase.getReference().child("users").child(userId).child("basic").child("photo");

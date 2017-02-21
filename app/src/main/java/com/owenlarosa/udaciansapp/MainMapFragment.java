@@ -1,5 +1,6 @@
 package com.owenlarosa.udaciansapp;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
@@ -310,11 +311,13 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
                 // pass the user id to the profile screen
                 intent.putExtra(ProfileFragment.EXTRA_USERID, data.key);
                 startActivity(intent);
+                ((Activity) mContext).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 break;
             case Event:
                 intent = new Intent(getActivity(), EventActivity.class);
                 intent.putExtra(EventFragment.EXTRA_USERID, data.key);
                 startActivity(intent);
+                ((Activity) mContext).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 break;
             case Topic:
                 intent = new Intent(getActivity(), ChatActivity.class);
@@ -322,6 +325,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
                 // all discussions here are group topics, not direct messages
                 intent.putExtra(ChatFragment.EXTRA_DIRECT, false);
                 startActivity(intent);
+                ((Activity) mContext).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 break;
             case Article:
                 // open the article in the browser

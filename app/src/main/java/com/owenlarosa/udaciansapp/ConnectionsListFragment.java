@@ -1,5 +1,6 @@
 package com.owenlarosa.udaciansapp;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -53,6 +54,7 @@ public class  ConnectionsListFragment extends Fragment {
                 String userId = (String) adapter.getItem(i);
                 intent.putExtra(ProfileFragment.EXTRA_USERID, userId);
                 startActivity(intent);
+                ((Activity) mContext).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
         setHasOptionsMenu(true);

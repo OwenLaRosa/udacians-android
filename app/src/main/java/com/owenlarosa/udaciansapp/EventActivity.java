@@ -10,4 +10,10 @@ public class EventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
 }

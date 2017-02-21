@@ -23,10 +23,8 @@ import com.owenlarosa.udaciansapp.ProfileActivity;
 import com.owenlarosa.udaciansapp.ProfileFragment;
 import com.owenlarosa.udaciansapp.R;
 import com.owenlarosa.udaciansapp.Utils;
-import com.owenlarosa.udaciansapp.data.Event;
 import com.owenlarosa.udaciansapp.data.Message;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -234,6 +232,7 @@ public class PostsListAdapter extends BaseAdapter {
                     Intent intent = new Intent(mContext, ProfileActivity.class);
                     intent.putExtra(ProfileFragment.EXTRA_USERID, post.getSender());
                     mContext.startActivity(intent);
+                    ((Activity) mContext).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 }
             });
         }

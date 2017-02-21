@@ -1,6 +1,8 @@
 package com.owenlarosa.udaciansapp;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -27,12 +29,14 @@ public class EventsListFragment extends Fragment {
     ListView listView;
 
     private Unbinder mUnbinder;
+    private Context mContext;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_events_list, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
+        mContext = getActivity();
 
         String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final EventsListAdapter adapter = new EventsListAdapter(getActivity(), user);
@@ -43,6 +47,7 @@ public class EventsListFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), EventActivity.class);
                 intent.putExtra(EventFragment.EXTRA_USERID, (String) adapter.getItem(i));
                 startActivity(intent);
+                ((Activity) mContext).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
 

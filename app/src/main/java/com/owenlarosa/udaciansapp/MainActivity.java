@@ -1,6 +1,7 @@
 package com.owenlarosa.udaciansapp;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -140,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                     intent.putExtra(ProfileFragment.EXTRA_USERID, FirebaseAuth.getInstance().getCurrentUser().getUid());
                     startActivity(intent);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 } else if (i == 9) {
                     // logout button tapped
                     logout();

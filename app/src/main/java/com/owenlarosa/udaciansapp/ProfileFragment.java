@@ -28,7 +28,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.api.client.util.Data;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -58,7 +57,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
-import static android.provider.Telephony.Mms.Part.TEXT;
 import static android.view.View.VISIBLE;
 
 /**

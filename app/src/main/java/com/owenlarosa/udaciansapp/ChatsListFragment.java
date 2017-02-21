@@ -1,5 +1,6 @@
 package com.owenlarosa.udaciansapp;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -56,6 +57,7 @@ public class ChatsListFragment extends Fragment {
                 // chats on this screen are public topics, not DMs
                 intent.putExtra(ChatFragment.EXTRA_DIRECT, mDirect);
                 startActivity(intent);
+                ((Activity) mContext).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
         setHasOptionsMenu(true);
