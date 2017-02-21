@@ -72,6 +72,7 @@
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.owenlarosa.udaciansapp.ACTION_DATA_UPDATED" />
+                <action android:name="com.owenlarosa.udaciansapp.widget.ACTION_OPEN_JOB_POSTING" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"

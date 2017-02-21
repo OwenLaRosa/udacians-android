@@ -13,7 +13,6 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
 
-import com.owenlarosa.udaciansapp.MainActivity;
 import com.owenlarosa.udaciansapp.R;
 import com.owenlarosa.udaciansapp.Utils;
 
@@ -39,9 +38,9 @@ public class ListWidgetProvider extends AppWidgetProvider {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_list);
 
             // launch the main activity when user taps icon
-            Intent intent = new Intent(context, MainActivity.class);
+            Intent intent = new Intent(ACTION_OPEN_JOB_POSTING);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-            remoteViews.setPendingIntentTemplate(R.id.widget, pendingIntent);
+            remoteViews.setPendingIntentTemplate(R.id.widget_list, pendingIntent);
             remoteViews.setEmptyView(R.id.widget_list, R.id.widget_empty);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
                 setRemoteAdapter(context, remoteViews);
