@@ -14,6 +14,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.owenlarosa.udaciansapp.Keys;
 import com.owenlarosa.udaciansapp.R;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class EventsListAdapter extends BaseAdapter {
         mUser = user;
         mContext = context;
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mEventsReference = mFirebaseDatabase.getReference().child("users").child(mUser).child("events");
+        mEventsReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(mUser).child(Keys.EVENTS);
         mEventsReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -124,8 +125,8 @@ public class EventsListAdapter extends BaseAdapter {
      * @param userId ID of the event / organizer's user ID
      */
     public void populateViewHolder(final ViewHolder viewHolder, String userId) {
-        DatabaseReference eventReference = mFirebaseDatabase.getReference().child("events").child(userId).child("info");
-        DatabaseReference nameReference = eventReference.child("name");
+        DatabaseReference eventReference = mFirebaseDatabase.getReference().child(Keys.EVENTS).child(userId).child(Keys.INFO);
+        DatabaseReference nameReference = eventReference.child(Keys.NAME);
         nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -137,7 +138,7 @@ public class EventsListAdapter extends BaseAdapter {
 
             }
         });
-        DatabaseReference aboutReference = eventReference.child("about");
+        DatabaseReference aboutReference = eventReference.child(Keys.ABOUT);
         aboutReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -149,7 +150,7 @@ public class EventsListAdapter extends BaseAdapter {
 
             }
         });
-        DatabaseReference placeReference = eventReference.child("place");
+        DatabaseReference placeReference = eventReference.child(Keys.PLACE);
         placeReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

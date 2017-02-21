@@ -21,6 +21,8 @@ import butterknife.Unbinder;
 
 public class HelpFragment extends Fragment {
 
+    private static final String HELP_FILE_URL = "file:///android_asset/udacians_help.html";
+
     @BindView(R.id.help_web_view)
     WebView webView;
 
@@ -35,7 +37,7 @@ public class HelpFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_help, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
 
-        webView.loadUrl("file:///android_asset/udacians_help.html");
+        webView.loadUrl(HELP_FILE_URL);
 
         return rootView;
     }

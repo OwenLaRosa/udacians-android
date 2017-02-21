@@ -138,8 +138,8 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
         mResources = getResources();
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference userReference = mFirebaseDatabase.getReference().child("users").child(mUserId);
-        mBasicReference = userReference.child("basic");
+        DatabaseReference userReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(mUserId);
+        mBasicReference = userReference.child(Keys.BASIC);
         mBasicReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -165,7 +165,7 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
 
             }
         });
-        mProfileReference = userReference.child("profile");
+        mProfileReference = userReference.child(Keys.PROFILE);
         mProfileReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -206,8 +206,8 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
             }
         });
         // used to write new posts, reading posts is handled by the adapter
-        mPostLinksReference = userReference.child("posts");
-        mPostsReference = mFirebaseDatabase.getReference().child("posts");
+        mPostLinksReference = userReference.child(Keys.POSTS);
+        mPostsReference = mFirebaseDatabase.getReference().child(Keys.POSTS);
         mPostsReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -264,8 +264,8 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
             });
         } else {
             // users can add others as connections
-            mIsConnectionReference = mFirebaseDatabase.getReference().child("users").child(user).child("connections").child(mUserId);
-            mFollowerReference = mFirebaseDatabase.getReference().child("users").child(mUserId).child("followers").child(user);
+            mIsConnectionReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(user).child(Keys.CONNECTIONS).child(mUserId);
+            mFollowerReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(mUserId).child(Keys.FOLLOWERS).child(user);
             mIsConnectionReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -304,12 +304,12 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
             headerView.writePostView.setVisibility(View.GONE);
         }
         // total number of users following this user's profile
-        mFollowerCountReference = userReference.child("follower_count");
+        mFollowerCountReference = userReference.child(Keys.FOLLOWER_COUNT);
 
         // storage is used for uploading images
         mFirebaseStorage = FirebaseStorage.getInstance();
-        StorageReference storageReference = mFirebaseStorage.getReferenceFromUrl("gs://udacians-df696.appspot.com");
-        mPublicImageStorage = storageReference.child(user).child("public").child("images");
+        StorageReference storageReference = mFirebaseStorage.getReferenceFromUrl(Keys.STORAGE_BASE_URL);
+        mPublicImageStorage = storageReference.child(user).child(Keys.PUBLIC).child(Keys.IMAGES);
 
         if (savedInstanceState != null) {
             headerView.writePostView.postEditText.setText(savedInstanceState.getString(TEXT_KEY));
@@ -448,7 +448,7 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
             @Override
             public void onClick(View view) {
                 // convert to Uri for use with intent
-                final String urlPrefix = "http://";
+                final String urlPrefix = Keys.HTTP_PREFIX_WITH_SLASHES;
                 Uri linkUri = null;
                 if (link.startsWith(urlPrefix)) {
                     linkUri = Uri.parse(link);
@@ -472,7 +472,7 @@ public class ProfileFragment extends Fragment implements MessageDelegate {
             mImage.compress(Bitmap.CompressFormat.JPEG, 50, outputStream);
             byte[] binaryData = outputStream.toByteArray();
             // use the current date to generate a unique file name for the image
-            String imageName = new Date().toString() + ".jpg";
+            String imageName = new Date().toString() + Keys.JPEG_EXTENSION;
             UploadTask uploadTask = mPublicImageStorage.child(imageName).putBytes(binaryData);
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override

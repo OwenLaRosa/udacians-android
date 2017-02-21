@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.owenlarosa.udaciansapp.Keys;
 import com.owenlarosa.udaciansapp.ProfileActivity;
 import com.owenlarosa.udaciansapp.ProfileFragment;
 import com.owenlarosa.udaciansapp.R;
@@ -53,7 +54,7 @@ public class AttendeesAdapter extends RecyclerView.Adapter {
         mContext = context;
         mUserId = userId;
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        attendeesReference = mFirebaseDatabase.getReference().child("events").child(mUserId).child("members");
+        attendeesReference = mFirebaseDatabase.getReference().child(Keys.EVENTS).child(mUserId).child(Keys.MEMBERS);
         attendeesReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -112,7 +113,7 @@ public class AttendeesAdapter extends RecyclerView.Adapter {
                 ((Activity) mContext).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
-        DatabaseReference photoReference = mFirebaseDatabase.getReference().child("users").child(userId).child("basic").child("photo");
+        DatabaseReference photoReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(userId).child(Keys.BASIC).child(Keys.PHOTO);
         photoReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -127,7 +128,7 @@ public class AttendeesAdapter extends RecyclerView.Adapter {
 
             }
         });
-        DatabaseReference nameReference = mFirebaseDatabase.getReference().child("users").child(userId).child("basic").child("name");
+        DatabaseReference nameReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(userId).child(Keys.BASIC).child(Keys.NAME);
         nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -163,7 +164,7 @@ public class AttendeesAdapter extends RecyclerView.Adapter {
      * @param addUser true if adding a user, false if removing one
      */
     private void updateMailingList(String user, final boolean addUser) {
-        DatabaseReference emailReference = mFirebaseDatabase.getReference().child("users").child(user).child("email");
+        DatabaseReference emailReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(user).child(Keys.EMAIL);
         emailReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

@@ -18,10 +18,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.owenlarosa.udaciansapp.Keys;
 import com.owenlarosa.udaciansapp.R;
 import com.owenlarosa.udaciansapp.Utils;
-
-import net.simonvt.schematic.annotation.Database;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -66,9 +65,9 @@ public class DiscussionsListAdapter extends BaseAdapter {
     public DiscussionsListAdapter(Context context, String userId, final boolean direct) {
         mIsDirect = direct;
         mContext = context;
-        DatabaseReference userReference = mFirebaseDatabase.getReference().child("users").child(userId);
+        DatabaseReference userReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(userId);
         if (mIsDirect) {
-            directMessagesReference = userReference.child("direct_messages");
+            directMessagesReference = userReference.child(Keys.DIRECT_MESSAGES);
             directMessagesReference.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -121,7 +120,7 @@ public class DiscussionsListAdapter extends BaseAdapter {
                 }
             });
         } else {
-            DatabaseReference enrollmentsReference = userReference.child("enrollments");
+            DatabaseReference enrollmentsReference = userReference.child(Keys.ENROLLMENTS);
             enrollmentsReference.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -152,7 +151,7 @@ public class DiscussionsListAdapter extends BaseAdapter {
 
                 }
             });
-            topicsReference = userReference.child("topics");
+            topicsReference = userReference.child(Keys.TOPICS);
             topicsReference.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -296,21 +295,21 @@ public class DiscussionsListAdapter extends BaseAdapter {
     private void populateViewHolder(final ViewHolder viewHolder, String topic) {
         // reference to topic ID to handle leaving chats
         viewHolder.id = topic;
-        if (topic.startsWith("nd")) {
+        if (topic.startsWith(Keys.ND)) {
             // for chats corresponding with a specific Nanodegree
             // users are disallowed from leaving course specific chats
             viewHolder.leaveChatButton.setVisibility(View.GONE);
             final boolean beta;
-            if (topic.endsWith("beta")) {
+            if (topic.endsWith(Keys.BETA)) {
                 // some students are enrolled in beta programs with different course IDs
-                topic = topic.replace("beta", "");
+                topic = topic.replace(Keys.BETA, "");
                 beta = true;
             } else {
                 // non beta, will use regular course name
                 beta = false;
             }
-            DatabaseReference nanodegreeReference = mFirebaseDatabase.getReference().child("nano_degrees").child(topic);
-            DatabaseReference nameReference = nanodegreeReference.child("name");
+            DatabaseReference nanodegreeReference = mFirebaseDatabase.getReference().child(Keys.NANO_DEGREES).child(topic);
+            DatabaseReference nameReference = nanodegreeReference.child(Keys.NAME);
             nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -330,7 +329,7 @@ public class DiscussionsListAdapter extends BaseAdapter {
 
                 }
             });
-            DatabaseReference imageReference = nanodegreeReference.child("image");
+            DatabaseReference imageReference = nanodegreeReference.child(Keys.IMAGE);
             imageReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -349,7 +348,7 @@ public class DiscussionsListAdapter extends BaseAdapter {
             // custom topics created by users
             // users can leave these chats
             viewHolder.leaveChatButton.setVisibility(View.VISIBLE);
-            DatabaseReference nameReference = mFirebaseDatabase.getReference().child("topics").child(topic).child("info").child("name");
+            DatabaseReference nameReference = mFirebaseDatabase.getReference().child(Keys.TOPICS).child(topic).child(Keys.INFO).child(Keys.NAME);
             nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -361,7 +360,7 @@ public class DiscussionsListAdapter extends BaseAdapter {
 
                 }
             });
-            DatabaseReference creatorReference = mFirebaseDatabase.getReference().child("users").child(topic).child("basic").child("name");
+            DatabaseReference creatorReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(topic).child(Keys.BASIC).child(Keys.NAME);
             creatorReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -373,7 +372,7 @@ public class DiscussionsListAdapter extends BaseAdapter {
 
                 }
             });
-            DatabaseReference imageReference = mFirebaseDatabase.getReference().child("users").child(topic).child("basic").child("photo");
+            DatabaseReference imageReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(topic).child(Keys.BASIC).child(Keys.PHOTO);
             imageReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -398,8 +397,8 @@ public class DiscussionsListAdapter extends BaseAdapter {
      */
     private void populateDirectViewHolder(final DirectViewHolder viewHolder, String userId) {
         viewHolder.id = userId;
-        DatabaseReference userBasicReference = mFirebaseDatabase.getReference().child("users").child(userId).child("basic");
-        DatabaseReference nameReference = userBasicReference.child("name");
+        DatabaseReference userBasicReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(userId).child(Keys.BASIC);
+        DatabaseReference nameReference = userBasicReference.child(Keys.NAME);
         nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -412,7 +411,7 @@ public class DiscussionsListAdapter extends BaseAdapter {
 
             }
         });
-        DatabaseReference titleReference = userBasicReference.child("title");
+        DatabaseReference titleReference = userBasicReference.child(Keys.TITLE);
         titleReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -425,7 +424,7 @@ public class DiscussionsListAdapter extends BaseAdapter {
 
             }
         });
-        DatabaseReference photoReference = userBasicReference.child("photo");
+        DatabaseReference photoReference = userBasicReference.child(Keys.PHOTO);
         photoReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -442,7 +441,7 @@ public class DiscussionsListAdapter extends BaseAdapter {
         });
         // "location" text view is used for the time of the last message
         String currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference timeStampReference = mFirebaseDatabase.getReference().child("users").child(currentUser).child("direct_messages").child(userId);
+        DatabaseReference timeStampReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(currentUser).child(Keys.DIRECT_MESSAGES).child(userId);
         timeStampReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

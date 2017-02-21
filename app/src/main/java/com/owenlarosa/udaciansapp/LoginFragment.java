@@ -96,7 +96,7 @@ public class LoginFragment extends Fragment {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // sync user's email address to profile
-                    DatabaseReference emailReference = mFirebaseDatabase.getReference().child("users").child(user.getUid()).child("email");
+                    DatabaseReference emailReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(user.getUid()).child(Keys.EMAIL);
                     emailReference.setValue(emailEditText.getText().toString());
                     // sync profile info (name, enrollments) to complete the login
                     new SyncProfileTask().execute(user.getUid());
@@ -184,21 +184,21 @@ public class LoginFragment extends Fragment {
                 // if successful, proceed to get the Firebase auth token
                 // build the url request
                 RequestBody formBody = new FormBody.Builder()
-                        .add("username", username)
-                        .add("password", password)
+                        .add(Keys.USERNAME, username)
+                        .add(Keys.PASSWORD, password)
                         .build();
                 // endpoint for posting a session
                 Request request = new Request.Builder()
-                        .url("https://udacians-df696.appspot.com/_ah/api/myApi/v1/session")
+                        .url(Keys.LOGIN_BASE_URL)
                         .post(formBody)
                         .build();
                 String loginResult = "";
                 Response response = mClient.newCall(request).execute();
                 JSONObject root = new JSONObject(response.body().string());
-                int code = root.getInt("code");
+                int code = root.getInt(Keys.CODE);
                 if (code == 200) {
                     // if login is successful, pass auth token as result
-                    String token = root.getString("token");
+                    String token = root.getString(Keys.TOKEN);
                     return token;
                 }
                 // return nothing if the login failed, no token
@@ -248,12 +248,14 @@ public class LoginFragment extends Fragment {
             mCookieJar.clear();
             // build request body
             RequestBody formBody = new FormBody.Builder()
-                    .add("udacity", String.format("{\"username\": \"%s\", \"password\": \"%s\"}",
+                    .add(Keys.UDACITY, String.format("{\"%s\": \"%s\", \"%s\": \"%s\"}",
+                            Keys.USERNAME,
                             username,
+                            Keys.PASSWORD,
                             password))
                     .build();
             Request request = new Request.Builder()
-                    .url("https://www.udacity.com/api/session")
+                    .url(Keys.XSRF_TOKEN_BASE_URL)
                     .post(formBody)
                     .build();
             // perform the request
@@ -293,23 +295,23 @@ public class LoginFragment extends Fragment {
 
             try {
                 Request request = new Request.Builder()
-                        .url("https://www.udacity.com/api/users/" + userId)
+                        .url(Keys.USERS_INFO_BASE_URL + userId)
                         .build();
                 Response response = mClient.newCall(request).execute();
 
                 String trimmedResponse = response.body().string().substring(5);
                 Log.d(LOG_TAG, "profile info: " + trimmedResponse);
                 JSONObject root = new JSONObject(trimmedResponse);
-                JSONObject user = root.getJSONObject("user");
-                firstName = user.getString("first_name");
-                lastName = user.getString("last_name");
-                JSONArray enrollments = user.getJSONArray("_enrollments");
+                JSONObject user = root.getJSONObject(Keys.USER);
+                firstName = user.getString(Keys.FIRST_NAME);
+                lastName = user.getString(Keys.LAST_NAME);
+                JSONArray enrollments = user.getJSONArray(Keys._ENROLLMENTS);
                 // add enrollments to the hashmap
                 for (int i = 0; i < enrollments.length(); i++) {
                     JSONObject course = enrollments.getJSONObject(i);
                     // only nanodegree courses should be included
-                    String courseId = course.getString("node_key");
-                    if (courseId.startsWith("nd")) {
+                    String courseId = course.getString(Keys.NODE_KEY);
+                    if (courseId.startsWith(Keys.ND)) {
                         // to be written to the database, the value should be true
                         enrollmentsMap.put(courseId, true);
                     }
@@ -328,16 +330,16 @@ public class LoginFragment extends Fragment {
         protected void onPostExecute(Boolean success) {
             super.onPostExecute(success);
             FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference userReference = database.getReference().child("users").child(userId);
-            DatabaseReference basicReference = userReference.child("basic");
+            DatabaseReference userReference = database.getReference().child(Keys.USERS).child(userId);
+            DatabaseReference basicReference = userReference.child(Keys.BASIC);
             if (success) {
-                basicReference.child("name").setValue(firstName + " " + lastName);
+                basicReference.child(Keys.NAME).setValue(firstName + " " + lastName);
             } else {
                 // if the data can't be synced at this time, use the email address
-                basicReference.child("name").setValue(emailEditText.getText().toString());
+                basicReference.child(Keys.NAME).setValue(emailEditText.getText().toString());
             }
             // sync user's enrollments with the database
-            DatabaseReference enrollmentsReference = userReference.child("enrollments");
+            DatabaseReference enrollmentsReference = userReference.child(Keys.ENROLLMENTS);
             enrollmentsReference.setValue(enrollmentsMap);
             // save keywords for job search for offline use
             // these are preloaded and saved so they can be used by the widget

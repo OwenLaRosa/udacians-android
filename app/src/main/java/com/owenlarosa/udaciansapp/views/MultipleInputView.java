@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.owenlarosa.udaciansapp.Keys;
 import com.owenlarosa.udaciansapp.R;
 import com.owenlarosa.udaciansapp.Utils;
 
@@ -29,7 +30,7 @@ import java.util.HashMap;
 
 public class MultipleInputView extends Dialog {
 
-    private static class Keys {
+    private static class InfoKeys {
         private static final String NAME = "name";
         private static final String TITLE = "title";
         private static final String URL = "url";
@@ -110,23 +111,23 @@ public class MultipleInputView extends Dialog {
             switch (mType) {
                 case Topic:
                     // data is pushed to location reference, so include the coordinates
-                    contents.put(Keys.LONGITUDE, mCoordinates.longitude);
-                    contents.put(Keys.LATITUDE, mCoordinates.latitude);
-                    contents.put(Keys.TIMESTAMP, ServerValue.TIMESTAMP);
+                    contents.put(InfoKeys.LONGITUDE, mCoordinates.longitude);
+                    contents.put(InfoKeys.LATITUDE, mCoordinates.latitude);
+                    contents.put(InfoKeys.TIMESTAMP, ServerValue.TIMESTAMP);
                     // name is stored outside of the topic_location reference
-                    String name = (String) contents.get(Keys.NAME);
-                    contents.remove(Keys.NAME);
+                    String name = (String) contents.get(InfoKeys.NAME);
+                    contents.remove(InfoKeys.NAME);
                     // push the coordinates as a topic location
-                    DatabaseReference topicLocationReference = mFirebaseDatabase.getReference().child("topic_locations").child(mUserId);
+                    DatabaseReference topicLocationReference = mFirebaseDatabase.getReference().child(Keys.TOPIC_LOCATIONS).child(mUserId);
                     topicLocationReference.removeValue();
                     topicLocationReference.setValue(contents);
                     // Rename the topic and clear old messages
-                    DatabaseReference topicNameReference = mFirebaseDatabase.getReference().child("topics").child(mUserId).child("info").child("name");
+                    DatabaseReference topicNameReference = mFirebaseDatabase.getReference().child(Keys.TOPICS).child(mUserId).child(Keys.INFO).child(Keys.NAME);
                     topicNameReference.setValue(name);
-                    DatabaseReference topicMessageReference = mFirebaseDatabase.getReference().child("topics").child(mUserId).child("messages");
+                    DatabaseReference topicMessageReference = mFirebaseDatabase.getReference().child(Keys.TOPICS).child(mUserId).child(Keys.MESSAGES);
                     topicMessageReference.removeValue();
                     // add the topic to this user's list
-                    DatabaseReference userTopicReference = mFirebaseDatabase.getReference().child("users").child(mUserId).child("topics").child(mUserId);
+                    DatabaseReference userTopicReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(mUserId).child(Keys.TOPICS).child(mUserId);
                     userTopicReference.setValue(true);
                     break;
                 case Article:
@@ -134,36 +135,36 @@ public class MultipleInputView extends Dialog {
                     String textToValidate = inputEditText.getText().toString();
                     String validUrl = Utils.getValidUrl(textToValidate);
                     if (validUrl != null) {
-                        contents.put(Keys.URL, validUrl);
+                        contents.put(InfoKeys.URL, validUrl);
                     } else {
                         return;
                     }
                     // data is pushed to location reference, so include the coordinates
-                    contents.put(Keys.LONGITUDE, mCoordinates.longitude);
-                    contents.put(Keys.LATITUDE, mCoordinates.latitude);
-                    contents.put(Keys.TIMESTAMP, ServerValue.TIMESTAMP);
-                    DatabaseReference articleReference = mFirebaseDatabase.getReference().child("articles").child(mUserId);
+                    contents.put(InfoKeys.LONGITUDE, mCoordinates.longitude);
+                    contents.put(InfoKeys.LATITUDE, mCoordinates.latitude);
+                    contents.put(InfoKeys.TIMESTAMP, ServerValue.TIMESTAMP);
+                    DatabaseReference articleReference = mFirebaseDatabase.getReference().child(Keys.ARTICLES).child(mUserId);
                     articleReference.removeValue();
                     articleReference.setValue(contents);
                     break;
                 case Event:
                     // coordinates are store separately from actual event data
                     HashMap<String, Object> coordinateMap = new HashMap<>();
-                    coordinateMap.put(Keys.LONGITUDE, mCoordinates.longitude);
-                    coordinateMap.put(Keys.LATITUDE, mCoordinates.latitude);
-                    coordinateMap.put(Keys.TIMESTAMP, ServerValue.TIMESTAMP);
-                    DatabaseReference eventLocationReference = mFirebaseDatabase.getReference().child("event_locations").child(mUserId);
+                    coordinateMap.put(InfoKeys.LONGITUDE, mCoordinates.longitude);
+                    coordinateMap.put(InfoKeys.LATITUDE, mCoordinates.latitude);
+                    coordinateMap.put(InfoKeys.TIMESTAMP, ServerValue.TIMESTAMP);
+                    DatabaseReference eventLocationReference = mFirebaseDatabase.getReference().child(Keys.EVENT_LOCATIONS).child(mUserId);
                     // remove reference first so UI can update properly
                     eventLocationReference.removeValue();
                     eventLocationReference.setValue(coordinateMap);
                     // event data is stored separately, in the "info" child
-                    DatabaseReference eventReference = mFirebaseDatabase.getReference().child("events").child(mUserId);
-                    DatabaseReference eventInfoReference = eventReference.child("info");
+                    DatabaseReference eventReference = mFirebaseDatabase.getReference().child(Keys.EVENTS).child(mUserId);
+                    DatabaseReference eventInfoReference = eventReference.child(Keys.INFO);
                     eventInfoReference.setValue(contents);
                     // clear posts and members list
-                    DatabaseReference eventPostsReference = eventReference.child("posts");
+                    DatabaseReference eventPostsReference = eventReference.child(Keys.POSTS);
                     eventPostsReference.removeValue();
-                    final DatabaseReference eventMembersReference = eventReference.child("members");
+                    final DatabaseReference eventMembersReference = eventReference.child(Keys.MEMBERS);
                     eventMembersReference.addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -172,7 +173,7 @@ public class MultipleInputView extends Dialog {
                             // remove the event unless it was created by the logged in user
                             if (!userId.equals(mUserId)) {
                                 // reference that lists this event on a user's profile
-                                DatabaseReference userEventReference = mFirebaseDatabase.getReference().child("users").child(userId).child("events").child(mUserId);
+                                DatabaseReference userEventReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(userId).child(Keys.EVENTS).child(mUserId);
                                 userEventReference.removeValue();
                             }
                         }
@@ -200,9 +201,9 @@ public class MultipleInputView extends Dialog {
                     // remove all members from the events list
                     eventMembersReference.removeValue();
                     // make sure the user who posted the event is added as a member
-                    DatabaseReference thisUserEventReference = mFirebaseDatabase.getReference().child("users").child(mUserId).child("events").child(mUserId);
+                    DatabaseReference thisUserEventReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(mUserId).child(Keys.EVENTS).child(mUserId);
                     thisUserEventReference.setValue(true);
-                    DatabaseReference memberReference = mFirebaseDatabase.getReference().child("events").child(mUserId).child("members").child(mUserId);
+                    DatabaseReference memberReference = mFirebaseDatabase.getReference().child(Keys.EVENTS).child(mUserId).child(Keys.MEMBERS).child(mUserId);
                     memberReference.setValue(true);
                     break;
             }
@@ -250,7 +251,7 @@ public class MultipleInputView extends Dialog {
                     // discussion prompt
                     subtitleTextView.setText(R.string.input_topic_p1_subtitle);
                     inputEditText.setHint(R.string.input_topic_p1_hint);
-                    inputEditText.setText((String) contents.get(Keys.NAME));
+                    inputEditText.setText((String) contents.get(InfoKeys.NAME));
                     inputEditText.setInputType(InputType.TYPE_CLASS_TEXT);
                     backButton.setText(mContext.getString(R.string.input_cancel));
                     backButton.setOnClickListener(cancelClickListener);
@@ -264,7 +265,7 @@ public class MultipleInputView extends Dialog {
                     // article title
                     subtitleTextView.setText(R.string.input_article_p1_subtitle);
                     inputEditText.setHint(R.string.input_article_p1_hint);
-                    inputEditText.setText((String) contents.get(Keys.TITLE));
+                    inputEditText.setText((String) contents.get(InfoKeys.TITLE));
                     inputEditText.setInputType(InputType.TYPE_CLASS_TEXT);
                     backButton.setText(mContext.getString(R.string.input_cancel));
                     backButton.setOnClickListener(cancelClickListener);
@@ -274,7 +275,7 @@ public class MultipleInputView extends Dialog {
                     // article URL
                     subtitleTextView.setText(R.string.input_article_p2_subtitle);
                     inputEditText.setHint(R.string.input_article_p2_hint);
-                    inputEditText.setText((String) contents.get(Keys.URL));
+                    inputEditText.setText((String) contents.get(InfoKeys.URL));
                     inputEditText.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS);
                     backButton.setText(mContext.getString(R.string.input_back));
                     backButton.setOnClickListener(previousPageClickListener);
@@ -288,7 +289,7 @@ public class MultipleInputView extends Dialog {
                     // event name
                     subtitleTextView.setText(R.string.input_event_p1_subtitle);
                     inputEditText.setHint(R.string.input_event_p1_hint);
-                    inputEditText.setText((String) contents.get(Keys.NAME));
+                    inputEditText.setText((String) contents.get(InfoKeys.NAME));
                     inputEditText.setInputType(InputType.TYPE_CLASS_TEXT);
                     backButton.setText(mContext.getString(R.string.input_cancel));
                     backButton.setOnClickListener(cancelClickListener);
@@ -298,7 +299,7 @@ public class MultipleInputView extends Dialog {
                     // event location
                     subtitleTextView.setText(R.string.input_event_p2_subtitle);
                     inputEditText.setHint(R.string.input_event_p2_hint);
-                    inputEditText.setText((String) contents.get(Keys.PLACE));
+                    inputEditText.setText((String) contents.get(InfoKeys.PLACE));
                     inputEditText.setInputType(InputType.TYPE_CLASS_TEXT);
                     backButton.setText(mContext.getString(R.string.input_back));
                     backButton.setOnClickListener(previousPageClickListener);
@@ -308,7 +309,7 @@ public class MultipleInputView extends Dialog {
                     // description of the event
                     subtitleTextView.setText(R.string.input_event_p3_subtitle);
                     inputEditText.setHint(R.string.input_event_p3_hint);
-                    inputEditText.setText((String) contents.get(Keys.ABOUT));
+                    inputEditText.setText((String) contents.get(InfoKeys.ABOUT));
                     inputEditText.setInputType(InputType.TYPE_CLASS_TEXT);
                     // event details should allow multi-line input
                     inputEditText.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
@@ -325,22 +326,22 @@ public class MultipleInputView extends Dialog {
         String input = inputEditText.getText().toString();
         switch (mType) {
             case Topic:
-                contents.put(Keys.NAME, input);
+                contents.put(InfoKeys.NAME, input);
                 break;
             case Article:
                 if (pageIndex == 0) {
-                    contents.put(Keys.TITLE, input);
+                    contents.put(InfoKeys.TITLE, input);
                 } else if (pageIndex == 1) {
-                    contents.put(Keys.URL, input);
+                    contents.put(InfoKeys.URL, input);
                 }
                 break;
             case Event:
                 if (pageIndex == 0) {
-                    contents.put(Keys.NAME, input);
+                    contents.put(InfoKeys.NAME, input);
                 } else if (pageIndex == 1) {
-                    contents.put(Keys.PLACE, input);
+                    contents.put(InfoKeys.PLACE, input);
                 } else if (pageIndex == 2) {
-                    contents.put(Keys.ABOUT, input);
+                    contents.put(InfoKeys.ABOUT, input);
                 }
                 break;
         }

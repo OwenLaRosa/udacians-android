@@ -85,6 +85,21 @@ public class Utils {
 
     private static final OkHttpClient client = new OkHttpClient();
 
+    private static class SearchKeys {
+        static final String BASE_URL = "http://service.dice.com/api/rest/jobsearch/v1/simple.json?";
+        static final String PARAM_SEARCH_TEXT = "text";
+        static final String PARAM_CITY = "&city=";
+        static final String PARAM_PAGE_COUNT = "&pgcnt=30";
+        static final String PARAM_SORT = "&sort=1";
+        static final String RESULT_ITEM_LIST = "resultItemList";
+        static final String DETAIL_URL = "detailUrl";
+        static final String JOB_TITLE = "jobTitle";
+        static final String COMPANY = "company";
+        static final String LOCATION = "location";
+        static final String DATE = "date";
+
+    }
+
     /**
      * Searches for jobs in the user's location based on their keywords
      * Clears database of old jobs replacing them with new ones
@@ -115,17 +130,15 @@ public class Utils {
     }
 
     public static boolean getJobsForKeyword(final Context context, String keyword, String city) {
-        final String BASE_URL = "http://service.dice.com/api/rest/jobsearch/v1/simple.json?";
-        final String PARAM_SEARCH_TEXT = "text";
         String url = new StringBuilder()
-                .append(BASE_URL)
-                .append(PARAM_SEARCH_TEXT)
+                .append(SearchKeys.BASE_URL)
+                .append(SearchKeys.PARAM_SEARCH_TEXT)
                 .append("=")
                 .append(keyword)
-                .append("&city=")
+                .append(SearchKeys.PARAM_CITY)
                 .append(city)
-                .append("&pgcnt=30")
-                .append("&sort=1")
+                .append(SearchKeys.PARAM_PAGE_COUNT)
+                .append(SearchKeys.PARAM_SEARCH_TEXT)
                 .toString();
         Request request = new Request.Builder()
                 .url(url)
@@ -134,17 +147,17 @@ public class Utils {
             Response response = client.newCall(request).execute();
             String responseText = response.body().string();
             JSONObject root = new JSONObject(responseText);
-            JSONArray results = root.getJSONArray("resultItemList");
+            JSONArray results = root.getJSONArray(SearchKeys.RESULT_ITEM_LIST);
 
             Vector<ContentValues> contentValuesVector = new Vector<ContentValues>(results.length());
 
             for (int i = 0; i < results.length(); i++) {
                 JSONObject job = results.getJSONObject(i);
-                String link = job.getString("detailUrl");
-                String title = job.getString("jobTitle");
-                String company = job.getString("company");
-                String location = job.getString("location");
-                String date = job.getString("date");
+                String link = job.getString(SearchKeys.DETAIL_URL);
+                String title = job.getString(SearchKeys.JOB_TITLE);
+                String company = job.getString(SearchKeys.COMPANY);
+                String location = job.getString(SearchKeys.LOCATION);
+                String date = job.getString(SearchKeys.DATE);
 
                 ContentValues jobValues = new ContentValues();
                 jobValues.put(JobsListColumns.URL, link);
@@ -178,7 +191,7 @@ public class Utils {
     public static void storeJobKeywords(final Context context) {
         String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference enrollmentsReference = firebaseDatabase.getReference().child("users").child(user).child("enrollments");
+        DatabaseReference enrollmentsReference = firebaseDatabase.getReference().child(Keys.USERS).child(user).child(Keys.ENROLLMENTS);
         enrollmentsReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -197,7 +210,7 @@ public class Utils {
                 final ArrayList<String> keywords = new ArrayList<>();
                 for (DataSnapshot child: dataSnapshot.getChildren()) {
                     final String courseId = child.getKey();
-                    DatabaseReference jobKeywordReference = firebaseDatabase.getReference().child("nano_degrees").child(courseId).child("keyword");
+                    DatabaseReference jobKeywordReference = firebaseDatabase.getReference().child(Keys.NANO_DEGREES).child(courseId).child(Keys.KEYWORD);
                     jobKeywordReference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -285,7 +298,7 @@ public class Utils {
         Long user1long = Long.parseLong(user1);
         Long user2long = Long.parseLong(user2);
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference messagesReference = firebaseDatabase.getReference().child("direct_messages");
+        DatabaseReference messagesReference = firebaseDatabase.getReference().child(Keys.DIRECT_MESSAGES);
         DatabaseReference chatReference;
         if (user1long < user2long) {
             chatReference = messagesReference.child(user1).child(user2);
@@ -304,9 +317,9 @@ public class Utils {
         Date today = new Date();
         SimpleDateFormat dateFormat;
         if (today.getTime() - date.getTime() <= 86400000) {
-            dateFormat = new SimpleDateFormat("h:m a");
+            dateFormat = new SimpleDateFormat(Keys.TIME_FORMAT);
         } else {
-            dateFormat = new SimpleDateFormat("M/d/yy");
+            dateFormat = new SimpleDateFormat(Keys.DATE_FORMAT);
         }
         return dateFormat.format(date);
     }
@@ -340,11 +353,11 @@ public class Utils {
     public static String getValidUrl(String textToValidate) {
         if (isValidUrl(textToValidate)) {
             return textToValidate;
-        } else if (textToValidate.startsWith("http")) {
+        } else if (textToValidate.startsWith(Keys.HTTP_PREFIX)) {
             return null;
         }
         // users commonly omit the HTTP, see if we can make this URL valid
-        String textWithHttpPrefix = "http://" + textToValidate;
+        String textWithHttpPrefix = Keys.HTTP_PREFIX_WITH_SLASHES + textToValidate;
         if (!Utils.isValidUrl(textWithHttpPrefix)) {
             return null;
         } else {

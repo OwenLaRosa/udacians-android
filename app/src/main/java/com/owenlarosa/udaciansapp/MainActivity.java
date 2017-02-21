@@ -288,25 +288,25 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
      */
     public void syncUserLocation(double latitude, double longitude, String place) {
         String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference locationReference = mFirebaseDatabase.getReference().child("locations").child(user);
+        DatabaseReference locationReference = mFirebaseDatabase.getReference().child(Keys.LOCATIONS).child(user);
         HashMap<String, Object> location = new HashMap<>();
         if (place != null) {
             // ideally we want to write all the data at once so everything is updated
-            location.put("latitude", latitude);
-            location.put("longitude", longitude);
-            location.put("location", place);
-            location.put("timestamp", ServerValue.TIMESTAMP);
+            location.put(Keys.LATITUDE, latitude);
+            location.put(Keys.LONGITUDE, longitude);
+            location.put(Keys.LOCATION, place);
+            location.put(Keys.TIMESTAMP, ServerValue.TIMESTAMP);
             locationReference.setValue(location);
         } else {
             // in cases where the place is null, lat and lon should be updaed individually
             // location is not changed since it may have had a previous value
             // reverse geocoding may not always return null for this place, so just use the old one
-            DatabaseReference longitudeReference = locationReference.child("longitude");
+            DatabaseReference longitudeReference = locationReference.child(Keys.EVENT_LOCATIONS);
             longitudeReference.setValue(longitude);
-            DatabaseReference latitudeReference = locationReference.child("latitude");
+            DatabaseReference latitudeReference = locationReference.child(Keys.LATITUDE);
             latitudeReference.setValue(latitude);
             // also update the timestamp when the coordinates change
-            DatabaseReference timestampReference = locationReference.child("timestamp");
+            DatabaseReference timestampReference = locationReference.child(Keys.TIMESTAMP);
             timestampReference.setValue(ServerValue.TIMESTAMP);
         }
     }

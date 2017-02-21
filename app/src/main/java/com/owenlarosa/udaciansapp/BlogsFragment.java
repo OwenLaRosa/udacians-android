@@ -43,7 +43,7 @@ public class BlogsFragment extends Fragment {
         mUnbinder = ButterKnife.bind(this, rootView);
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        articlesReference = mFirebaseDatabase.getReference().child("articles");
+        articlesReference = mFirebaseDatabase.getReference().child(Keys.ARTICLES);
 
         final BlogFeedAdapter adapter = new BlogFeedAdapter(getActivity());
         listView.setAdapter(adapter);
@@ -51,7 +51,7 @@ public class BlogsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String articleId = adapter.getItem(i);
-                DatabaseReference urlReference = articlesReference.child(articleId).child("url");
+                DatabaseReference urlReference = articlesReference.child(articleId).child(Keys.URL);
                 urlReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

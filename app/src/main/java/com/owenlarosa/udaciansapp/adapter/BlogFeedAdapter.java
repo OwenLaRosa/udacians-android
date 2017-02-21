@@ -14,6 +14,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.owenlarosa.udaciansapp.Keys;
 import com.owenlarosa.udaciansapp.R;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class BlogFeedAdapter extends BaseAdapter {
     public BlogFeedAdapter(Context context) {
         mContext = context;
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        articlesReference = mFirebaseDatabase.getReference().child("articles");
+        articlesReference = mFirebaseDatabase.getReference().child(Keys.ARTICLES);
         articlesReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -118,7 +119,7 @@ public class BlogFeedAdapter extends BaseAdapter {
 
     private void populateViewHolder(final ViewHolder viewHolder, String userId) {
         DatabaseReference articleReference = articlesReference.child(userId);
-        DatabaseReference titleReference = articleReference.child("title");
+        DatabaseReference titleReference = articleReference.child(Keys.TITLE);
         titleReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -130,7 +131,7 @@ public class BlogFeedAdapter extends BaseAdapter {
 
             }
         });
-        DatabaseReference authorReference = mFirebaseDatabase.getReference().child("users").child(userId).child("basic").child("name");
+        DatabaseReference authorReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(userId).child(Keys.BASIC).child(Keys.NAME);
         authorReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -142,7 +143,7 @@ public class BlogFeedAdapter extends BaseAdapter {
 
             }
         });
-        DatabaseReference urlReference = articleReference.child("url");
+        DatabaseReference urlReference = articleReference.child(Keys.URL);
         urlReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

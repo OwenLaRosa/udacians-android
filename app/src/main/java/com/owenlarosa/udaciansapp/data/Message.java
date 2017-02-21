@@ -1,6 +1,7 @@
 package com.owenlarosa.udaciansapp.data;
 
 import com.google.firebase.database.ServerValue;
+import com.owenlarosa.udaciansapp.Keys;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -74,7 +75,7 @@ public class Message {
      */
     public Map<String, Object> toMap() {
         Map<String, Object> mapped = toProfilePost();
-        mapped.put("date", ServerValue.TIMESTAMP);
+        mapped.put(Keys.DATE, ServerValue.TIMESTAMP);
         return mapped;
     }
 
@@ -85,9 +86,9 @@ public class Message {
      */
     public Map<String, Object> toProfilePost() {
         Map<String, Object> mapped = new HashMap<>();
-        mapped.put("sender", sender);
-        mapped.put("content", content);
-        mapped.put("imageUrl", imageUrl);
+        mapped.put(Keys.SENDER, sender);
+        mapped.put(Keys.CONTENT, content);
+        mapped.put(Keys.IMAGE_URL, imageUrl);
         return mapped;
     }
 

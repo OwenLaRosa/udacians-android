@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.owenlarosa.udaciansapp.Keys;
 import com.owenlarosa.udaciansapp.ProfileActivity;
 import com.owenlarosa.udaciansapp.ProfileFragment;
 import com.owenlarosa.udaciansapp.R;
@@ -149,9 +150,9 @@ public class MessageListAdapter extends BaseAdapter {
                 ((Activity) mContext).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
-        DatabaseReference userBasicReference = mFirebaseDatabase.getReference().child("users").child(message.getSender()).child("basic");
+        DatabaseReference userBasicReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(message.getSender()).child(Keys.BASIC);
         // user data stored in separate profile reference
-        final DatabaseReference nameReference = userBasicReference.child("name");
+        final DatabaseReference nameReference = userBasicReference.child(Keys.NAME);
         nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -163,7 +164,7 @@ public class MessageListAdapter extends BaseAdapter {
 
             }
         });
-        DatabaseReference photoReference = userBasicReference.child("photo");
+        DatabaseReference photoReference = userBasicReference.child(Keys.PHOTO);
         photoReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

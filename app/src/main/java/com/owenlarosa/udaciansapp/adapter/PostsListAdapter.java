@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.owenlarosa.udaciansapp.Keys;
 import com.owenlarosa.udaciansapp.ProfileActivity;
 import com.owenlarosa.udaciansapp.ProfileFragment;
 import com.owenlarosa.udaciansapp.R;
@@ -72,17 +73,17 @@ public class PostsListAdapter extends BaseAdapter {
         String root = "";
         switch (type) {
             case Person:
-                root = "users";
+                root = Keys.USERS;
                 break;
             case Event:
-                root = "events";
+                root = Keys.EVENTS;
                 break;
         }
 
         // set up the firebase references
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        postsReference = mFirebaseDatabase.getReference().child("posts");
-        postLinksReference = mFirebaseDatabase.getReference().child(root).child(mUid).child("posts");
+        postsReference = mFirebaseDatabase.getReference().child(Keys.POSTS);
+        postLinksReference = mFirebaseDatabase.getReference().child(root).child(mUid).child(Keys.POSTS);
         postLinksReference.limitToLast(10).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -238,8 +239,8 @@ public class PostsListAdapter extends BaseAdapter {
         }
         // other data is associate with the user
         // download it separately if it hasn't been already
-        DatabaseReference basicReference = mFirebaseDatabase.getReference().child("users").child(post.getSender()).child("basic");
-        DatabaseReference nameReference = basicReference.child("name");
+        DatabaseReference basicReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(post.getSender()).child(Keys.BASIC);
+        DatabaseReference nameReference = basicReference.child(Keys.NAME);
         nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -253,7 +254,7 @@ public class PostsListAdapter extends BaseAdapter {
 
             }
         });
-        DatabaseReference photoReference = basicReference.child("photo");
+        DatabaseReference photoReference = basicReference.child(Keys.PHOTO);
         photoReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

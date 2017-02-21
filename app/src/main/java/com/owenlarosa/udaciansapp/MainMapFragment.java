@@ -154,10 +154,10 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
 
     private void syncData() {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mLocationsReference = mFirebaseDatabase.getReference().child("locations");
-        mEventsReference = mFirebaseDatabase.getReference().child("event_locations");
-        mTopicsReference = mFirebaseDatabase.getReference().child("topic_locations");
-        mArticlesReference = mFirebaseDatabase.getReference().child("articles");
+        mLocationsReference = mFirebaseDatabase.getReference().child(Keys.LOCATIONS);
+        mEventsReference = mFirebaseDatabase.getReference().child(Keys.EVENT_LOCATIONS);
+        mTopicsReference = mFirebaseDatabase.getReference().child(Keys.TOPIC_LOCATIONS);
+        mArticlesReference = mFirebaseDatabase.getReference().child(Keys.ARTICLES);
 
         mLocationsEventListener = new ChildEventListener() {
             @Override
@@ -179,7 +179,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         };
-        mLocationsReference.orderByChild("timestamp").limitToLast(100).addChildEventListener(mLocationsEventListener);
+        mLocationsReference.orderByChild(Keys.TIMESTAMP).limitToLast(100).addChildEventListener(mLocationsEventListener);
 
         mEventsEventListener = new ChildEventListener() {
             @Override
@@ -201,7 +201,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         };
-        mEventsReference.orderByChild("timestamp").limitToLast(20).addChildEventListener(mEventsEventListener);
+        mEventsReference.orderByChild(Keys.TIMESTAMP).limitToLast(20).addChildEventListener(mEventsEventListener);
 
         mTopicsEventListener = new ChildEventListener() {
             @Override
@@ -223,7 +223,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         };
-        mTopicsReference.orderByChild("timestamp").limitToLast(20).addChildEventListener(mTopicsEventListener);
+        mTopicsReference.orderByChild(Keys.TIMESTAMP).limitToLast(20).addChildEventListener(mTopicsEventListener);
 
         mArticlesEventListener = new ChildEventListener() {
             @Override
@@ -245,7 +245,7 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         };
-        mArticlesReference.orderByChild("timestamp").limitToLast(20).addChildEventListener(mArticlesEventListener);
+        mArticlesReference.orderByChild(Keys.TIMESTAMP).limitToLast(20).addChildEventListener(mArticlesEventListener);
     }
 
     private void addPin(DataSnapshot dataSnapshot, PinType type) {
@@ -366,39 +366,39 @@ public class MainMapFragment extends Fragment implements GoogleMap.OnInfoWindowC
 
     private void loadPersonData(final Marker marker, String userId) {
         // reference to basic profile info
-        DatabaseReference userReference = mFirebaseDatabase.getReference().child("users").child(userId).child("basic");
+        DatabaseReference userReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(userId).child(Keys.BASIC);
         // user's display name
-        DatabaseReference nameReference = userReference.child("name");
+        DatabaseReference nameReference = userReference.child(Keys.NAME);
         // user's title
-        DatabaseReference titleReference = userReference.child("title");
+        DatabaseReference titleReference = userReference.child(Keys.TITLE);
         setMarkerString(marker, nameReference, true);
         setMarkerString(marker, titleReference, false);
     }
 
     private void loadEventData(Marker marker, String userId) {
-        DatabaseReference eventReference = mFirebaseDatabase.getReference().child("events").child(userId).child("info");
+        DatabaseReference eventReference = mFirebaseDatabase.getReference().child(Keys.EVENTS).child(userId).child(Keys.INFO);
         // title of the event
-        DatabaseReference nameReference = eventReference.child("name");
+        DatabaseReference nameReference = eventReference.child(Keys.NAME);
         // full address of the event
-        DatabaseReference placeReference = eventReference.child("place");
+        DatabaseReference placeReference = eventReference.child(Keys.PLACE);
         setMarkerString(marker, nameReference, true);
         setMarkerString(marker, placeReference, false);
     }
 
     private void loadTopicData(Marker marker, String userId) {
         // name of the topic
-        DatabaseReference topicNameReference = mFirebaseDatabase.getReference().child("topics").child(userId).child("info").child("name");
+        DatabaseReference topicNameReference = mFirebaseDatabase.getReference().child(Keys.TOPICS).child(userId).child(Keys.INFO).child(Keys.NAME);
         // author of the topic
-        DatabaseReference authorNameReference = mFirebaseDatabase.getReference().child("users").child(userId).child("basic").child("name");
+        DatabaseReference authorNameReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(userId).child(Keys.BASIC).child(Keys.NAME);
         setMarkerString(marker, topicNameReference, true);
         setMarkerString(marker, authorNameReference, false);
     }
 
     private void loadArticleData(Marker marker, String userId) {
         // title of the article
-        DatabaseReference articleTitleReference = mFirebaseDatabase.getReference().child("articles").child(userId).child("title");
+        DatabaseReference articleTitleReference = mFirebaseDatabase.getReference().child(Keys.ARTICLES).child(userId).child(Keys.TITLE);
         // poster of the article
-        DatabaseReference authorNameReference = mFirebaseDatabase.getReference().child("users").child(userId).child("basic").child("name");
+        DatabaseReference authorNameReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(userId).child(Keys.BASIC).child(Keys.NAME);
         setMarkerString(marker, articleTitleReference, true);
         setMarkerString(marker, authorNameReference, false);
     }

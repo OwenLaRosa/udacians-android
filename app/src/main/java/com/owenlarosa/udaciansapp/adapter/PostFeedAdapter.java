@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.owenlarosa.udaciansapp.Keys;
 import com.owenlarosa.udaciansapp.ProfileActivity;
 import com.owenlarosa.udaciansapp.ProfileFragment;
 import com.owenlarosa.udaciansapp.R;
@@ -61,7 +62,7 @@ public class PostFeedAdapter extends BaseAdapter {
         mContext = context;
         mUserId = userId;
 
-        DatabaseReference connectionsReference = mFirebaseDatabase.getReference().child("users").child(mUserId).child("connections");
+        DatabaseReference connectionsReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(mUserId).child(Keys.CONNECTIONS);
         connectionsReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -143,7 +144,7 @@ public class PostFeedAdapter extends BaseAdapter {
         Date date = new Date(postLink.timestamp);
         String formattedTime = Utils.formatTime(date);
         viewHolder.timeTextView.setText(formattedTime);
-        DatabaseReference postReference = mFirebaseDatabase.getReference().child("posts").child(postLink.identifier);
+        DatabaseReference postReference = mFirebaseDatabase.getReference().child(Keys.POSTS).child(postLink.identifier);
         postReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -173,7 +174,7 @@ public class PostFeedAdapter extends BaseAdapter {
                         }
                     });
                 }
-                DatabaseReference nameReference = mFirebaseDatabase.getReference().child("users").child(post.getSender()).child("basic").child("name");
+                DatabaseReference nameReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(post.getSender()).child(Keys.BASIC).child(Keys.NAME);
                 nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -186,7 +187,7 @@ public class PostFeedAdapter extends BaseAdapter {
 
                     }
                 });
-                DatabaseReference profileImageReference = mFirebaseDatabase.getReference().child("users").child(post.getSender()).child("basic").child("photo");
+                DatabaseReference profileImageReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(post.getSender()).child(Keys.BASIC).child(Keys.PHOTO);
                 profileImageReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -216,7 +217,7 @@ public class PostFeedAdapter extends BaseAdapter {
      */
     private void getConnectionsPostLinks() {
         for (String user: connections) {
-            DatabaseReference userPostLinksReference = mFirebaseDatabase.getReference().child("users").child(user).child("posts");
+            DatabaseReference userPostLinksReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(user).child(Keys.POSTS);
             userPostLinksReference.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {

@@ -10,7 +10,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
@@ -21,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.owenlarosa.udaciansapp.ChatActivity;
 import com.owenlarosa.udaciansapp.ChatFragment;
+import com.owenlarosa.udaciansapp.Keys;
 import com.owenlarosa.udaciansapp.R;
 
 import java.util.ArrayList;
@@ -48,10 +48,10 @@ public class ConnectionsListAdapter extends BaseAdapter {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         if (followers) {
             // users who have added this user as a connection
-            mConnectionsReference = mFirebaseDatabase.getReference().child("users").child(mUser).child("followers");
+            mConnectionsReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(mUser).child(Keys.FOLLOWERS);
         } else {
             // users that this user has added as a connection
-            mConnectionsReference = mFirebaseDatabase.getReference().child("users").child(mUser).child("connections");
+            mConnectionsReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(mUser).child(Keys.CONNECTIONS);
         }
         mConnectionsReference.addChildEventListener(new ChildEventListener() {
             @Override
@@ -151,8 +151,8 @@ public class ConnectionsListAdapter extends BaseAdapter {
      * @param userId User to fetch data for
      */
     public void populateViewHolder(final ViewHolder viewHolder, String userId) {
-        DatabaseReference userBasicReference = mFirebaseDatabase.getReference().child("users").child(userId).child("basic");
-        DatabaseReference nameReference = userBasicReference.child("name");
+        DatabaseReference userBasicReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(userId).child(Keys.BASIC);
+        DatabaseReference nameReference = userBasicReference.child(Keys.NAME);
         nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -166,7 +166,7 @@ public class ConnectionsListAdapter extends BaseAdapter {
 
             }
         });
-        DatabaseReference titleReference = userBasicReference.child("title");
+        DatabaseReference titleReference = userBasicReference.child(Keys.TITLE);
         titleReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -179,7 +179,7 @@ public class ConnectionsListAdapter extends BaseAdapter {
 
             }
         });
-        DatabaseReference photoReference = userBasicReference.child("photo");
+        DatabaseReference photoReference = userBasicReference.child(Keys.PHOTO);
         photoReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -194,7 +194,7 @@ public class ConnectionsListAdapter extends BaseAdapter {
 
             }
         });
-        DatabaseReference locationReference = mFirebaseDatabase.getReference().child("locations").child(userId).child("location");
+        DatabaseReference locationReference = mFirebaseDatabase.getReference().child(Keys.LOCATIONS).child(userId).child(Keys.LOCATION);
         locationReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

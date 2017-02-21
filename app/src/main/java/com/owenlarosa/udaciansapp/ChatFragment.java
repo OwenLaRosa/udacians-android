@@ -109,16 +109,16 @@ public class ChatFragment extends Fragment {
         // set up storage for uploading images
         final String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mFirebaseStorage = FirebaseStorage.getInstance();
-        StorageReference storageReference = mFirebaseStorage.getReferenceFromUrl("gs://udacians-df696.appspot.com");
-        mPublicImageStorage = storageReference.child(user).child("public").child("images");
+        StorageReference storageReference = mFirebaseStorage.getReferenceFromUrl(Keys.STORAGE_BASE_URL);
+        mPublicImageStorage = storageReference.child(user).child(Keys.PUBLIC).child(Keys.IMAGES);
 
         final DatabaseReference chatReference;
-        mSenderDirectMessageReference = mFirebaseDatabase.getReference().child("users").child(user).child("direct_messages").child(chatId);
-        mRecipientDirectMessageReference = mFirebaseDatabase.getReference().child("users").child(chatId).child("direct_messages").child(user);
+        mSenderDirectMessageReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(user).child(Keys.DIRECT_MESSAGES).child(chatId);
+        mRecipientDirectMessageReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(chatId).child(Keys.DIRECT_MESSAGES).child(user);
         if (direct) {
             // direct messages
             chatReference = Utils.getDirectChatReference(user, chatId);
-            DatabaseReference nameReference = mFirebaseDatabase.getReference().child("users").child(chatId).child("basic").child("name");
+            DatabaseReference nameReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(chatId).child(Keys.BASIC).child(Keys.NAME);
             // title should be name of user sending DMs to
             nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -133,9 +133,9 @@ public class ChatFragment extends Fragment {
                 }
             });
         } else {
-            chatReference = mFirebaseDatabase.getReference().child("topics").child(chatId).child("messages");
-            if (chatId.startsWith("nd")) {
-                DatabaseReference nameReference = mFirebaseDatabase.getReference().child("nano_degrees").child(chatId).child("name");
+            chatReference = mFirebaseDatabase.getReference().child(Keys.TOPICS).child(chatId).child(Keys.MESSAGES);
+            if (chatId.startsWith(Keys.ND)) {
+                DatabaseReference nameReference = mFirebaseDatabase.getReference().child(Keys.NANO_DEGREES).child(chatId).child(Keys.NAME);
                 // title should be name of the Nanodegree
                 nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -152,7 +152,7 @@ public class ChatFragment extends Fragment {
                 // this discussion is already on the user's list
                 shouldJoinChat = false;
             } else {
-                DatabaseReference nameReference = mFirebaseDatabase.getReference().child("topics").child(chatId).child("info").child("name");
+                DatabaseReference nameReference = mFirebaseDatabase.getReference().child(Keys.TOPICS).child(chatId).child(Keys.INFO).child(Keys.NAME);
                 // title should be name/prompt of the topic
                 nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -167,7 +167,7 @@ public class ChatFragment extends Fragment {
                     }
                 });
                 // determine if sending a message will cause the user to join (add to discussions list)
-                DatabaseReference isMemberReference = mFirebaseDatabase.getReference().child("users").child(user).child("topics").child(chatId);
+                DatabaseReference isMemberReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(user).child(Keys.TOPICS).child(chatId);
                 isMemberReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -208,7 +208,7 @@ public class ChatFragment extends Fragment {
                     mImage.compress(Bitmap.CompressFormat.JPEG, 50, outputStream);
                     byte[] binaryData = outputStream.toByteArray();
                     // use the current date to generate a unique file name for the image
-                    String imageName = new Date().toString() + ".jpg";
+                    String imageName = new Date().toString() + Keys.JPEG_EXTENSION;
                     UploadTask uploadTask = mPublicImageStorage.child(imageName).putBytes(binaryData);
                     uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -232,7 +232,7 @@ public class ChatFragment extends Fragment {
 
                 // add discussion to the user's list if they haven't already been added
                 if (shouldJoinChat != null && shouldJoinChat) {
-                    DatabaseReference isMemberReference = mFirebaseDatabase.getReference().child("users").child(user).child("topics").child(chatId);
+                    DatabaseReference isMemberReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(user).child(Keys.TOPICS).child(chatId);
                     isMemberReference.setValue(true);
                     shouldJoinChat = false;
                 }

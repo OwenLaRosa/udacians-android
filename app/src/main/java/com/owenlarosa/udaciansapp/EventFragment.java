@@ -161,7 +161,7 @@ public class EventFragment extends Fragment implements MessageDelegate {
         headerView.recyclerView.setAdapter(attendeesAdapter);
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mEventReference = mFirebaseDatabase.getReference().child("events").child(mUserId).child("info");
+        mEventReference = mFirebaseDatabase.getReference().child(Keys.EVENTS).child(mUserId).child(Keys.INFO);
         mEventReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -177,7 +177,7 @@ public class EventFragment extends Fragment implements MessageDelegate {
             }
         });
         // show name of organizer
-        final DatabaseReference organizerReference = mFirebaseDatabase.getReference().child("users").child(mUserId).child("basic").child("name");
+        final DatabaseReference organizerReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(mUserId).child(Keys.BASIC).child(Keys.NAME);
         organizerReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -190,7 +190,7 @@ public class EventFragment extends Fragment implements MessageDelegate {
 
             }
         });
-        mPostsReference = mFirebaseDatabase.getReference().child("events").child(mUserId).child("posts");
+        mPostsReference = mFirebaseDatabase.getReference().child(Keys.EVENTS).child(mUserId).child(Keys.POSTS);
         String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // event organizers have the option to email members of the event
@@ -202,7 +202,7 @@ public class EventFragment extends Fragment implements MessageDelegate {
             attendButton.setBackgroundTintList(ColorStateList.valueOf(mResources.getColor(R.color.colorAccent)));
         } else {
             // show add/remove from event icon for other users
-            isAttendingReference = mFirebaseDatabase.getReference().child("users").child(user).child("events").child(mUserId);
+            isAttendingReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(user).child(Keys.EVENTS).child(mUserId);
             isAttendingReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -225,12 +225,12 @@ public class EventFragment extends Fragment implements MessageDelegate {
                 }
             });
         }
-        isMemberReference = mFirebaseDatabase.getReference().child("events").child(mUserId).child("members").child(user);
+        isMemberReference = mFirebaseDatabase.getReference().child(Keys.EVENTS).child(mUserId).child(Keys.MEMBERS).child(user);
 
         // storage is used for uploading images
         mFirebaseStorage = FirebaseStorage.getInstance();
-        StorageReference storageReference = mFirebaseStorage.getReferenceFromUrl("gs://udacians-df696.appspot.com");
-        mPublicImageStorage = storageReference.child(user).child("public").child("images");
+        StorageReference storageReference = mFirebaseStorage.getReferenceFromUrl(Keys.STORAGE_BASE_URL);
+        mPublicImageStorage = storageReference.child(user).child(Keys.PUBLIC).child(Keys.IMAGES);
 
         if (savedInstanceState != null) {
             headerView.writePostView.postEditText.setText(savedInstanceState.getString(TEXT_KEY));
@@ -285,7 +285,7 @@ public class EventFragment extends Fragment implements MessageDelegate {
             // send an email message with user's preferred application
             // http://stackoverflow.com/questions/5420138/is-it-possible-to-use-an-action-sento-intent-to-send-to-multiple-recipients
             Intent intent = new Intent(Intent.ACTION_SENDTO);
-            intent.setType("message/rfc822");
+            intent.setType(Keys.MESSAGE_INTENT_TYPE);
             if (emailList.size() != 0) {
                 intent.setData(buildMailRecipients(emailList));
             }
@@ -316,7 +316,7 @@ public class EventFragment extends Fragment implements MessageDelegate {
     private Uri buildMailRecipients(ArrayList<String> emailList) {
         StringBuilder builder = new StringBuilder();
         // default start of the url
-        builder.append("mailto:");
+        builder.append(Keys.MAILTO);
         for (int i = 0; i < emailList.size(); i++) {
             String emailAddress = emailList.get(i);
             builder.append(emailAddress);
@@ -336,7 +336,7 @@ public class EventFragment extends Fragment implements MessageDelegate {
             mImage.compress(Bitmap.CompressFormat.JPEG, 50, outputStream);
             byte[] binaryData = outputStream.toByteArray();
             // use the current date to generate a unique file name for the image
-            String imageName = new Date().toString() + ".jpg";
+            String imageName = new Date().toString() + Keys.JPEG_EXTENSION;
             UploadTask uploadTask = mPublicImageStorage.child(imageName).putBytes(binaryData);
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override

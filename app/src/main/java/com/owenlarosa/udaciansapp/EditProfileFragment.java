@@ -105,13 +105,13 @@ public class EditProfileFragment extends Fragment {
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference userReference = mFirebaseDatabase.getReference().child("users").child(user);
-        mBasicReference = userReference.child("basic");
-        mProfileReference = userReference.child("profile");
+        DatabaseReference userReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(user);
+        mBasicReference = userReference.child(Keys.BASIC);
+        mProfileReference = userReference.child(Keys.PROFILE);
 
         mFirebaseStorage = FirebaseStorage.getInstance();
-        StorageReference storageReference = mFirebaseStorage.getReferenceFromUrl("gs://udacians-df696.appspot.com");
-        mPublicImageStorage = storageReference.child(user).child("public").child("images");
+        StorageReference storageReference = mFirebaseStorage.getReferenceFromUrl(Keys.STORAGE_BASE_URL);
+        mPublicImageStorage = storageReference.child(user).child(Keys.PUBLIC).child(Keys.IMAGES);
 
         if (savedInstanceState == null) {
             // prefill the data for the first launch
@@ -123,7 +123,7 @@ public class EditProfileFragment extends Fragment {
                 profileImageButton.setImageBitmap(mImage);
             } else {
                 // user keeps original image, already stored in reference
-                DatabaseReference photoReference = mBasicReference.child("photo");
+                DatabaseReference photoReference = mBasicReference.child(Keys.PHOTO);
                 photoReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -253,8 +253,8 @@ public class EditProfileFragment extends Fragment {
      */
     @OnClick(R.id.edit_save_button)
     public void saveChanges() {
-        mBasicReference.child("title").setValue(titleEditText.getText().toString());
-        mBasicReference.child("about").setValue(aboutEditText.getText().toString());
+        mBasicReference.child(Keys.TITLE).setValue(titleEditText.getText().toString());
+        mBasicReference.child(Keys.ABOUT).setValue(aboutEditText.getText().toString());
         String siteLink = Utils.getValidUrl(siteEditText.getText().toString());
         if (siteLink != null || siteEditText.getText().toString().equals("")) {
             siteEditText.setBackgroundColor(mResources.getColor(R.color.white));
@@ -292,7 +292,7 @@ public class EditProfileFragment extends Fragment {
             mImage.compress(Bitmap.CompressFormat.JPEG, 50, outputStream);
             byte[] binaryData = outputStream.toByteArray();
             // use the current date to generate a unique file name for the image
-            String imageName = new Date().toString() + ".jpg";
+            String imageName = new Date().toString() + Keys.JPEG_EXTENSION;
             UploadTask uploadTask = mPublicImageStorage.child(imageName).putBytes(binaryData);
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override

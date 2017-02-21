@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.owenlarosa.udaciansapp.Keys;
 import com.owenlarosa.udaciansapp.R;
 import com.owenlarosa.udaciansapp.contentprovider.JobsListColumns;
 import com.owenlarosa.udaciansapp.contentprovider.JobsProvider;
@@ -74,7 +75,7 @@ public class ListWidgetRemoteViewsService extends RemoteViewsService {
                 Intent fillInIntent = new Intent();
                 fillInIntent.setAction(ListWidgetProvider.ACTION_OPEN_JOB_POSTING);
                 Bundle bundle = new Bundle();
-                bundle.putString("url", url);
+                bundle.putString(Keys.URL, url);
                 fillInIntent.putExtras(bundle);
                 remoteViews.setOnClickFillInIntent(R.id.job_list_item, fillInIntent);
 

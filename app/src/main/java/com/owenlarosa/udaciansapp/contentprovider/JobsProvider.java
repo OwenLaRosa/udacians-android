@@ -16,7 +16,7 @@ public class JobsProvider {
     public static final String AUTHORITY = "com.owenlarosa.udaciansapp";
 
     @TableEndpoint(table = JobsDatabase.JOBS) public static class Jobs {
-        @ContentUri(path = "jobs",
+        @ContentUri(path = JobsDatabase.JOBS,
         type = "vnd.android.cursor.dir/job",
         defaultSort = JobsListColumns.DATE + " ASC")
         public static final Uri JOBS = Uri.parse("content://" + AUTHORITY + "/jobs");

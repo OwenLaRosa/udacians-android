@@ -13,6 +13,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
 
+import com.owenlarosa.udaciansapp.Keys;
 import com.owenlarosa.udaciansapp.R;
 import com.owenlarosa.udaciansapp.Utils;
 
@@ -69,7 +70,7 @@ public class ListWidgetProvider extends AppWidgetProvider {
             int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, getClass()));
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list);
         } else if (intent.getAction().equals(ACTION_OPEN_JOB_POSTING)) {
-            Uri jobLink = Uri.parse(intent.getExtras().getString("url"));
+            Uri jobLink = Uri.parse(intent.getExtras().getString(Keys.URL));
             Intent jobIntent = new Intent(Intent.ACTION_VIEW, jobLink);
             jobIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(jobIntent);

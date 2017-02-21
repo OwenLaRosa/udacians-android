@@ -171,8 +171,8 @@ public class NavigationDrawerAdapter extends BaseAdapter {
             return;
         }
         String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference userBasicReference = mFirebaseDatabase.getReference().child("users").child(user).child("basic");
-        DatabaseReference nameReference = userBasicReference.child("name");
+        DatabaseReference userBasicReference = mFirebaseDatabase.getReference().child(Keys.USERS).child(user).child(Keys.BASIC);
+        DatabaseReference nameReference = userBasicReference.child(Keys.NAME);
         nameReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -184,7 +184,7 @@ public class NavigationDrawerAdapter extends BaseAdapter {
 
             }
         });
-        DatabaseReference titleReference = userBasicReference.child("title");
+        DatabaseReference titleReference = userBasicReference.child(Keys.TITLE);
         titleReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -201,7 +201,7 @@ public class NavigationDrawerAdapter extends BaseAdapter {
 
             }
         });
-        DatabaseReference photoReference = userBasicReference.child("photo");
+        DatabaseReference photoReference = userBasicReference.child(Keys.PHOTO);
         photoReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
