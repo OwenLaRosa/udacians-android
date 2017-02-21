@@ -3,21 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/report_bug_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="Submit"/>
-
-    <EditText
-        android:id="@+id/report_bug_edit_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@id/report_bug_button"
-        android:hint="Bug or suggestion goes here"/>
+    <WebView
+        android:id="@+id/help_web_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>
