@@ -13,6 +13,7 @@
 
     <ImageView
         android:id="@+id/connection_photo_image_view"
+        android:contentDescription="@string/a11y_profile_picture"
         android:layout_width="@dimen/connections_image_size"
         android:layout_height="@dimen/connections_image_size"
         android:scaleType="centerCrop"

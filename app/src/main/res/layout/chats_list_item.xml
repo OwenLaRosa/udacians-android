@@ -12,6 +12,7 @@
 
     <ImageView
         android:id="@+id/chat_photo_image_view"
+        android:contentDescription="@string/a11y_photo"
         android:layout_width="@dimen/chats_image_size"
         android:layout_height="@dimen/chats_image_size"
         android:scaleType="centerCrop"

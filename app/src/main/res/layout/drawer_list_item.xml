@@ -7,6 +7,7 @@
 
     <ImageView
         android:id="@+id/drawer_icon"
+        android:contentDescription="@string/a11y_drawer_item"
         android:layout_width="@dimen/drawer_icon_size"
         android:layout_height="@dimen/drawer_icon_size"
         android:layout_marginTop="@dimen/drawer_vertical_margin"

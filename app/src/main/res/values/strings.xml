@@ -135,6 +135,11 @@
     <string name="a11y_profile_picture">Profile picture</string>
     <!-- placeholder for user generated photo content -->
     <string name="a11y_photo">Photo</string>
+    <!-- placeholder for images in discussions list screen -->
+    <!-- This content description is replaced by a more specific one at runtime -->
+    <string name="a11y_chat_photo">Chat photo</string>
+    <!-- for nav drawer icons, each also has a label which can be used to distinguish them -->
+    <string name="a11y_drawer_item">Drawer item</string>
 
     <!-- strings used by shared preferences -->
     <string name="pref_auth_token">token</string>
