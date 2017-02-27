@@ -31,4 +31,5 @@ Feast your eyes on some "pencil drawn" NinjaMock sketches: https://ninjamock.com
 ## Contribute
 
 Want to learn more or particpate in beta testing? Just drop me a message at owen.larosa@gmail.com
+
 Questions, bugs, compliments? Open an issue and I'll be right on it.
